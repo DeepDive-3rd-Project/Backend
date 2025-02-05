@@ -17,7 +17,7 @@ public class AddressQueryService {
 	private final AddressRepository addressRepository;
 
 	public Address getById(Long id) {
-		return addressRepository.findById(id)
+		return addressRepository.findByIdAndDeletedAtIsNull(id)
 			.orElseThrow(AddressNotFoundException::new);
 	}
 

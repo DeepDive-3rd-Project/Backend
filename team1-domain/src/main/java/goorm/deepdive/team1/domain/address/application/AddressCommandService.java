@@ -14,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 public class AddressCommandService {
 	private final AddressRepository addressRepository;
 
-	public Address create(Address address) {
+	public Address create(double x, double y, String regionAddress, String roadAddress) {
+		Address address = Address.create(x, y, regionAddress, roadAddress);
 		return addressRepository.save(address);
 	}
 
@@ -29,11 +30,11 @@ public class AddressCommandService {
 
 	public void delete(Long id) {
 		Address address = getAddress(id);
-		addressRepository.delete(address);
+		address.markAsDeleted();
 	}
 
 	private Address getAddress(Long id) {
-		return addressRepository.findById(id)
+		return addressRepository.findByIdAndDeletedAtIsNull(id)
 			.orElseThrow(AddressNotFoundException::new);
 	}
 }

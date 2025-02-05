@@ -8,7 +8,7 @@ import goorm.deepdive.team1.domain.address.domain.Address;
 public interface AddressRepository {
 	Address save(Address address);
 
-	Optional<Address> findById(Long id);
+	Optional<Address> findByIdAndDeletedAtIsNull(Long id);
 
 	List<Address> findAllByDeletedAtIsNull();
 
