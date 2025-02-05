@@ -32,7 +32,7 @@ public class UserCommandService {
 	}
 
 	private User getUser(Long id) {
-		return userRepository.findById(id)
+		return userRepository.findByIdAndDeletedAtIsNull(id)
 			.orElseThrow(UserNotFoundException::new);
 	}
 }
