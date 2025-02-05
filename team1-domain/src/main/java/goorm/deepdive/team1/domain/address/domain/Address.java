@@ -34,4 +34,29 @@ public class Address extends BaseTimeEntity {
 
 	@Column(nullable = false, unique = true)
 	private String roadAddress;
+
+	public static Address create(double x, double y, String regionAddress, String roadAddress) {
+		return Address.builder()
+			.x(x)
+			.y(y)
+			.regionAddress(regionAddress)
+			.roadAddress(roadAddress)
+			.build();
+	}
+
+	public void updateX(double x) {
+		this.x = x;
+	}
+
+	public void updateY(double y) {
+		this.y = y;
+	}
+
+	public void updateRegionAddress(String regionAddress) {
+		this.regionAddress = regionAddress;
+	}
+
+	public void updateRoadAddress(String roadAddress) {
+		this.roadAddress = roadAddress;
+	}
 }
