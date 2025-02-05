@@ -36,12 +36,10 @@ public class UserFacade {
 	}
 
 	public void update(Long id, UserUpdateRequest request) {
-		User user = userQueryService.getById(id);
-		userCommandService.update(user, request.name(), request.email(), request.phoneNumber());
+		userCommandService.update(id, request.name(), request.email(), request.phoneNumber());
 	}
 
 	public void delete(Long id) {
-		User user = userQueryService.getById(id);
-		userCommandService.delete(user);
+		userCommandService.delete(id);
 	}
 }

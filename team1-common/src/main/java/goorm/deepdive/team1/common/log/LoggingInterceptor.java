@@ -13,7 +13,6 @@ import jakarta.validation.constraints.NotNull;
 
 @Component
 public class LoggingInterceptor implements HandlerInterceptor {
-
 	@Override
 	public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response,
 		@NotNull Object handler) {

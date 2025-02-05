@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Profile("local")
 public class ExceptionLoggingAspect {
-	@Pointcut("execution(* goorm.deepdive.team1.api..application..*(..)) && "
+	@Pointcut("execution(* goorm.deepdive.team1.domain..application..*(..)) && "
 		+ "!execution(* goorm.deepdive.team1.common..*(..)) && "
 		+ "!@annotation(goorm.deepdive.team1.common.log.NoLogging) && "
 		+ "!@annotation(org.springframework.boot.context.properties.ConfigurationProperties)"
