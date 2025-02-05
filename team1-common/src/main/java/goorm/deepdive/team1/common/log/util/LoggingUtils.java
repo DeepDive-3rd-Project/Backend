@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class LoggingUtils {
-
 	public static List<String> getArguments(JoinPoint joinPoint) {
 		return Arrays.stream(joinPoint.getArgs())
 			.map(LoggingUtils::getObjectFields)
