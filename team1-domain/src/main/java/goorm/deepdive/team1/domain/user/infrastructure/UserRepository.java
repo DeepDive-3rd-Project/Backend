@@ -8,7 +8,7 @@ import goorm.deepdive.team1.domain.user.domain.User;
 public interface UserRepository {
 	User save(User user);
 
-	Optional<User> findById(Long id);
+	Optional<User> findByIdAndDeletedAtIsNull(Long id);
 
 	List<User> findAllByDeletedAtIsNull();
 

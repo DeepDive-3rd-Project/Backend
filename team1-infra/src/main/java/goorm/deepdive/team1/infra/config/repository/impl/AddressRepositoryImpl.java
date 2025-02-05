@@ -34,5 +34,4 @@ public class AddressRepositoryImpl implements AddressRepository {
 	public void delete(Address address) {
 		jpaAddressRepository.delete(address);
 	}
-
 }

@@ -17,7 +17,7 @@ public class UserQueryService {
 	private final UserRepository userRepository;
 
 	public User getById(Long id) {
-		return userRepository.findById(id)
+		return userRepository.findByIdAndDeletedAtIsNull(id)
 			.orElseThrow(UserNotFoundException::new);
 	}
 
