@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import goorm.deepdive.team1.infra.config.base.Team1Config;
 
-@EntityScan(basePackages = "sorisoop.soridam.domain")
+@EntityScan(basePackages = "goorm.deepdive.team1.domain")
 @Configuration
 @EnableJpaRepositories(basePackages = "goorm.deepdive.team1.infra")
 public class JpaConfig implements Team1Config {
