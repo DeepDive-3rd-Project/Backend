@@ -13,4 +13,6 @@ public interface AddressRepository {
 	List<Address> findAllByDeletedAtIsNull();
 
 	void delete(Address address);
+
+	Optional<Address> findByRegionAddressOrRoadAddressAndDeletedAtIsNull(String address);
 }

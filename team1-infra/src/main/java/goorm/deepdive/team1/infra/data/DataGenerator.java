@@ -56,8 +56,7 @@ public class DataGenerator {
 
 			AddressHistory history = AddressHistory.builder()
 				.user(user)
-				.oldAddress(address)
-				.newAddress(address)
+				.address(address)
 				.build();
 			entityManager.persist(history);
 

@@ -1,9 +1,9 @@
 package goorm.deepdive.team1.api.user.presentation;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
@@ -71,9 +71,18 @@ public interface UserController {
 			- Description : 이 API는 유저 데이터를 삭제할 수 있습니다.
 		""")
 	@ApiResponse(responseCode = "204")
-	@PatchMapping("/{id}")
 	ResponseEntity<Void> delete(
 		@Parameter(description = "삭제할 사용자의 ID", example = "1")
 		@PathVariable Long id
+	);
+
+	@Operation(summary = "주소 기반 유저 목록 검색 API", description = """
+			- Description : 이 API는 해당 키워드를 포함한 주소를 가지고 있는 유저 목록을 조회할 수 있습니다.
+		""")
+	@ApiResponse(responseCode = "200")
+	ResponseEntity<UserListResponse> searchUsersByAddressKeyword(
+		@Parameter(description = "검색할 주소 키워드", example = "강남")
+		@RequestParam(required = false)
+		String keyword
 	);
 }
