@@ -2,6 +2,9 @@ package goorm.deepdive.team1.api.user.application;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import goorm.deepdive.team1.api.kakao.response.AddressResponseDto;
+import goorm.deepdive.team1.api.kakao.KakaoApiAddressService;
+import goorm.deepdive.team1.domain.address.exception.AddressNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,7 @@ public class UserFacade {
 	private final AddressHistoryCommandService addressHistoryCommandService;
 	private final AddressCommandService addressCommandService;
 	private final AddressQueryService addressQueryService;
+	private final KakaoApiAddressService kakaoApiAddressService;
 
 	@Transactional
 	public UserPersistResponse create(UserCreateRequest request) {
@@ -35,10 +39,16 @@ public class UserFacade {
 		Address address = null;
 		try {
 			address = addressQueryService.getByAddress(request.address());
-		} catch (UserNotFoundException e) {
-			// todo : 카카오 api를 이용하여 주소 데이터를 가져와서 저장
-			// address = addressCommandService.create();
-			// addressCommandService.save(address);
+		} catch (AddressNotFoundException e) {
+			AddressResponseDto kakaoAddressDto = kakaoApiAddressService.getGeoDataFromAddress(request.address());
+
+			address = addressCommandService.create(
+					kakaoAddressDto.getY(),
+					kakaoAddressDto.getX(),
+					kakaoAddressDto.getRegionAddress(),
+					kakaoAddressDto.getRoadAddress());
+
+			addressCommandService.save(address);
 		}
 		addressHistoryCommandService.create(user, address);
 
