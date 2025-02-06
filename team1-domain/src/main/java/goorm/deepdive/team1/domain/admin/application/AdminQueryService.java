@@ -16,6 +16,6 @@ public class AdminQueryService {
 
     public Admin findByEmail(String email) {
         return adminRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+                .orElseThrow(() -> new CustomException(AdminExceptionCode.ADMIN_NOT_FOUND));
     }
 }
