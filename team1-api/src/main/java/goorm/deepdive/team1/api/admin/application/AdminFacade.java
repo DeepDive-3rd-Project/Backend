@@ -19,7 +19,7 @@ public class AdminFacade {
     public AdminRegisterResponse register(AdminRegisterRequest request) {
         Admin admin = adminCommandService.register(request.email(), request.password(), request.role());
         String token = adminCommandService.login(request.email(), request.password());
-        return AdminRegisterResponse.from(admin, token);
+        return new AdminRegisterResponse(admin.getId(), admin.getEmail(), token);
     }
 
     public AdminLoginResponse login(AdminLoginRequest request) {

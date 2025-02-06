@@ -8,7 +8,7 @@ public record AdminRegisterResponse(
         String email,
         String token
 ) {
-    public static AdminRegisterResponse from(Admin admin, String token) {
-        return new AdminRegisterResponse(admin.getId(), admin.getEmail(), token);
+    public static AdminRegisterResponse from(Long id, String email, String token) {
+        return new AdminRegisterResponse(id, email, token);
     }
 }
