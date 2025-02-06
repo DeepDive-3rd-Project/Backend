@@ -16,6 +16,10 @@ public record UserCreateRequest(
 
 	@Schema(description = "휴대폰 번호", example = "01012345678", requiredMode = REQUIRED)
 	@NotBlank
-	String phoneNumber
+	String phoneNumber,
+
+	@Schema(description = "주소", example = "창훈로 52번길 22", requiredMode = REQUIRED)
+	@NotBlank
+	String address
 ) {
 }

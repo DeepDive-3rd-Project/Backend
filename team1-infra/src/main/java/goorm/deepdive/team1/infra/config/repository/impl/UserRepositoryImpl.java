@@ -39,4 +39,9 @@ public class UserRepositoryImpl implements UserRepository {
 	public boolean existsById(Long id) {
 		return jpaUserRepository.existsById(id);
 	}
+
+	@Override
+	public List<User> findUsersByAddressKeyword(String keyword) {
+		return jpaUserRepository.findUsersByAddressKeyword(keyword);
+	}
 }
