@@ -58,4 +58,11 @@ public class UserControllerImpl implements UserController{
 		userFacade.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+
+	@Override
+	@GetMapping("/search")
+	public ResponseEntity<UserListResponse> searchUsersByAddressKeyword(String keyword) {
+		UserListResponse response = userFacade.searchUsersByAddressKeyword(keyword);
+		return ResponseEntity.ok(response);
+	}
 }

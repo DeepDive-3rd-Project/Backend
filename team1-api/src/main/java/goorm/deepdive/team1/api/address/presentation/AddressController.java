@@ -1,7 +1,6 @@
 package goorm.deepdive.team1.api.address.presentation;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -71,7 +70,6 @@ public interface AddressController {
 			- Description : 이 API는 주소 데이터를 삭제할 수 있습니다.
 		""")
 	@ApiResponse(responseCode = "204")
-	@PatchMapping("/{id}")
 	ResponseEntity<Void> delete(
 		@Parameter(description = "삭제할 주소의 ID", example = "1")
 		@PathVariable Long id

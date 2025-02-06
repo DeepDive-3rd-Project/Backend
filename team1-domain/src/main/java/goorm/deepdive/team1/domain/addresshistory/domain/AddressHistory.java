@@ -4,6 +4,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
+import goorm.deepdive.team1.domain.BaseTimeEntity;
 import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.user.domain.User;
 import jakarta.persistence.Entity;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
-public class AddressHistory {
+public class AddressHistory extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
@@ -31,10 +32,13 @@ public class AddressHistory {
 	private User user;
 
 	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "old_addr_id", nullable = false)
-	private Address oldAddress;
+	@JoinColumn(name = "address_id", nullable = false)
+	private Address address;
 
-	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "new_addr_id", nullable = false)
-	private Address newAddress;
+	public static AddressHistory create(User user, Address address) {
+		return AddressHistory.builder()
+			.user(user)
+			.address(address)
+			.build();
+	}
 }

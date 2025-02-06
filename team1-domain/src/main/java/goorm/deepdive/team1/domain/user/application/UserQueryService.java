@@ -24,4 +24,8 @@ public class UserQueryService {
 	public List<User> getAllByDeletedAtIsNull() {
 		return userRepository.findAllByDeletedAtIsNull();
 	}
+
+	public List<User> getUsersByAddressKeyword(String keyword) {
+		return userRepository.findUsersByAddressKeyword(keyword);
+	}
 }
