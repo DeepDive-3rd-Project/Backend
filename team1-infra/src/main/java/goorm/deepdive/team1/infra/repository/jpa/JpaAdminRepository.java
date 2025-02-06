@@ -1,4 +1,4 @@
-package goorm.deepdive.team1.infra.config.repository.jpa;
+package goorm.deepdive.team1.infra.repository.jpa;
 
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -3,20 +3,24 @@ spring:
     name: team1
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:team1}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:team1}?reWriteBatchedInserts=true&preferQueryMode=simple
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
     driver-class-name: org.postgresql.Driver
 
   jpa:
-    hibernate:
-      ddl-auto: validate
-      default_batch_fetch_size: 1000
-      jdbc:
-        time_zone: Asia/Seoul
     defer-datasource-initialization: true
     show-sql: true
     open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: validate
+        default_batch_fetch_size: 10000
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          time_zone: Asia/Seoul
 
 #jwt
 jwtsecret: nH3Hj8aTgFz1vB3LgKm2t4zWk9YqL1D6abcdefghiJklmnopQ=

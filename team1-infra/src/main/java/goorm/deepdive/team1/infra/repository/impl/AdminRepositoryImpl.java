@@ -1,8 +1,8 @@
-package goorm.deepdive.team1.infra.config.repository.impl;
+package goorm.deepdive.team1.infra.repository.impl;
 
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
-import goorm.deepdive.team1.infra.config.repository.jpa.JpaAdminRepository;
+import goorm.deepdive.team1.infra.repository.jpa.JpaAdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
