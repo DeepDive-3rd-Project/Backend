@@ -67,7 +67,9 @@ public class SecurityConfig implements Team1Config {
 	};
 
 	private static final String[] PUBLIC_ENDPOINTS = {
-		"/api/users/**"
+		"/api/users/**",
+	    "/api/admin/**"
+
 	};
 
 
