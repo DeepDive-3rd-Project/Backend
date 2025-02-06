@@ -1,4 +1,4 @@
-package goorm.deepdive.team1.infra.config.repository.jpa;
+package goorm.deepdive.team1.infra.repository.jpa;
 
 import java.util.List;
 import java.util.Optional;
