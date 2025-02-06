@@ -19,7 +19,7 @@ public class DataGeneratorControllerImpl implements DataGeneratorController {
 	@PostMapping
 	public ResponseEntity<DataGeneratorResponse> create(int totalRecords) {
 		Long duration = dataGenerator.generateData(totalRecords);
-		DataGeneratorResponse response = DataGeneratorResponse.of(totalRecords, duration);
+		DataGeneratorResponse response = DataGeneratorResponse.of(totalRecords * 3, duration);
 		return ResponseEntity.ok(response);
 	}
 }
