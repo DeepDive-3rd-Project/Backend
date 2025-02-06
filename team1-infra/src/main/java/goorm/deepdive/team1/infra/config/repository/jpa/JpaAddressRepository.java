@@ -11,4 +11,6 @@ public interface JpaAddressRepository extends JpaRepository<Address, Long> {
 	List<Address> findAllByDeletedAtIsNull();
 
 	Optional<Address> findByIdAndDeletedAtIsNull(Long id);
+
+	Optional<Address> findByRegionAddressOrRoadAddressAndDeletedAtIsNull(String region, String road);
 }

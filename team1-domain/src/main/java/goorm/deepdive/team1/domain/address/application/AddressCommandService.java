@@ -19,6 +19,10 @@ public class AddressCommandService {
 		return addressRepository.save(address);
 	}
 
+	public Address save(Address address) {
+		return addressRepository.save(address);
+	}
+
 	public void update(Long id, double x, double y, String regionAddress, String roadAddress) {
 		Address address = getAddress(id);
 

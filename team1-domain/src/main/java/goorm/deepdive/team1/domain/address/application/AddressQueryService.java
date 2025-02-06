@@ -24,4 +24,10 @@ public class AddressQueryService {
 	public List<Address> getAllByDeletedAtIsNull() {
 		return addressRepository.findAllByDeletedAtIsNull();
 	}
+
+	public Address getByAddress(String address) {
+		return addressRepository.findByRegionAddressOrRoadAddressAndDeletedAtIsNull(address)
+			.orElseThrow(AddressNotFoundException::new);
+	}
+
 }

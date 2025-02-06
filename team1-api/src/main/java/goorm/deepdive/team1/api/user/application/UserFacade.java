@@ -11,10 +11,13 @@ import goorm.deepdive.team1.api.user.presentation.resonse.UserListResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserResponse;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
+import goorm.deepdive.team1.domain.address.application.AddressQueryService;
+import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
 import goorm.deepdive.team1.domain.user.application.UserCommandService;
 import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
+import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -24,16 +27,21 @@ public class UserFacade {
 	private final UserCommandService userCommandService;
 	private final AddressHistoryCommandService addressHistoryCommandService;
 	private final AddressCommandService addressCommandService;
+	private final AddressQueryService addressQueryService;
 
 	@Transactional
 	public UserPersistResponse create(UserCreateRequest request) {
 		User user = userCommandService.create(request.name(), request.email(), request.phoneNumber());
-		/* todo : 유저 생성 시 주소 같이 저장 로직 구현
-		Address address = addressSearchService(request.address());
-		addressCommandService.create(address);
-
+		Address address = null;
+		try {
+			address = addressQueryService.getByAddress(request.address());
+		} catch (UserNotFoundException e) {
+			// todo : 카카오 api를 이용하여 주소 데이터를 가져와서 저장
+			// address = addressCommandService.create();
+			// addressCommandService.save(address);
+		}
 		addressHistoryCommandService.create(user, address);
-		*/
+
 		return UserPersistResponse.from(user);
 	}
 
