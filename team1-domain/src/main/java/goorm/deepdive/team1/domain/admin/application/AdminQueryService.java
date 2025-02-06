@@ -12,5 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AdminQueryService {
+    private final AdminRepository adminRepository;
 
+    public Admin findByEmail(String email) {
+        return adminRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+    }
 }
