@@ -17,3 +17,9 @@ spring:
     defer-datasource-initialization: true
     show-sql: true
     open-in-view: false
+
+#jwt
+jwtsecret: nH3Hj8aTgFz1vB3LgKm2t4zWk9YqL1D6abcdefghiJklmnopQ=
+refreshSecret: awtgvtj8aTgFz1vB3LgKm2t4zWk9YqL1D6abcdefghiJklmdtwwE=
+expirationSeconds: 600
+refreshExpirationSeconds: 604800
