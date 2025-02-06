@@ -1,4 +1,4 @@
-package goorm.deepdive.team1.domain.kakao.Dto;
+package goorm.deepdive.team1.api.kakao.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
