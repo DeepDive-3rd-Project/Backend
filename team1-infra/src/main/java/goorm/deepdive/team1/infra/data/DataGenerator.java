@@ -36,7 +36,7 @@ public class DataGenerator {
 				faker.address().streetAddressNumber();
 			String roadAddress = faker.address().state() + " " +
 				faker.address().city() + " " +
-				faker.address().streetAddress() + "길" + " " +
+				faker.address().streetAddress() + "길 " +
 				faker.address().streetAddressNumber();
 
 			User user = User.builder()
