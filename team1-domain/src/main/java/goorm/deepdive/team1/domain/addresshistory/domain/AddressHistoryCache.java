@@ -21,7 +21,18 @@ public class AddressHistoryCache {
 	@Indexed
 	private Long userId;
 
-	private String address;
+	private String regionAddress;
+	private String roadAddress;
 
 	private LocalDateTime createdAt;
+
+	public static AddressHistoryCache create(Long id, Long userId, String regionAddress, String roadAddress, LocalDateTime createdAt) {
+		return AddressHistoryCache.builder()
+			.id(id)
+			.userId(userId)
+			.regionAddress(regionAddress)
+			.roadAddress(roadAddress)
+			.createdAt(createdAt)
+			.build();
+	}
 }

@@ -7,14 +7,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import goorm.deepdive.team1.domain.user.domain.User;
+import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.infrastructure.UserRepository;
 import goorm.deepdive.team1.infra.repository.jpa.JpaUserRepository;
+import goorm.deepdive.team1.infra.repository.redis.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 	private final JpaUserRepository jpaUserRepository;
+	private final RedisUserRepository redisUserRepository;
 
 	@Override
 	public User save(User user) {
@@ -27,8 +30,13 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public Page<User> findAllByDeletedAtIsNull(Pageable pageable) {
-		return jpaUserRepository.findAllByDeletedAtIsNull(pageable);
+	public Optional<UserCache> getUserCache(Long id) {
+		return redisUserRepository.findById(id);
+	}
+
+	@Override
+	public Page<UserCache> findAll(Pageable pageable) {
+		return redisUserRepository.findAll(pageable);
 	}
 
 	@Override

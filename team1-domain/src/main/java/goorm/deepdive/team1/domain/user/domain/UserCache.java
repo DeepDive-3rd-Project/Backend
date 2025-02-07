@@ -25,4 +25,16 @@ public class UserCache {
 
 	private String latestRegionAddress;
 	private String latestRoadAddress;
+
+
+	public static UserCache create(Long id, String name, String email, String phoneNumber, String latestRegionAddress, String latestRoadAddress) {
+		return UserCache.builder()
+			.id(id)
+			.name(name)
+			.email(email)
+			.phoneNumber(phoneNumber)
+			.latestRegionAddress(latestRegionAddress)
+			.latestRoadAddress(latestRoadAddress)
+			.build();
+	}
 }

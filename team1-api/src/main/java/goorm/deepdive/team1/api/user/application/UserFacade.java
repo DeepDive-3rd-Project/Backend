@@ -9,7 +9,6 @@ import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
-import goorm.deepdive.team1.api.user.presentation.resonse.UserResponse;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
 import goorm.deepdive.team1.domain.address.application.AddressQueryService;
 import goorm.deepdive.team1.domain.address.domain.Address;
@@ -17,6 +16,7 @@ import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryComm
 import goorm.deepdive.team1.domain.user.application.UserCommandService;
 import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
+import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -45,13 +45,12 @@ public class UserFacade {
 		return UserPersistResponse.from(user);
 	}
 
-	public UserResponse getById(Long id) {
-		User user = userQueryService.getById(id);
-		return UserResponse.from(user);
+	public UserCache getUserCacheById(Long id) {
+		return userQueryService.getUserCacheById(id);
 	}
 
-	public PaginatedListResponse getAllByDeletedAtIsNull(Pageable pageable) {
-		Page<User> userList = userQueryService.getAllByDeletedAtIsNull(pageable);
+	public PaginatedListResponse getAll(Pageable pageable) {
+		Page<UserCache> userList = userQueryService.getAll(pageable);
 		return PaginatedListResponse.from(userList);
 	}
 

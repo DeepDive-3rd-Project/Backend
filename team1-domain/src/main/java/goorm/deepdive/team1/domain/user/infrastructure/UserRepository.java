@@ -6,13 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import goorm.deepdive.team1.domain.user.domain.User;
+import goorm.deepdive.team1.domain.user.domain.UserCache;
 
 public interface UserRepository {
 	User save(User user);
 
 	Optional<User> findByIdAndDeletedAtIsNull(Long id);
 
-	Page<User> findAllByDeletedAtIsNull(Pageable pageable);
+	Optional<UserCache> getUserCache(Long id);
+
+	Page<UserCache> findAll(Pageable pageable);
 
 	void deleteById(Long id);
 

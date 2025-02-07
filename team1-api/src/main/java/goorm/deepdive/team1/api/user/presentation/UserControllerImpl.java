@@ -16,7 +16,7 @@ import goorm.deepdive.team1.api.user.application.UserFacade;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
-import goorm.deepdive.team1.api.user.presentation.resonse.UserResponse;
+import goorm.deepdive.team1.domain.user.domain.UserCache;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -34,20 +34,18 @@ public class UserControllerImpl implements UserController{
 
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<UserResponse> getById(Long id) {
-		UserResponse response = userFacade.getById(id);
+	public ResponseEntity<UserCache> getUserCacheById(Long id) {
+		UserCache response = userFacade.getUserCacheById(id);
 		return ResponseEntity.ok(response);
 	}
 
 	@Override
 	@GetMapping
-	public ResponseEntity<PaginatedListResponse> getAllByDeletedAtIsNull(
+	public ResponseEntity<PaginatedListResponse> getAll(
 		int page,
 		int size
 	) {
-		PaginatedListResponse response = userFacade.getAllByDeletedAtIsNull(
-			PageRequest.of(page, size)
-		);
+		PaginatedListResponse response = userFacade.getAll(PageRequest.of(page, size));
 		return ResponseEntity.ok(response);
 	}
 

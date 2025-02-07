@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.domain.user.domain.User;
+import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
 import goorm.deepdive.team1.domain.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +17,18 @@ import lombok.RequiredArgsConstructor;
 public class UserQueryService {
 	private final UserRepository userRepository;
 
+	public UserCache getUserCacheById(Long id) {
+		return userRepository.getUserCache(id)
+			.orElseThrow(UserNotFoundException::new);
+	}
+
 	public User getById(Long id) {
 		return userRepository.findByIdAndDeletedAtIsNull(id)
 			.orElseThrow(UserNotFoundException::new);
 	}
 
-	public Page<User> getAllByDeletedAtIsNull(Pageable pageable) {
-		return userRepository.findAllByDeletedAtIsNull(pageable);
+	public Page<UserCache> getAll(Pageable pageable) {
+		return userRepository.findAll(pageable);
 	}
 
 	public Page<User> getUsersByRoadAddressKeyword(String keyword, Pageable pageable) {

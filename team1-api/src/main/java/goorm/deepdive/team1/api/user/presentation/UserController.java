@@ -10,7 +10,7 @@ import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserListResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
-import goorm.deepdive.team1.api.user.presentation.resonse.UserResponse;
+import goorm.deepdive.team1.domain.user.domain.UserCache;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,9 +40,9 @@ public interface UserController {
 		""")
 	@ApiResponse(
 		responseCode = "200",
-		content = @Content(schema = @Schema(implementation = UserResponse.class))
+		content = @Content(schema = @Schema(implementation = UserCache.class))
 	)
-	ResponseEntity<UserResponse> getById(
+	ResponseEntity<UserCache> getUserCacheById(
 		@Parameter(description = "조회할 사용자의 ID", example = "1")
 		@PathVariable Long id
 	);
@@ -54,7 +54,7 @@ public interface UserController {
 		responseCode = "200",
 		content = @Content(schema = @Schema(implementation = UserListResponse.class))
 	)
-	ResponseEntity<PaginatedListResponse> getAllByDeletedAtIsNull(
+	ResponseEntity<PaginatedListResponse> getAll(
 		@Parameter(
 			description = "페이지 인덱스",
 			example = "0",
