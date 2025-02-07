@@ -74,8 +74,8 @@ public class KakaoApiAddressService {
 
         JSONObject data = documents.getJSONObject(0);
 
-        double latitude = data.getDouble("y");  //위도
         double longitude = data.getDouble("x");  //경도
+        double latitude = data.getDouble("y");  //위도
 
         JSONObject address = data.optJSONObject("address");
         JSONObject roadAddress = data.optJSONObject("road_address");
@@ -92,8 +92,8 @@ public class KakaoApiAddressService {
         }
 
         return AddressResponseDto.builder()
-                .y(latitude)
                 .x(longitude)
+                .y(latitude)
                 .regionAddress(region)
                 .roadAddress(roadName)
                 .build();

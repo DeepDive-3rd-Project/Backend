@@ -4,7 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import goorm.deepdive.team1.api.kakao.response.AddressResponseDto;
 import goorm.deepdive.team1.api.kakao.KakaoApiAddressService;
+import goorm.deepdive.team1.common.exception.CustomException;
+import goorm.deepdive.team1.common.exception.KakaoApiExceptionCode;
 import goorm.deepdive.team1.domain.address.exception.AddressNotFoundException;
+import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +46,8 @@ public class UserFacade {
 			AddressResponseDto kakaoAddressDto = kakaoApiAddressService.getGeoDataFromAddress(request.address());
 
 			address = addressCommandService.create(
-					kakaoAddressDto.getY(),
 					kakaoAddressDto.getX(),
+					kakaoAddressDto.getY(),
 					kakaoAddressDto.getRegionAddress(),
 					kakaoAddressDto.getRoadAddress());
 
