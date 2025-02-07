@@ -1,8 +1,9 @@
 package goorm.deepdive.team1.infra.repository.impl;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import goorm.deepdive.team1.domain.user.domain.User;
@@ -26,8 +27,8 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public List<User> findAllByDeletedAtIsNull() {
-		return jpaUserRepository.findAllByDeletedAtIsNull();
+	public Page<User> findAllByDeletedAtIsNull(Pageable pageable) {
+		return jpaUserRepository.findAllByDeletedAtIsNull(pageable);
 	}
 
 	@Override
@@ -41,12 +42,12 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public List<User> findUsersByRoadAddressKeyword(String keyword) {
-		return jpaUserRepository.findUsersByRoadAddressKeyword(keyword);
+	public Page<User> findUsersByRoadAddressKeyword(String keyword, Pageable pageable) {
+		return jpaUserRepository.findUsersByRoadAddressKeyword(keyword, pageable);
 	}
 
 	@Override
-	public List<User> findUsersByRegionAddressKeyword(String keyword) {
-		return jpaUserRepository.findUsersByRegionAddressKeyword(keyword);
+	public Page<User> findUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
+		return jpaUserRepository.findUsersByRegionAddressKeyword(keyword, pageable);
 	}
 }

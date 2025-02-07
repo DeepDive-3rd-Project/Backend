@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserListResponse;
@@ -17,7 +18,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Tag(name = "USER", description = "유저 API")
 public interface UserController {
@@ -52,7 +54,18 @@ public interface UserController {
 		responseCode = "200",
 		content = @Content(schema = @Schema(implementation = UserListResponse.class))
 	)
-	ResponseEntity<UserListResponse> getAllByDeletedAtIsNull();
+	ResponseEntity<PaginatedListResponse> getAllByDeletedAtIsNull(
+		@Parameter(
+			description = "페이지 인덱스",
+			example = "0",
+			required = true
+		) @PositiveOrZero @RequestParam(defaultValue = "0") int page,
+		@Parameter(
+			description = "응답 개수",
+			example = "10",
+			required = true
+		) @Positive @RequestParam(defaultValue = "10") int size
+	);
 
 	@Operation(summary = "유저 수정 API", description = """
 			- Description : 이 API는 유저 데이터를 수정할 수 있습니다.
@@ -80,8 +93,21 @@ public interface UserController {
 			- Description : 이 API는 해당 키워드를 포함한 주소를 가지고 있는 유저 목록을 조회할 수 있습니다.
 		""")
 	@ApiResponse(responseCode = "200")
-	ResponseEntity<UserListResponse> searchUsersByRoadAddressKeyword(
-		@Parameter(description = "검색할 주소 키워드", example = "서울")
+	ResponseEntity<PaginatedListResponse> searchUsersByRoadAddressKeyword(
+		@Parameter(
+			description = "페이지 인덱스",
+			example = "0",
+			required = true
+		) @PositiveOrZero @RequestParam(defaultValue = "0") int page,
+		@Parameter(
+			description = "응답 개수",
+			example = "10",
+			required = true
+		) @Positive @RequestParam(defaultValue = "10") int size,
+		@Parameter(
+			description = "검색할 주소 키워드",
+			example = "서울"
+		)
 		@RequestParam(required = false)
 		String keyword
 	);
@@ -90,8 +116,21 @@ public interface UserController {
 			- Description : 이 API는 해당 키워드를 포함한 주소를 가지고 있는 유저 목록을 조회할 수 있습니다.
 		""")
 	@ApiResponse(responseCode = "200")
-	ResponseEntity<UserListResponse> searchUsersByRegionAddressKeyword(
-		@Parameter(description = "검색할 주소 키워드", example = "충북")
+	ResponseEntity<PaginatedListResponse> searchUsersByRegionAddressKeyword(
+		@Parameter(
+			description = "페이지 인덱스",
+			example = "0",
+			required = true
+		) @PositiveOrZero @RequestParam(defaultValue = "0") int page,
+		@Parameter(
+			description = "응답 개수",
+			example = "10",
+			required = true
+		) @Positive @RequestParam(defaultValue = "10") int size,
+		@Parameter(
+			description = "검색할 주소 키워드",
+			example = "충북"
+		)
 		@RequestParam(required = false)
 		String keyword
 	);

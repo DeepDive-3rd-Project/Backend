@@ -1,7 +1,7 @@
 package goorm.deepdive.team1.domain.user.application;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,15 +21,15 @@ public class UserQueryService {
 			.orElseThrow(UserNotFoundException::new);
 	}
 
-	public List<User> getAllByDeletedAtIsNull() {
-		return userRepository.findAllByDeletedAtIsNull();
+	public Page<User> getAllByDeletedAtIsNull(Pageable pageable) {
+		return userRepository.findAllByDeletedAtIsNull(pageable);
 	}
 
-	public List<User> getUsersByRoadAddressKeyword(String keyword) {
-		return userRepository.findUsersByRoadAddressKeyword(keyword);
+	public Page<User> getUsersByRoadAddressKeyword(String keyword, Pageable pageable) {
+		return userRepository.findUsersByRoadAddressKeyword(keyword, pageable);
 	}
 
-	public List<User> getUsersByRegionAddressKeyword(String keyword) {
-		return userRepository.findUsersByRegionAddressKeyword(keyword);
+	public Page<User> getUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
+		return userRepository.findUsersByRegionAddressKeyword(keyword, pageable);
 	}
 }

@@ -1,13 +1,13 @@
 package goorm.deepdive.team1.api.user.application;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
-import goorm.deepdive.team1.api.user.presentation.resonse.UserListResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserResponse;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
@@ -50,9 +50,9 @@ public class UserFacade {
 		return UserResponse.from(user);
 	}
 
-	public UserListResponse getAllByDeletedAtIsNull() {
-		List<User> userList = userQueryService.getAllByDeletedAtIsNull();
-		return UserListResponse.from(userList);
+	public PaginatedListResponse getAllByDeletedAtIsNull(Pageable pageable) {
+		Page<User> userList = userQueryService.getAllByDeletedAtIsNull(pageable);
+		return PaginatedListResponse.from(userList);
 	}
 
 	public void update(Long id, UserUpdateRequest request) {
@@ -63,13 +63,13 @@ public class UserFacade {
 		userCommandService.delete(id);
 	}
 
-	public UserListResponse searchUsersByRoadAddressKeyword(String keyword) {
-		List<User> userList = userQueryService.getUsersByRoadAddressKeyword(keyword);
-		return UserListResponse.from(userList);
+	public PaginatedListResponse searchUsersByRoadAddressKeyword(String keyword, Pageable pageable) {
+		Page<User> userList = userQueryService.getUsersByRoadAddressKeyword(keyword, pageable);
+		return PaginatedListResponse.from(userList);
 	}
 
-	public UserListResponse searchUsersByRegionAddressKeyword(String keyword) {
-		List<User> userList = userQueryService.getUsersByRegionAddressKeyword(keyword);
-		return UserListResponse.from(userList);
+	public PaginatedListResponse searchUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
+		Page<User> userList = userQueryService.getUsersByRegionAddressKeyword(keyword, pageable);
+		return PaginatedListResponse.from(userList);
 	}
 }

@@ -2,6 +2,7 @@ package goorm.deepdive.team1.api.user.presentation;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.application.UserFacade;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
-import goorm.deepdive.team1.api.user.presentation.resonse.UserListResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +41,13 @@ public class UserControllerImpl implements UserController{
 
 	@Override
 	@GetMapping
-	public ResponseEntity<UserListResponse> getAllByDeletedAtIsNull() {
-		UserListResponse response = userFacade.getAllByDeletedAtIsNull();
+	public ResponseEntity<PaginatedListResponse> getAllByDeletedAtIsNull(
+		int page,
+		int size
+	) {
+		PaginatedListResponse response = userFacade.getAllByDeletedAtIsNull(
+			PageRequest.of(page, size)
+		);
 		return ResponseEntity.ok(response);
 	}
 
@@ -61,15 +67,29 @@ public class UserControllerImpl implements UserController{
 
 	@Override
 	@GetMapping("/search/road")
-	public ResponseEntity<UserListResponse> searchUsersByRoadAddressKeyword(String keyword) {
-		UserListResponse response = userFacade.searchUsersByRoadAddressKeyword(keyword);
+	public ResponseEntity<PaginatedListResponse> searchUsersByRoadAddressKeyword(
+		int page,
+		int size,
+		String keyword
+	) {
+		PaginatedListResponse response = userFacade.searchUsersByRoadAddressKeyword(
+			keyword,
+			PageRequest.of(page, size)
+		);
 		return ResponseEntity.ok(response);
 	}
 
 	@Override
 	@GetMapping("/search/region")
-	public ResponseEntity<UserListResponse> searchUsersByRegionAddressKeyword(String keyword) {
-		UserListResponse response = userFacade.searchUsersByRegionAddressKeyword(keyword);
+	public ResponseEntity<PaginatedListResponse> searchUsersByRegionAddressKeyword(
+		int page,
+		int size,
+		String keyword
+	) {
+		PaginatedListResponse response = userFacade.searchUsersByRegionAddressKeyword(
+			keyword,
+			PageRequest.of(page, size)
+		);
 		return ResponseEntity.ok(response);
 	}
 }
