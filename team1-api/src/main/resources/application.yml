@@ -16,7 +16,7 @@ spring:
       hibernate:
         format_sql: true
         ddl-auto: validate
-        default_batch_fetch_size: 10000
+        default_batch_fetch_size: 1000
         order_inserts: true
         order_updates: true
         jdbc:
