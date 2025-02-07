@@ -16,14 +16,16 @@ spring:
       hibernate:
         format_sql: true
         ddl-auto: validate
-        default_batch_fetch_size: 10000
+        default_batch_fetch_size: 1000
         order_inserts: true
         order_updates: true
         jdbc:
           time_zone: Asia/Seoul
+
 
 #jwt
 jwtsecret: nH3Hj8aTgFz1vB3LgKm2t4zWk9YqL1D6abcdefghiJklmnopQ=
 refreshSecret: awtgvtj8aTgFz1vB3LgKm2t4zWk9YqL1D6abcdefghiJklmdtwwE=
 expirationSeconds: 600
 refreshExpirationSeconds: 604800
+
