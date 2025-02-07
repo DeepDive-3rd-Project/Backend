@@ -1,6 +1,10 @@
 package goorm.deepdive.team1.domain.addresshistory.domain;
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,5 +15,13 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class AddressHistoryCache {
+	@Id
+	private Long id;
 
+	@Indexed
+	private Long userId;
+
+	private String address;
+
+	private LocalDateTime createdAt;
 }
