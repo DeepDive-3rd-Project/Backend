@@ -41,7 +41,12 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public List<User> findUsersByAddressKeyword(String keyword) {
-		return jpaUserRepository.findUsersByAddressKeyword(keyword);
+	public List<User> findUsersByRoadAddressKeyword(String keyword) {
+		return jpaUserRepository.findUsersByRoadAddressKeyword(keyword);
+	}
+
+	@Override
+	public List<User> findUsersByRegionAddressKeyword(String keyword) {
+		return jpaUserRepository.findUsersByRegionAddressKeyword(keyword);
 	}
 }

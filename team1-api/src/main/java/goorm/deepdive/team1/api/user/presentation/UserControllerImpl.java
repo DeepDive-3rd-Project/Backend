@@ -60,9 +60,16 @@ public class UserControllerImpl implements UserController{
 	}
 
 	@Override
-	@GetMapping("/search")
-	public ResponseEntity<UserListResponse> searchUsersByAddressKeyword(String keyword) {
-		UserListResponse response = userFacade.searchUsersByAddressKeyword(keyword);
+	@GetMapping("/search/road")
+	public ResponseEntity<UserListResponse> searchUsersByRoadAddressKeyword(String keyword) {
+		UserListResponse response = userFacade.searchUsersByRoadAddressKeyword(keyword);
+		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@GetMapping("/search/region")
+	public ResponseEntity<UserListResponse> searchUsersByRegionAddressKeyword(String keyword) {
+		UserListResponse response = userFacade.searchUsersByRegionAddressKeyword(keyword);
 		return ResponseEntity.ok(response);
 	}
 }

@@ -25,7 +25,11 @@ public class UserQueryService {
 		return userRepository.findAllByDeletedAtIsNull();
 	}
 
-	public List<User> getUsersByAddressKeyword(String keyword) {
-		return userRepository.findUsersByAddressKeyword(keyword);
+	public List<User> getUsersByRoadAddressKeyword(String keyword) {
+		return userRepository.findUsersByRoadAddressKeyword(keyword);
+	}
+
+	public List<User> getUsersByRegionAddressKeyword(String keyword) {
+		return userRepository.findUsersByRegionAddressKeyword(keyword);
 	}
 }

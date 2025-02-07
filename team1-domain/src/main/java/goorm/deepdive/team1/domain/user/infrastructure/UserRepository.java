@@ -16,5 +16,7 @@ public interface UserRepository {
 
 	boolean existsById(Long id);
 
-	List<User> findUsersByAddressKeyword(String keyword);
+	List<User> findUsersByRoadAddressKeyword(String keyword);
+
+	List<User> findUsersByRegionAddressKeyword(String keyword);
 }

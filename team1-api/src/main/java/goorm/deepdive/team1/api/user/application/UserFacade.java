@@ -63,8 +63,13 @@ public class UserFacade {
 		userCommandService.delete(id);
 	}
 
-	public UserListResponse searchUsersByAddressKeyword(String keyword) {
-		List<User> userList = userQueryService.getUsersByAddressKeyword(keyword);
+	public UserListResponse searchUsersByRoadAddressKeyword(String keyword) {
+		List<User> userList = userQueryService.getUsersByRoadAddressKeyword(keyword);
+		return UserListResponse.from(userList);
+	}
+
+	public UserListResponse searchUsersByRegionAddressKeyword(String keyword) {
+		List<User> userList = userQueryService.getUsersByRegionAddressKeyword(keyword);
 		return UserListResponse.from(userList);
 	}
 }

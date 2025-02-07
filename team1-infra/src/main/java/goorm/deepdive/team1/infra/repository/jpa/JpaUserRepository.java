@@ -26,11 +26,25 @@ public interface JpaUserRepository extends JpaRepository<User, Long> {
                 	FROM AddressHistory subAh
                 	GROUP BY subAh.user.id
             	)
-            	AND (
-                	LOWER(ah.address.regionAddress) LIKE LOWER(CONCAT('%', :keyword, '%')) 
-                	OR LOWER(ah.address.roadAddress) LIKE LOWER(CONCAT('%', :keyword, '%'))
-            	)
+            	AND LOWER(ah.address.roadAddress) LIKE LOWER(CONCAT('%', :keyword, '%'))
         	)
     """)
-	List<User> findUsersByAddressKeyword(@Param("keyword") String keyword);
+	List<User> findUsersByRoadAddressKeyword(@Param("keyword") String keyword);
+
+	@Query("""
+        SELECT u
+        FROM User u
+        WHERE u.deletedAt IS NULL
+         	AND u.id IN (
+            	SELECT ah.user.id
+            	FROM AddressHistory ah
+            	WHERE ah.id IN (
+                	SELECT MAX(subAh.id)
+                	FROM AddressHistory subAh
+                	GROUP BY subAh.user.id
+            	)
+            	AND LOWER(ah.address.regionAddress) LIKE LOWER(CONCAT('%', :keyword, '%'))
+        	)
+    """)
+	List<User> findUsersByRegionAddressKeyword(@Param("keyword") String keyword);
 }

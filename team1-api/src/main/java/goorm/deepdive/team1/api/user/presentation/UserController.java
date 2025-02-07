@@ -76,12 +76,22 @@ public interface UserController {
 		@PathVariable Long id
 	);
 
-	@Operation(summary = "주소 기반 유저 목록 검색 API", description = """
+	@Operation(summary = "도로명 주소 기반 유저 목록 검색 API", description = """
 			- Description : 이 API는 해당 키워드를 포함한 주소를 가지고 있는 유저 목록을 조회할 수 있습니다.
 		""")
 	@ApiResponse(responseCode = "200")
-	ResponseEntity<UserListResponse> searchUsersByAddressKeyword(
-		@Parameter(description = "검색할 주소 키워드", example = "강남")
+	ResponseEntity<UserListResponse> searchUsersByRoadAddressKeyword(
+		@Parameter(description = "검색할 주소 키워드", example = "서울")
+		@RequestParam(required = false)
+		String keyword
+	);
+
+	@Operation(summary = "지번 주소 기반 유저 목록 검색 API", description = """
+			- Description : 이 API는 해당 키워드를 포함한 주소를 가지고 있는 유저 목록을 조회할 수 있습니다.
+		""")
+	@ApiResponse(responseCode = "200")
+	ResponseEntity<UserListResponse> searchUsersByRegionAddressKeyword(
+		@Parameter(description = "검색할 주소 키워드", example = "충북")
 		@RequestParam(required = false)
 		String keyword
 	);
