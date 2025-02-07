@@ -21,3 +21,9 @@ spring:
         order_updates: true
         jdbc:
           time_zone: Asia/Seoul
+
+  jwt:
+    secret: ${JWT_SECRET}
+    refresh-secret: ${JWT_REFRESH_SECRET}
+    expiration-seconds: ${JWT_EXPIRATION_SECONDS:600}
+    refresh-expiration-seconds: ${JWT_REFRESH_EXPIRATION_SECONDS:604800}
