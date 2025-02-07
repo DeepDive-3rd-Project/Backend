@@ -22,8 +22,8 @@ spring:
         jdbc:
           time_zone: Asia/Seoul
 
-#jwt
-jwtsecret: nH3Hj8aTgFz1vB3LgKm2t4zWk9YqL1D6abcdefghiJklmnopQ=
-refreshSecret: awtgvtj8aTgFz1vB3LgKm2t4zWk9YqL1D6abcdefghiJklmdtwwE=
-expirationSeconds: 600
-refreshExpirationSeconds: 604800
+# JWT
+jwtsecret: ${JWT_SECRET}
+refreshSecret: ${JWT_REFRESH_SECRET}
+expirationSeconds: ${JWT_EXPIRATION_SECONDS:600}
+refreshExpirationSeconds: ${JWT_REFRESH_EXPIRATION_SECONDS:604800}
