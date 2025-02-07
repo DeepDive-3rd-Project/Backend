@@ -1,4 +1,4 @@
-package goorm.deepdive.team1.infra.config.repository.impl;
+package goorm.deepdive.team1.infra.repository.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.infrastructure.UserRepository;
-import goorm.deepdive.team1.infra.config.repository.jpa.JpaUserRepository;
+import goorm.deepdive.team1.infra.repository.jpa.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Repository
