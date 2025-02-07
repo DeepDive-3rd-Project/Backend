@@ -26,12 +26,12 @@ public class BatchService {
 		return CompletableFuture.completedFuture(null);
 	}
 
-	public void insertBatch(int batchSize) {
+	public void insertBatch(int total) {
 		String insertUserSql = "INSERT INTO \"user\" (name, email, phone_number, created_at, updated_at) VALUES (?, ?, ?, ?, ?) RETURNING id";
 		String insertAddressSql = "INSERT INTO address (x, y, region_address, road_address, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
 		String insertHistorySql = "INSERT INTO address_history (user_id, address_id, created_at, updated_at) VALUES (?, ?, ?, ?)";
 
-		for (int i = 0; i < batchSize; i++) {
+		for (int i = 0; i < total; i++) {
 			Long userId = jdbcTemplate.queryForObject(insertUserSql, new Object[]{
 				faker.name().fullName(),
 				faker.bothify("??????####@example.com"),
@@ -45,6 +45,7 @@ public class BatchService {
 				faker.address().streetName() + " " +
 				faker.address().streetAddressNumber() + "-" +
 				faker.address().streetAddressNumber();
+
 			String roadAddress = faker.address().state() + " " +
 				faker.address().city() + " " +
 				faker.address().streetAddress() + "길 " +
@@ -64,7 +65,6 @@ public class BatchService {
 				Timestamp.valueOf(LocalDateTime.now())
 			);
 		}
-
-		System.out.println("Batch of " + batchSize + " inserted successfully!");
+		System.out.println(total + " 개 성공!");
 	}
 }
