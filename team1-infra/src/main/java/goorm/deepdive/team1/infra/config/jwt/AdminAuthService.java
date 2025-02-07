@@ -1,8 +1,9 @@
 package goorm.deepdive.team1.infra.config.jwt;
 
+import goorm.deepdive.team1.common.exception.AdminExceptionCode;
+import goorm.deepdive.team1.common.exception.CustomException;
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
-import goorm.deepdive.team1.infra.config.jwt.CustomAdminDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +19,7 @@ public class AdminAuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Admin admin = adminRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Admin not found with email: " + email));
+                .orElseThrow(() -> new CustomException(AdminExceptionCode.ADMIN_NOT_FOUND));
         // Admin 엔티티를 CustomAdminDetails로 감싸서 반환
         return new CustomAdminDetails(admin);
     }

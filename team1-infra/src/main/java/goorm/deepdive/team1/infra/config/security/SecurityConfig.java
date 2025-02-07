@@ -3,6 +3,7 @@ package goorm.deepdive.team1.infra.config.security;
 import java.util.Arrays;
 import java.util.Collections;
 
+import goorm.deepdive.team1.infra.config.jwt.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,9 +28,11 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig implements Team1Config {
 
+	private final JWTUtil jwtUtil;
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http,  AuthenticationManager authenticationManager) throws Exception {
-		LoginFilter loginFilter = new LoginFilter(authenticationManager);
+		LoginFilter loginFilter = new LoginFilter(authenticationManager, jwtUtil);
 		loginFilter.setFilterProcessesUrl("/api/admin/login");
 
 		return http
