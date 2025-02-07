@@ -13,7 +13,7 @@ public interface UserRepository {
 
 	Optional<User> findByIdAndDeletedAtIsNull(Long id);
 
-	Optional<UserCache> getUserCache(Long id);
+	UserCache getUserCache(Long id);
 
 	Page<UserCache> findAll(Pageable pageable);
 

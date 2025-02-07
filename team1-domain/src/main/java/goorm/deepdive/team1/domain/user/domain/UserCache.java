@@ -7,11 +7,13 @@ import org.springframework.data.redis.core.index.Indexed;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @RedisHash(value = "users", timeToLive = 60 * 60 * 24)
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserCache {
 	@Id
 	private Long id;

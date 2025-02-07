@@ -30,13 +30,13 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public Optional<UserCache> getUserCache(Long id) {
+	public UserCache getUserCache(Long id) {
 		return redisUserRepository.findById(id);
 	}
 
 	@Override
 	public Page<UserCache> findAll(Pageable pageable) {
-		return redisUserRepository.findAll(pageable);
+		return redisUserRepository.findAllSorted(pageable);
 	}
 
 	@Override

@@ -18,8 +18,7 @@ public class UserQueryService {
 	private final UserRepository userRepository;
 
 	public UserCache getUserCacheById(Long id) {
-		return userRepository.getUserCache(id)
-			.orElseThrow(UserNotFoundException::new);
+		return userRepository.getUserCache(id);
 	}
 
 	public User getById(Long id) {
