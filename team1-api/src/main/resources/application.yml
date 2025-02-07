@@ -22,8 +22,8 @@ spring:
         jdbc:
           time_zone: Asia/Seoul
 
-# JWT
-jwtsecret: ${JWT_SECRET}
-refreshSecret: ${JWT_REFRESH_SECRET}
-expirationSeconds: ${JWT_EXPIRATION_SECONDS:600}
-refreshExpirationSeconds: ${JWT_REFRESH_EXPIRATION_SECONDS:604800}
+  jwt:
+    secret: ${JWT_SECRET}
+    refresh-secret: ${JWT_REFRESH_SECRET}
+    expiration-seconds: ${JWT_EXPIRATION_SECONDS:600}
+    refresh-expiration-seconds: ${JWT_REFRESH_EXPIRATION_SECONDS:604800}

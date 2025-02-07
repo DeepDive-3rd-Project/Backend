@@ -16,8 +16,8 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     private final long expirationMillis;
 
     public JwtTokenProviderImpl(
-            @Value("${jwtsecret}") String secret,
-            @Value("${expirationSeconds}") long expirationSeconds
+            @Value("${spring.jwt.secret}") String secret,
+            @Value("${spring.jwt.expiration-seconds}") long expirationSeconds
     ) {
         this.signingKey = Keys.hmacShaKeyFor(secret.getBytes());
         this.expirationMillis = expirationSeconds * 1000L;
