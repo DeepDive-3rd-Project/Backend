@@ -64,8 +64,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 .orElse("ROLE_USER");
 
         // JWT 생성
-        String token = jwtUtil.createToken(email, role); // 1시간 유효기간
+        String token = jwtUtil.createAccessToken(String.valueOf(adminId), role); // 1시간 유효기간
+        String refreshToken = jwtUtil.createRefreshToken(String.valueOf(adminId));
         response.addHeader("Authorization", "Bearer " + token);
+        response.addHeader("Refresh-Token", refreshToken);
         // JSON 응답 생성
         try {
             response.setContentType("application/json");
@@ -76,6 +78,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             AdminResponse.put("id", String.valueOf(adminId));
             AdminResponse.put("email", email);
             AdminResponse.put("Accesstoken",token );
+            AdminResponse.put("Refresh-Token",refreshToken );
 
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writeValue(response.getOutputStream(), AdminResponse);
