@@ -69,7 +69,7 @@ public class KakaoApiAddressService {
         JSONArray documents = jsonObject.getJSONArray("documents");
 
         if (documents.isEmpty()) {
-            throw new CustomException(KakaoApiExceptionCode.NOT_FOUND);
+            throw new CustomException(KakaoApiExceptionCode.ADDRESS_NOT_FOUND);
         }
 
         JSONObject data = documents.getJSONObject(0);
@@ -81,14 +81,14 @@ public class KakaoApiAddressService {
         JSONObject roadAddress = data.optJSONObject("road_address");
 
         if (address == null || roadAddress == null) {
-            throw new CustomException(KakaoApiExceptionCode.NOT_FOUND);
+            throw new CustomException(KakaoApiExceptionCode.ADDRESS_NOT_FOUND);
         }
 
         String region = address.optString("address_name", null);
         String roadName = roadAddress.optString("address_name", null);
 
         if (region == null || roadName == null) {
-            throw new CustomException(KakaoApiExceptionCode.NOT_FOUND);
+            throw new CustomException(KakaoApiExceptionCode.ADDRESS_NOT_FOUND);
         }
 
         return AddressResponseDto.builder()
