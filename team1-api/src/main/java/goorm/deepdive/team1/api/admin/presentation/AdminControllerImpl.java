@@ -25,11 +25,11 @@ public class AdminControllerImpl implements AdminController{
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AdminLoginResponse> login(@RequestBody AdminLoginRequest request) {
-        AdminLoginResponse response = adminFacade.login(request);
-        return ResponseEntity.ok(response);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<AdminLoginResponse> login(@RequestBody AdminLoginRequest request) {
+//        AdminLoginResponse response = adminFacade.login(request);
+//        return ResponseEntity.ok(response);
+//    }
 
 
 }
