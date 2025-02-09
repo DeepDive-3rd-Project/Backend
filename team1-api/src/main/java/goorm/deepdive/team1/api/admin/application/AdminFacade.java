@@ -4,9 +4,12 @@ import goorm.deepdive.team1.api.admin.presentation.request.AdminLoginRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminLoginResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
+import goorm.deepdive.team1.common.exception.AdminExceptionCode;
+import goorm.deepdive.team1.common.exception.CustomException;
 import goorm.deepdive.team1.domain.admin.application.AdminCommandService;
 import goorm.deepdive.team1.domain.admin.application.AdminQueryService;
 import goorm.deepdive.team1.domain.admin.domain.Admin;
+import goorm.deepdive.team1.domain.user.exception.UserDomainExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +20,12 @@ public class AdminFacade {
     private final AdminQueryService adminQueryService;
 
     public AdminRegisterResponse register(AdminRegisterRequest request) {
+
+        //이메일 중복 검증
+        if (adminQueryService.existsByEmail(request.email())) {
+            throw new CustomException(AdminExceptionCode.EMAIL_ALREADY_EXISTS);
+        }
+
         Admin admin = adminCommandService.register(request.email(), request.password(), request.role());
         String token = adminCommandService.login(request.email(), request.password());
         return new AdminRegisterResponse(admin.getId(), admin.getEmail(), token);

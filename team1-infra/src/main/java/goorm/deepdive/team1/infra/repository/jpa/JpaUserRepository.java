@@ -48,4 +48,6 @@ public interface JpaUserRepository extends JpaRepository<User, Long> {
         	)
     """)
 	Page<User> findUsersByRegionAddressKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+	boolean existsByEmail(String email);
 }

@@ -18,4 +18,9 @@ public class AdminQueryService {
         return adminRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(AdminExceptionCode.ADMIN_NOT_FOUND));
     }
+
+    public boolean existsByEmail(String email) {
+        return adminRepository.existsByEmail(email);
+    }
+
 }

@@ -2,19 +2,12 @@ package goorm.deepdive.team1.api.user.application;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import goorm.deepdive.team1.api.kakao.response.AddressResponseDto;
+import goorm.deepdive.team1.api.kakao.response.KakaoApiAddressResponse;
 import goorm.deepdive.team1.api.kakao.KakaoApiAddressService;
 import goorm.deepdive.team1.common.exception.CustomException;
-import goorm.deepdive.team1.common.exception.KakaoApiExceptionCode;
-import goorm.deepdive.team1.domain.address.exception.AddressNotFoundException;
-import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
+import goorm.deepdive.team1.domain.user.exception.UserDomainExceptionCode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import goorm.deepdive.team1.api.paging.PaginatedListResponse;
-import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
-import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
-import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
 import goorm.deepdive.team1.domain.address.application.AddressQueryService;
 import goorm.deepdive.team1.domain.address.domain.Address;
@@ -23,8 +16,12 @@ import goorm.deepdive.team1.domain.user.application.UserCommandService;
 import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
-import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
+import goorm.deepdive.team1.api.paging.PaginatedListResponse;
+import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
+import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
+import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import lombok.RequiredArgsConstructor;
+
 
 @Component
 @RequiredArgsConstructor
@@ -38,21 +35,29 @@ public class UserFacade {
 
 	@Transactional
 	public UserPersistResponse create(UserCreateRequest request) {
+
+		if (userQueryService.existsByEmail(request.email())) {
+			throw new CustomException(UserDomainExceptionCode.EMAIL_ALREADY_EXISTS);
+		}
+
 		User user = userCommandService.create(request.name(), request.email(), request.phoneNumber());
-		Address address = null;
-		try {
-			address = addressQueryService.getByAddress(request.address());
-		} catch (AddressNotFoundException e) {
-			AddressResponseDto kakaoAddressDto = kakaoApiAddressService.getGeoDataFromAddress(request.address());
 
+		KakaoApiAddressResponse kakaoApiAddressResponse = kakaoApiAddressService.getGeoDataFromAddress(request.address());
+		Address address = addressQueryService.findByRegionOrRoadAddress(
+				kakaoApiAddressResponse.regionAddress(),
+				kakaoApiAddressResponse.roadAddress()
+		);
+
+		if (address == null) {
 			address = addressCommandService.create(
-					kakaoAddressDto.getX(),
-					kakaoAddressDto.getY(),
-					kakaoAddressDto.getRegionAddress(),
-					kakaoAddressDto.getRoadAddress());
-
+					kakaoApiAddressResponse.x(),
+					kakaoApiAddressResponse.y(),
+					kakaoApiAddressResponse.regionAddress(),
+					kakaoApiAddressResponse.roadAddress()
+			);
 			addressCommandService.save(address);
 		}
+
 		addressHistoryCommandService.create(user, address);
 
 		return UserPersistResponse.from(user);
@@ -83,5 +88,6 @@ public class UserFacade {
 	public PaginatedListResponse searchUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
 		Page<User> userList = userQueryService.getUsersByRegionAddressKeyword(keyword, pageable);
 		return PaginatedListResponse.from(userList);
+
 	}
 }

@@ -1,5 +1,7 @@
 package goorm.deepdive.team1.domain.user.application;
 
+import goorm.deepdive.team1.common.exception.CustomException;
+import goorm.deepdive.team1.domain.user.exception.UserDomainExceptionCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +22,13 @@ public class UserCommandService {
 	}
 
 	public void update(Long id, String name, String email, String phoneNumber) {
+
 		User user = getUser(id);
+
+		if (!user.getEmail().equals(email) && userRepository.existsByEmail(email)) {
+			throw new CustomException(UserDomainExceptionCode.EMAIL_ALREADY_EXISTS);
+		}
+
 		user.updateName(name);
 		user.updateEmail(email);
 		user.updatePhoneNumber(phoneNumber);

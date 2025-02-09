@@ -58,4 +58,9 @@ public class UserRepositoryImpl implements UserRepository {
 	public Page<User> findUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
 		return jpaUserRepository.findUsersByRegionAddressKeyword(keyword, pageable);
 	}
+
+	@Override
+	public boolean existsByEmail(String email) {
+		return jpaUserRepository.existsByEmail(email);
+	}
 }
