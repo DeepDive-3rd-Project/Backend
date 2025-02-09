@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import goorm.deepdive.team1.infra.config.jwt.JWTUtil;
+import goorm.deepdive.team1.infra.config.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +34,6 @@ public class SecurityConfig implements Team1Config {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http,  AuthenticationManager authenticationManager) throws Exception {
 		LoginFilter loginFilter = new LoginFilter(authenticationManager, jwtUtil);
-		loginFilter.setFilterProcessesUrl("/api/admin/login");
 
 		return http
 			.cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
@@ -52,6 +52,7 @@ public class SecurityConfig implements Team1Config {
 				.anyRequest().permitAll()
 			)
 				.addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
 				.build();
 	}
 	private static final String[] SWAGGER_PATTERNS = {

@@ -77,7 +77,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             AdminResponse.put("message", "Login successful");
             AdminResponse.put("id", String.valueOf(adminId));
             AdminResponse.put("email", email);
-            AdminResponse.put("Accesstoken",token );
+            AdminResponse.put("Accesstoken","Bearer " + token);
             AdminResponse.put("Refresh-Token",refreshToken );
 
             ObjectMapper objectMapper = new ObjectMapper();

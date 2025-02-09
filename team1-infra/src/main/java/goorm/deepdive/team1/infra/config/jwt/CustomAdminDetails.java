@@ -14,7 +14,6 @@ public class CustomAdminDetails implements UserDetails {
     public CustomAdminDetails(Admin admin) {
         this.admin = admin;
     }
-
     public Admin getAdmin() {
         return admin;
     }
@@ -37,10 +36,14 @@ public class CustomAdminDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(() -> admin.getRole().name()); // Enum 객체 자체를 반환하는 것이 아니라, 문자열(String)로 변환하려면 .name()을 호출해야 함.
+        if (admin.getRole() != null) {
+            authorities.add(() -> admin.getRole().name());
+        } else {
+            // 기본 권한 설정 또는 로그 남기기
+            authorities.add(() -> "ROLE_USER");
+        }
         return authorities;
     }
-
     @Override
     public boolean isEnabled() {
         // 관리자의 활성 상태를 항상 true로 설정 (추후 필요시 조건 추가 가능)

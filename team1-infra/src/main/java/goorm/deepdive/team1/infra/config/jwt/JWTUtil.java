@@ -58,6 +58,14 @@ public class JWTUtil {
                 .compact();
     }
 
+    public String getAdminId(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Access_secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("AdminId", String.class);
+    }
 
     public String getEmail(String token) {
         return Jwts.parserBuilder()
