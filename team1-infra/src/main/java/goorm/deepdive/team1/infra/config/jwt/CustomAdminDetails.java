@@ -33,10 +33,11 @@ public class CustomAdminDetails implements UserDetails {
         return admin.getPassword();
     }
 
+    // getAuthorities() 메서드를 구현하면, 별도의 getRole() 메서드를 만들지 않아도 역할(Role) 정보를 사용할 수 있음.
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(() -> admin.getRole().name()); // 람다식을 사용하여 GrantedAuthority 구현
+        authorities.add(() -> admin.getRole().name()); // Enum 객체 자체를 반환하는 것이 아니라, 문자열(String)로 변환하려면 .name()을 호출해야 함.
         return authorities;
     }
 

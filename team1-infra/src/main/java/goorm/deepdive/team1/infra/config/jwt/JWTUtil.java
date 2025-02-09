@@ -11,6 +11,7 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+// 토큰 생성과 검증 로직을 담은 클래스
 @Component
 public class JWTUtil {
 
@@ -19,12 +20,17 @@ public class JWTUtil {
     @Value("${spring.jwt.secret}")
     private String secret;
 
+    @Value("${spring.jwt.expiration-seconds}")
+    private long expirationSeconds;
+
+
     @PostConstruct
     public void init() {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createToken(String email, String role, Long expirationMs) {
+    public String createToken(String email, String role) {
+        long expirationMs = expirationSeconds * 1000; // 만료시간 (ex expirationSeconds가 600인경우 => 10분)
         return Jwts.builder()
                 .claim("email", email)
                 .claim("role", role)
