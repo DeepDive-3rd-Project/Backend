@@ -1,18 +1,18 @@
 package goorm.deepdive.team1.common.exception;
 
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 import org.springframework.http.HttpStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import static org.springframework.http.HttpStatus.*;
+
 @Getter
 @AllArgsConstructor
 public enum AdminExceptionCode implements ExceptionCode {
 	NOT_ADMIN(FORBIDDEN, "관리자 전용 API입니다."),
-	ADMIN_NOT_FOUND(NOT_FOUND, "해당 이메일의 관리자를 찾을 수 없습니다.");
+	ADMIN_NOT_FOUND(NOT_FOUND, "해당 이메일의 관리자를 찾을 수 없습니다."),
+	EMAIL_ALREADY_EXISTS(CONFLICT, "이미 존재하는 이메일입니다.");
 	;
 
 	private final HttpStatus status;

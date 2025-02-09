@@ -13,7 +13,7 @@ public enum KakaoApiExceptionCode implements ExceptionCode {
     RATE_LIMIT_EXCEEDED(TOO_MANY_REQUESTS, "Kakao API 요청 제한을 초과했습니다."),
     SERVICE_DISABLED(FORBIDDEN, "Kakao API 서비스가 비활성화되었습니다."),
     API_CALL_FAILED(INTERNAL_SERVER_ERROR,  "Kakao API 호출 중 문제가 발생했습니다."),
-    NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 주소를 찾을 수 없습니다.");
+    ADDRESS_NOT_FOUND(NOT_FOUND, "요청한 주소를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;
