@@ -2,6 +2,7 @@ package goorm.deepdive.team1.infra.config.security;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import goorm.deepdive.team1.infra.config.jwt.CookieUtil;
 import goorm.deepdive.team1.infra.config.jwt.CustomAdminDetails;
 import goorm.deepdive.team1.infra.config.jwt.JWTUtil;
 import jakarta.servlet.FilterChain;
@@ -24,6 +25,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+
+import static goorm.deepdive.team1.infra.config.jwt.CookieUtil.createCookie;
 
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -67,7 +70,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = jwtUtil.createAccessToken(String.valueOf(adminId), role); // 1시간 유효기간
         String refreshToken = jwtUtil.createRefreshToken(String.valueOf(adminId));
         response.addHeader("Authorization", "Bearer " + token);
-        response.addHeader("Refresh-Token", refreshToken);
+        response.addCookie(CookieUtil.createCookie("Refresh-Token", refreshToken, 3600));
+//        response.addHeader("Refresh-Token", refreshToken);
         // JSON 응답 생성
         try {
             response.setContentType("application/json");
@@ -78,7 +82,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             AdminResponse.put("id", String.valueOf(adminId));
             AdminResponse.put("email", email);
             AdminResponse.put("Accesstoken","Bearer " + token);
-            AdminResponse.put("Refresh-Token",refreshToken );
 
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.writeValue(response.getOutputStream(), AdminResponse);
