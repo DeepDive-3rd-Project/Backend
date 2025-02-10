@@ -20,7 +20,6 @@ public class AdminControllerImpl implements AdminController{
 
     @PostMapping("/register")
     public ResponseEntity<AdminRegisterResponse> register(@RequestBody AdminRegisterRequest request) {
-        System.out.println("Request received: " + request);
         AdminRegisterResponse response = adminFacade.register(request);
         return ResponseEntity.ok(response);
     }

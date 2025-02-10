@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AdminFacade {
     private final AdminCommandService adminCommandService;
-    private final AdminQueryService adminQueryService;
+//    private final AdminQueryService adminQueryService;
 
     public AdminRegisterResponse register(AdminRegisterRequest request) {
         Admin admin = adminCommandService.register(request.email(), request.password(), request.role());
@@ -22,9 +22,9 @@ public class AdminFacade {
         return new AdminRegisterResponse(admin.getId(), admin.getEmail(), token);
     }
 
-    public AdminLoginResponse login(AdminLoginRequest request) {
-        Admin admin = adminQueryService.findByEmail(request.email());
-        String token = adminCommandService.login(request.email(), request.password());
-        return new AdminLoginResponse(admin.getId(), admin.getEmail(), token);
-    }
+//    public AdminLoginResponse login(AdminLoginRequest request) {
+//        Admin admin = adminQueryService.findByEmail(request.email());
+//        String token = adminCommandService.login(request.email(), request.password());
+//        return new AdminLoginResponse(admin.getId(), admin.getEmail(), token);
+//    }
 }

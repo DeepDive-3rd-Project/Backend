@@ -48,8 +48,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password);
             return authenticationManager.authenticate(authToken);
-        } catch (Exception e) {
-            throw new RuntimeException("로그인 요청 파싱 오류", e);
+        } catch (IOException e) {
+            throw new RuntimeException("로그인 요청 파싱 오류", e); // 이 부분은 파싱 오류일 때만 예외 처리
         }
     }
 
@@ -87,25 +87,24 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 
-//    @Override
-//    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException{
-//        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //401 에러
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//
-//
-//        Map<String, Object> errorResponse = new HashMap<>();
-//        errorResponse.put("status", HttpStatus.UNAUTHORIZED.value());
-//        errorResponse.put("message", "ID 또는 비밀번호가 일치하지 않습니다.");
-//        errorResponse.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        try (PrintWriter writer = response.getWriter()) {
-//            writer.write(mapper.writeValueAsString(errorResponse));
-//            writer.flush();
-//            response.flushBuffer();
-//        }
-//    }
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException{
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); //401 에러
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("status", HttpStatus.UNAUTHORIZED.value());
+        errorResponse.put("message", "ID 또는 비밀번호가 일치하지 않습니다.");
+        errorResponse.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+
+        ObjectMapper mapper = new ObjectMapper();
+        try (PrintWriter writer = response.getWriter()) {
+            writer.write(mapper.writeValueAsString(errorResponse));
+            writer.flush();
+            response.flushBuffer();
+        }
+    }
 }
 
 
