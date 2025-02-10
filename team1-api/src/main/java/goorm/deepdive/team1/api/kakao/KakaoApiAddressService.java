@@ -12,17 +12,15 @@ import goorm.deepdive.team1.common.exception.CustomException;
 import goorm.deepdive.team1.common.exception.KakaoApiException.*;
 import goorm.deepdive.team1.api.kakao.response.KakaoApiAddressResponse;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class KakaoApiAddressService {
 
     private final ObjectMapper objectMapper;
-
-    public KakaoApiAddressService(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
 
     @Value("${kakao.api.key}")
     private String restApiKey;
