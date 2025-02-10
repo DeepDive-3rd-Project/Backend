@@ -3,7 +3,7 @@ package goorm.deepdive.team1.domain.address.domain;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import goorm.deepdive.team1.domain.BaseTimeEntity;
+import goorm.deepdive.team1.domain.common.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

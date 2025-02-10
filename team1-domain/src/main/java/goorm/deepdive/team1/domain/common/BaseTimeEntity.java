@@ -1,4 +1,4 @@
-package goorm.deepdive.team1.domain;
+package goorm.deepdive.team1.domain.common;
 
 import java.time.LocalDateTime;
 
