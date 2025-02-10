@@ -30,6 +30,10 @@ public class ElasticUserRepository {
 		return search("regionAddress", regionAddress, pageable);
 	}
 
+	public Page<UserDocument> searchByName(String name, Pageable pageable){
+		return search("name", name, pageable);
+	}
+
 	private Page<UserDocument> search(String field, String keyword, Pageable pageable){
 		Query query = Query.of(q -> q
 			.match(m -> m

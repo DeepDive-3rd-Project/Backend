@@ -61,4 +61,9 @@ public class UserRepositoryImpl implements UserRepository {
 	public Page<UserDocument> searchByRegionAddress(String keyword, Pageable pageable) {
 		return elasticUserRepository.searchByRegionAddress(keyword, pageable);
 	}
+
+	@Override
+	public Page<UserDocument> searchByName(String name, Pageable pageable) {
+		return elasticUserRepository.searchByName(name, pageable);
+	}
 }

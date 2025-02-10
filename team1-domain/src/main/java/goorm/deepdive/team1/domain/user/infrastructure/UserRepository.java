@@ -25,4 +25,6 @@ public interface UserRepository {
 	Page<UserDocument> searchByRoadAddress(String keyword, Pageable pageable);
 
 	Page<UserDocument> searchByRegionAddress(String keyword, Pageable pageable);
+
+	Page<UserDocument> searchByName(String name, Pageable pageable);
 }

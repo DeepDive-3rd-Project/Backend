@@ -72,4 +72,9 @@ public class UserFacade {
 		Page<UserDocument> userList = userQueryService.getUsersByRegionAddressKeyword(keyword, pageable);
 		return PaginatedListResponse.from(userList);
 	}
+
+	public PaginatedListResponse searchUsersByName(String name, Pageable pageable) {
+		Page<UserDocument> userList = userQueryService.getUsersByName(name, pageable);
+		return PaginatedListResponse.from(userList);
+	}
 }

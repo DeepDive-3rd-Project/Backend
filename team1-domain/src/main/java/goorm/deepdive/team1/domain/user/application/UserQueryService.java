@@ -38,4 +38,8 @@ public class UserQueryService {
 	public Page<UserDocument> getUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
 		return userRepository.searchByRegionAddress(keyword, pageable);
 	}
+
+	public Page<UserDocument> getUsersByName(String name, Pageable pageable) {
+		return userRepository.searchByName(name, pageable);
+	}
 }
