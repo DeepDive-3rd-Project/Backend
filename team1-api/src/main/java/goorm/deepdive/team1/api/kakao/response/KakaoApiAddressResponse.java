@@ -26,7 +26,7 @@ public record KakaoApiAddressResponse(
     @NotBlank
     String roadAddress
 ) {
-        public static KakaoApiAddressResponse from(double x, double y,String regionAddress, String roadAddress) {
+        public static KakaoApiAddressResponse of(double x, double y, String regionAddress, String roadAddress) {
             return KakaoApiAddressResponse.builder()
                     .x(x)
                     .y(y)

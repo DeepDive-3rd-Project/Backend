@@ -17,7 +17,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class KakaoApiAddressService {
-    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private final ObjectMapper objectMapper;
+
+    public KakaoApiAddressService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Value("${kakao.api.key}")
     private String restApiKey;
@@ -50,8 +55,7 @@ public class KakaoApiAddressService {
             } else {
                 throw getKakaoApiException(responseCode);
             }
-        } catch (CustomException e) {
-            throw e;
+
         } catch (Exception e) {
             throw new ApiCallFailedException();
         }
@@ -95,12 +99,7 @@ public class KakaoApiAddressService {
                 throw new AddressNotFoundException();
             }
 
-            return KakaoApiAddressResponse.builder()
-                    .x(longitude)
-                    .y(latitude)
-                    .regionAddress(region)
-                    .roadAddress(roadName)
-                    .build();
+            return KakaoApiAddressResponse.of(longitude,latitude,region,roadName);
         } catch (Exception e) {
             throw new ApiCallFailedException();
         }
