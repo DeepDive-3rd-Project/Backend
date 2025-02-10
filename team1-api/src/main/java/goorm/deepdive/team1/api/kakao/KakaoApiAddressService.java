@@ -9,14 +9,17 @@ import java.net.URL;
 import goorm.deepdive.team1.common.exception.CustomException;
 import goorm.deepdive.team1.common.exception.KakaoApiExceptionCode;
 import goorm.deepdive.team1.api.kakao.response.AddressResponseDto;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class KakaoApiAddressService {
 
-    private final String REST_API_KEY = "9cd742e01ee31be1eb4ac4d5fb33500f";
+    @Value("${kakao.api.key}")
+    private String restApiKey;
 
     public AddressResponseDto getGeoDataFromAddress(String address) {
         try {
@@ -27,7 +30,7 @@ public class KakaoApiAddressService {
             URL url = new URL(requestUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setRequestProperty("Authorization", "KakaoAK " + REST_API_KEY);
+            conn.setRequestProperty("Authorization", "KakaoAK " + restApiKey);
             conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
 
             int responseCode = conn.getResponseCode();
