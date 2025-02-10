@@ -1,5 +1,6 @@
 package goorm.deepdive.team1.infra.config.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.domain.Role;
 import jakarta.servlet.FilterChain;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -25,7 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String ACCESS_TOKEN_HEADER = "Authorization";
-    public static final String REFRESH_TOKEN_HEADER = "Refresh-Token";
+//    public static final String REFRESH_TOKEN_HEADER = "Refresh-Token";
 
     private final JWTUtil jwtUtil;
 //    private final RedisTemplate<String, String> redisTemplate;
@@ -37,36 +39,22 @@ public class JwtFilter extends OncePerRequestFilter {
         // 요청에서 액세스 토큰 가져오기
         String accessToken = extractToken(request, ACCESS_TOKEN_HEADER);
 
-        // 액세스 토큰이 없거나 만료되었을 경우
+        // 액세스 토큰이 없거나 만료된 경우 처리
         if (accessToken == null || jwtUtil.isExpired(accessToken)) {
-            log.warn("액세스 토큰이 만료되었거나 없습니다. 리프레시 토큰 확인 진행");
+            log.warn("액세스 토큰이 만료되었거나 없습니다.");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
 
-            // 리프레시 토큰 가져오기
-            String refreshToken = extractToken(request, REFRESH_TOKEN_HEADER);
+            Map<String, Object> errorResponse = Map.of(
+                    "status", 401,
+                    "error", "Unauthorized",
+                    "message", "엑세스 토큰이 없거나 만료되었습니다.",
+                    "path", request.getRequestURI()
+            );
 
-            // 리프레시 토큰이 없거나 만료되었으면 인증 불가
-            if (refreshToken == null || jwtUtil.isRefreshTokenExpired(refreshToken)) {
-                log.warn("리프레시 토큰이 만료되었거나 없습니다.");
-                response.sendError(HttpStatus.UNAUTHORIZED.value(), "인증이 필요합니다.");
-                return;
-            }
-//
-//            // 블랙리스트(로그아웃 처리된 토큰) 확인
-//            if (isTokenBlacklisted(refreshToken)) {
-//                log.warn("블랙리스트에 등록된 리프레시 토큰입니다.");
-//                response.sendError(HttpStatus.UNAUTHORIZED.value(), "블랙리스트에 등록된 토큰입니다.");
-//                return;
-//            }
-
-            // 리프레시 토큰이 유효하면 새로운 액세스 토큰 발급
-            String adminId = jwtUtil.getAdminId(refreshToken);
-            String role = jwtUtil.getRole(refreshToken);
-            String newAccessToken = jwtUtil.createAccessToken(adminId, role);
-            response.setHeader(ACCESS_TOKEN_HEADER, BEARER_PREFIX + newAccessToken);
-
-            // 인증 객체 설정
-            setAuthentication(adminId, role);
-            filterChain.doFilter(request, response);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.writeValue(response.getWriter(), errorResponse);
             return;
         }
 
@@ -80,8 +68,10 @@ public class JwtFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         return uri.contains("login") || uri.contains("swagger-ui") || uri.contains("swagger-resources")
                 || uri.contains("v3/api-docs") || uri.contains("webjars")
+                || uri.contains("/reissue")
                 || (uri.contains("admin") && request.getMethod().equals("POST"))
                 || uri.contains("register"); // 회원가입 엔드포인트 추가
+
     }
 
     /**
@@ -95,22 +85,16 @@ public class JwtFilter extends OncePerRequestFilter {
         return null;
     }
 
-    /**
-     * 블랙리스트(로그아웃된) 토큰인지 확인
-     */
+//    블랙리스트(로그아웃된) 토큰인지 확인
 //    private boolean isTokenBlacklisted(String token) {
 //        return Boolean.TRUE.equals(redisTemplate.hasKey("admin:blacklist:refreshToken:" + token));
 //    }
 
-    /**
-     * 스프링 시큐리티 인증 객체 설정
-     */
+//    스프링 시큐리티 인증 객체 설정
     // Spring Security의 인증(Authentication) 객체를 생성하여 현재 요청의 SecurityContextHolder에 저장
     private void setAuthentication(String adminId, String role) {
         Admin adminEntity = Admin.builder()
                 .id(Long.valueOf(adminId)) // adminId를 Long으로 변환하여 설정
-                .email("admin" + adminId + "@example.com") // 예시 이메일 생성
-                .password("tempPassword") // 임시 비밀번호 설정
                 .role(Role.valueOf(role)) // Role Enum 설정
                 .build();
         CustomAdminDetails adminDetails = new CustomAdminDetails(adminEntity);
