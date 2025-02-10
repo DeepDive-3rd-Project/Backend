@@ -1,8 +1,7 @@
 package goorm.deepdive.team1.common.exception;
 
-import static goorm.deepdive.team1.common.exception.AdminExceptionCode.NOT_ADMIN;
-import static goorm.deepdive.team1.common.exception.GlobalExceptionCode.INVALID_INPUT;
-import static goorm.deepdive.team1.common.exception.GlobalExceptionCode.SERVER_ERROR;
+
+import static goorm.deepdive.team1.common.exception.GlobalExceptionCode.*;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<ExceptionResponse> handleAccessDeniedException() {
-		ExceptionResponse response = ExceptionResponse.from(NOT_ADMIN);
+		ExceptionResponse response = ExceptionResponse.from(FORBIDDEN_ACCESS);
 		return ResponseEntity.status(FORBIDDEN).body(response);
 	}
 

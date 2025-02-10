@@ -22,4 +22,9 @@ public class AdminRepositoryImpl implements AdminRepository {
     public Optional<Admin> findByEmail(String email) {
         return jpaAdminRepository.findByEmail(email);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return jpaAdminRepository.existsByEmail(email);
+    }
 }

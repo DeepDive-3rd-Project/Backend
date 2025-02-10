@@ -37,4 +37,8 @@ public class UserQueryService {
 	public Page<User> getUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
 		return userRepository.findUsersByRegionAddressKeyword(keyword, pageable);
 	}
+
+	public boolean existsByEmail(String email) {
+		return userRepository.existsByEmail(email);
+	}
 }

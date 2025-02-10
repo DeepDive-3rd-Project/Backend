@@ -24,4 +24,7 @@ public interface UserRepository {
 	Page<User> findUsersByRoadAddressKeyword(String keyword, Pageable pageable);
 
 	Page<User> findUsersByRegionAddressKeyword(String keyword, Pageable pageable);
+
+	boolean existsByEmail(String email);
+
 }
