@@ -3,6 +3,7 @@ package goorm.deepdive.team1.infra.config.security;
 import java.util.Arrays;
 import java.util.Collections;
 
+import goorm.deepdive.team1.common.exception.CustomAccessDeniedHandler;
 import goorm.deepdive.team1.infra.config.jwt.JWTUtil;
 import goorm.deepdive.team1.infra.config.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig implements Team1Config {
 
 	private final JWTUtil jwtUtil;
+	private final CustomAccessDeniedHandler accessDeniedHandler;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http,  AuthenticationManager authenticationManager) throws Exception {
@@ -51,6 +53,10 @@ public class SecurityConfig implements Team1Config {
 				.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
 				.anyRequest().permitAll()
 			)
+//				ex) 권한 제한 예시 .requestMatchers("/api/users/**").hasAuthority("SUPER")
+				.exceptionHandling(exception -> exception
+						.accessDeniedHandler(accessDeniedHandler) // AccessDeniedHandler 등록
+				)
 				.addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class)
 				.build();
