@@ -7,8 +7,8 @@ import java.net.URLEncoder;
 import java.net.URL;
 
 import goorm.deepdive.team1.common.exception.CustomException;
-import goorm.deepdive.team1.common.exception.KakaoApiExceptionCode;
-import goorm.deepdive.team1.api.kakao.response.AddressResponseDto;
+import goorm.deepdive.team1.common.exception.KakaoApiException.*;
+import goorm.deepdive.team1.api.kakao.response.KakaoApiAddressResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,7 +21,7 @@ public class KakaoApiAddressService {
     @Value("${kakao.api.key}")
     private String restApiKey;
 
-    public AddressResponseDto getGeoDataFromAddress(String address) {
+    public KakaoApiAddressResponse getGeoDataFromAddress(String address) {
         try {
             String apiUrl = "https://dapi.kakao.com/v2/local/search/address.json";
             String encodedAddress = URLEncoder.encode(address, "UTF-8");
@@ -53,26 +53,26 @@ public class KakaoApiAddressService {
                 throw e;
 
         } catch (Exception e) {
-            throw new CustomException(KakaoApiExceptionCode.API_CALL_FAILED);
+            throw new ApiCallFailedException();
         }
     }
 
     private CustomException getKakaoApiException(int responseCode) {
         return switch (responseCode) {
-            case 400 -> new CustomException(KakaoApiExceptionCode.INVALID_REQUEST);
-            case 403 -> new CustomException(KakaoApiExceptionCode.UNAUTHORIZED);
-            case 429 -> new CustomException(KakaoApiExceptionCode.RATE_LIMIT_EXCEEDED);
-            case 503 -> new CustomException(KakaoApiExceptionCode.SERVICE_DISABLED);
-            default -> new CustomException(KakaoApiExceptionCode.API_CALL_FAILED);
+            case 400 -> new InvalidRequestException();
+            case 403 -> new UnauthorizedException();
+            case 429 -> new RateLimitExceededException();
+            case 503 -> new ServiceDisabledException();
+            default -> new ApiCallFailedException();
         };
     }
 
-    private AddressResponseDto parseJsonResponse(String jsonResponse) {
+    private KakaoApiAddressResponse parseJsonResponse(String jsonResponse) {
         JSONObject jsonObject = new JSONObject(jsonResponse);
         JSONArray documents = jsonObject.getJSONArray("documents");
 
         if (documents.isEmpty()) {
-            throw new CustomException(KakaoApiExceptionCode.ADDRESS_NOT_FOUND);
+            throw new AddressNotFoundException();
         }
 
         JSONObject data = documents.getJSONObject(0);
@@ -84,17 +84,17 @@ public class KakaoApiAddressService {
         JSONObject roadAddress = data.optJSONObject("road_address");
 
         if (address == null || roadAddress == null) {
-            throw new CustomException(KakaoApiExceptionCode.ADDRESS_NOT_FOUND);
+            throw new AddressNotFoundException();
         }
 
         String region = address.optString("address_name", null);
         String roadName = roadAddress.optString("address_name", null);
 
         if (region == null || roadName == null) {
-            throw new CustomException(KakaoApiExceptionCode.ADDRESS_NOT_FOUND);
+            throw new AddressNotFoundException();
         }
 
-        return AddressResponseDto.builder()
+        return KakaoApiAddressResponse.builder()
                 .x(longitude)
                 .y(latitude)
                 .regionAddress(region)

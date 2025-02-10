@@ -1,6 +1,8 @@
-package goorm.deepdive.team1.common.exception;
+package goorm.deepdive.team1.common.exception.KakaoApiException;
 
 import static org.springframework.http.HttpStatus.*;
+
+import goorm.deepdive.team1.common.exception.ExceptionCode;
 import org.springframework.http.HttpStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

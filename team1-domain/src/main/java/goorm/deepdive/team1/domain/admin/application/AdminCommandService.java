@@ -1,10 +1,11 @@
 package goorm.deepdive.team1.domain.admin.application;
 
 
-import goorm.deepdive.team1.common.exception.AdminExceptionCode;
-import goorm.deepdive.team1.common.exception.CustomException;
+
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.domain.Role;
+import goorm.deepdive.team1.domain.admin.exception.AdminNotFoundException;
+import goorm.deepdive.team1.domain.admin.exception.PasswordMismatchException;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
 import goorm.deepdive.team1.domain.admin.security.JwtTokenProvider;
 import goorm.deepdive.team1.domain.admin.security.PasswordEncryptor;
@@ -32,10 +33,10 @@ public class AdminCommandService {
 
     public String login(String email, String password) {
         Admin admin = adminRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(AdminExceptionCode.ADMIN_NOT_FOUND));
+                .orElseThrow(AdminNotFoundException::new);
 
         if (!passwordEncryptor.matches(password, admin.getPassword())) {
-            throw new CustomException(AdminExceptionCode.NOT_ADMIN);
+            throw new PasswordMismatchException();
         }
 
         return jwtTokenProvider.generateToken(admin.getEmail(), admin.getRole().name());

@@ -2,6 +2,7 @@ package goorm.deepdive.team1.domain.user.application;
 
 import goorm.deepdive.team1.common.exception.CustomException;
 import goorm.deepdive.team1.domain.user.exception.UserDomainExceptionCode;
+import goorm.deepdive.team1.domain.user.exception.UserEmailAlreadyExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,7 @@ public class UserCommandService {
 		User user = getUser(id);
 
 		if (!user.getEmail().equals(email) && userRepository.existsByEmail(email)) {
-			throw new CustomException(UserDomainExceptionCode.EMAIL_ALREADY_EXISTS);
+			throw new UserEmailAlreadyExistsException();
 		}
 
 		user.updateName(name);
