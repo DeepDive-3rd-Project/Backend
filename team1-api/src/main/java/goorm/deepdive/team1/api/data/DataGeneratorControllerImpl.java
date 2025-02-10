@@ -1,5 +1,7 @@
 package goorm.deepdive.team1.api.data;
 
+import java.io.IOException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +19,7 @@ public class DataGeneratorControllerImpl implements DataGeneratorController {
 
 	@Override
 	@PostMapping
-	public ResponseEntity<DataGeneratorResponse> create(int totalRecords) {
+	public ResponseEntity<DataGeneratorResponse> create(int totalRecords) throws IOException {
 		Long duration = dataGenerator.generateData(totalRecords);
 		DataGeneratorResponse response = DataGeneratorResponse.of(totalRecords * 3, duration);
 		return ResponseEntity.ok(response);
