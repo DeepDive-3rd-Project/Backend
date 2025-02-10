@@ -4,8 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import goorm.deepdive.team1.api.kakao.response.KakaoApiAddressResponse;
 import goorm.deepdive.team1.api.kakao.KakaoApiAddressService;
-import goorm.deepdive.team1.common.exception.CustomException;
-import goorm.deepdive.team1.domain.user.exception.UserDomainExceptionCode;
+import goorm.deepdive.team1.domain.user.exception.UserEmailAlreadyExistsException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
@@ -37,7 +36,7 @@ public class UserFacade {
 	public UserPersistResponse create(UserCreateRequest request) {
 
 		if (userQueryService.existsByEmail(request.email())) {
-			throw new CustomException(UserDomainExceptionCode.EMAIL_ALREADY_EXISTS);
+			throw new UserEmailAlreadyExistsException();
 		}
 
 		User user = userCommandService.create(request.name(), request.email(), request.phoneNumber());
