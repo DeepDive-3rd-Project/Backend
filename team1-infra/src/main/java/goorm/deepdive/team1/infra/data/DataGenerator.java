@@ -1,6 +1,5 @@
 package goorm.deepdive.team1.infra.data;
 
-import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 
@@ -14,20 +13,14 @@ public class DataGenerator {
 	private final BatchService batchService;
 	private static final int BATCH_SIZE = 1000;
 
-	public Long generateData(int totalRecords) throws IOException {
+	public Long generateData(int totalRecords) {
 		long startTime = System.currentTimeMillis();
 
 		int totalBatches = totalRecords / BATCH_SIZE;
 		int remainingRecords = totalRecords % BATCH_SIZE;
 
 		CompletableFuture<?>[] futures = IntStream.range(0, totalBatches)
-			.mapToObj(i -> {
-				try {
-					return batchService.insertBatchAsync(BATCH_SIZE);
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			})
+			.mapToObj(i -> batchService.insertBatchAsync(BATCH_SIZE))
 			.toArray(CompletableFuture[]::new);
 
 		CompletableFuture.allOf(futures).join();

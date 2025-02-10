@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
+import goorm.deepdive.team1.domain.user.domain.UserDocument;
 import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
 import goorm.deepdive.team1.domain.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +31,11 @@ public class UserQueryService {
 		return userRepository.findAll(pageable);
 	}
 
-	public Page<User> getUsersByRoadAddressKeyword(String keyword, Pageable pageable) {
-		return userRepository.findUsersByRoadAddressKeyword(keyword, pageable);
+	public Page<UserDocument> getUsersByRoadAddressKeyword(String keyword, Pageable pageable) {
+		return userRepository.searchByRoadAddress(keyword, pageable);
 	}
 
-	public Page<User> getUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
-		return userRepository.findUsersByRegionAddressKeyword(keyword, pageable);
+	public Page<UserDocument> getUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
+		return userRepository.searchByRegionAddress(keyword, pageable);
 	}
 }
