@@ -66,4 +66,9 @@ public class UserRepositoryImpl implements UserRepository {
 	public Page<UserDocument> searchByName(String name, Pageable pageable) {
 		return elasticUserRepository.searchByName(name, pageable);
 	}
+
+	@Override
+	public boolean existsByEmail(String email) {
+		return jpaUserRepository.existsByEmail(email);
+	}
 }

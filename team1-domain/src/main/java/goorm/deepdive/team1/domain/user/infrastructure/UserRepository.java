@@ -23,8 +23,10 @@ public interface UserRepository {
 	boolean existsById(Long id);
 
 	Page<UserDocument> searchByRoadAddress(String keyword, Pageable pageable);
-
+  
 	Page<UserDocument> searchByRegionAddress(String keyword, Pageable pageable);
 
 	Page<UserDocument> searchByName(String name, Pageable pageable);
+
+	boolean existsByEmail(String email);
 }

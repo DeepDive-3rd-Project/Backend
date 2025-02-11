@@ -42,4 +42,8 @@ public class UserQueryService {
 	public Page<UserDocument> getUsersByName(String name, Pageable pageable) {
 		return userRepository.searchByName(name, pageable);
 	}
+
+	public boolean existsByEmail(String email) {
+		return userRepository.existsByEmail(email);
+	}
 }

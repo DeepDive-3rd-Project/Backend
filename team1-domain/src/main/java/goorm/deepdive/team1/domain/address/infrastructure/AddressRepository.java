@@ -14,5 +14,5 @@ public interface AddressRepository {
 
 	void delete(Address address);
 
-	Optional<Address> findByRegionAddressOrRoadAddressAndDeletedAtIsNull(String address);
+	Optional<Address> findByRegionAddressOrRoadAddressAndDeletedAtIsNull(String regionAddress, String roadAddress);
 }
