@@ -40,8 +40,8 @@ public class CookieUtil {
     public static void clearAuthCookie(HttpServletResponse response, String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
+//        cookie.setSecure(true);
+//        cookie.setPath("/");
         cookie.setMaxAge(COOKIE_EXPIRED_AGE);
         response.addCookie(cookie);
     }

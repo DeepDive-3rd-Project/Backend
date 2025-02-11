@@ -71,6 +71,24 @@ public class AdminFacade {
         return new AdminReissueResponse(Long.parseLong(adminId), newAccessToken);
     }
 
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+
+        // 쿠키에서 리프레시 토큰 가져오지만 쿠키 값이 비워져 있는 경우에 대한 부분도 후에 개선 필요함
+        String refreshToken = CookieUtil.getRefreshToken(request);
+        if (refreshToken == null) {
+            throw new CustomException(JwtExceptionCode.EMPTY_REFRESH_TOKEN);
+        }
+
+        // Redis에서 저장된 리프레시 토큰 삭제
+        String adminId = jwtUtil.getRefreshTokenAdminId(refreshToken);
+        tokenRepository.deleteRefreshToken(adminId);
+
+        // 응답에서 토큰 삭제 (쿠키 및 헤더 초기화)
+        response.setHeader("Authorization", ""); // 헤더 제거
+        CookieUtil.clearAuthCookie(response, "Refresh-Token"); // 쿠키 삭제
+
+    }
+
 
 //    public AdminLoginResponse login(AdminLoginRequest request) {
 //        Admin admin = adminQueryService.findByEmail(request.email());

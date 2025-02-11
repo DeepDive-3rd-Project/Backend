@@ -33,6 +33,12 @@ public class AdminControllerImpl implements AdminController{
         return ResponseEntity.ok(registerResponse);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        adminFacade.logout(request, response);
+        return ResponseEntity.ok().build();
+    }
+
 //    @PostMapping("/login")
 //    public ResponseEntity<AdminLoginResponse> login(@RequestBody AdminLoginRequest request) {
 //        AdminLoginResponse response = adminFacade.login(request);
