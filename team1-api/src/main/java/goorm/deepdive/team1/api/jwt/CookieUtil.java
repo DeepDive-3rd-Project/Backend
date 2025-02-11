@@ -1,7 +1,12 @@
 package goorm.deepdive.team1.api.jwt;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+
 
 public class CookieUtil {
 
@@ -19,6 +24,18 @@ public class CookieUtil {
         cookie.setMaxAge(exp);
         return cookie;
     }
+
+    public static String getRefreshToken(HttpServletRequest request) {
+        if (request.getCookies() == null) {
+            return null;
+        }
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> "Refresh-Token".equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElse(null);
+    }
+
 
     public static void clearAuthCookie(HttpServletResponse response, String cookieName) {
         Cookie cookie = new Cookie(cookieName, null);

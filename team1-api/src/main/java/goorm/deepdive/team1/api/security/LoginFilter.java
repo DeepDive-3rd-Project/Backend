@@ -60,9 +60,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // JWT 생성
         String token = jwtUtil.createAccessToken(String.valueOf(adminId), role); // 1시간 유효기간
-        String refreshToken = jwtUtil.createRefreshToken(String.valueOf(adminId));
+        String refreshToken = jwtUtil.createRefreshToken(String.valueOf(adminId), role);
         response.addHeader("Authorization", "Bearer " + token);
-        response.addCookie(CookieUtil.createCookie("Refresh-Token", refreshToken, 3600));
+        response.addCookie(CookieUtil.createCookie("Refresh-Token", refreshToken, 604800));
 //        response.addHeader("Refresh-Token", refreshToken);
         // JSON 응답 생성
         try {
