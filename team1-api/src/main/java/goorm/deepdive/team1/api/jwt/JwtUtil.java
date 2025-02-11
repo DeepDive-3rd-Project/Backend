@@ -150,7 +150,7 @@ public class JwtUtil {
 
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
-        String adminId = claims.get("adminId", String.class);
+        String adminId = claims.get("AdminId", String.class);
         String role = claims.get("role", String.class);
 
         Admin adminEntity = Admin.builder()
@@ -174,7 +174,7 @@ public class JwtUtil {
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                    .setSigningKey(secret)
+                    .setSigningKey(Access_secretKey)
                     .build()
                     .parseClaimsJws(token);
 

@@ -73,16 +73,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
 //    해당 JWT 필터 자체가 실행되지 않도록 설정하는 코드지만  permitAll() 대처하는 방안으로 리뷰 받음
-//    @Override
-//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-//        String uri = request.getRequestURI();
-//        return uri.contains("login") || uri.contains("swagger-ui") || uri.contains("swagger-resources")
-//                || uri.contains("v3/api-docs") || uri.contains("webjars")
-//                || uri.contains("/reissue")
-//                || (uri.contains("admin") && request.getMethod().equals("POST"))
-//                || uri.contains("register"); // 회원가입 엔드포인트 추가
-//
-//    }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String uri = request.getRequestURI();
+        return uri.contains("login") || uri.contains("swagger-ui") || uri.contains("swagger-resources")
+                || uri.contains("v3/api-docs") || uri.contains("webjars")
+                || uri.contains("/reissue")
+                || (uri.contains("admin") && request.getMethod().equals("POST"))
+                || uri.contains("register"); // 회원가입 엔드포인트 추가
+
+    }
 
 
 //    블랙리스트(로그아웃된) 토큰인지 확인
