@@ -134,4 +134,27 @@ public interface UserController {
 		@RequestParam(required = false)
 		String keyword
 	);
+
+	@Operation(summary = "사용자 이름 기반 유저 목록 검색 API", description = """
+			- Description : 이 API는 해당 사용자 이름을 기반으로 유저 목록을 조회할 수 있습니다.
+		""")
+	@ApiResponse(responseCode = "200")
+	ResponseEntity<PaginatedListResponse> searchUsersByName(
+		@Parameter(
+			description = "페이지 인덱스",
+			example = "0",
+			required = true
+		) @PositiveOrZero @RequestParam(defaultValue = "0") int page,
+		@Parameter(
+			description = "응답 개수",
+			example = "10",
+			required = true
+		) @Positive @RequestParam(defaultValue = "10") int size,
+		@Parameter(
+			description = "검색할 이름",
+			example = "홍길동"
+		)
+		@RequestParam(required = false)
+		String name
+	);
 }

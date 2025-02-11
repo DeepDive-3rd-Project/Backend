@@ -15,6 +15,8 @@ import goorm.deepdive.team1.domain.user.application.UserCommandService;
 import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
+import goorm.deepdive.team1.domain.user.domain.UserDocument;
+import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
 import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
@@ -80,12 +82,17 @@ public class UserFacade {
 	}
 
 	public PaginatedListResponse searchUsersByRoadAddressKeyword(String keyword, Pageable pageable) {
-		Page<User> userList = userQueryService.getUsersByRoadAddressKeyword(keyword, pageable);
+		Page<UserDocument> userList = userQueryService.getUsersByRoadAddressKeyword(keyword, pageable);
 		return PaginatedListResponse.from(userList);
 	}
 
 	public PaginatedListResponse searchUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
-		Page<User> userList = userQueryService.getUsersByRegionAddressKeyword(keyword, pageable);
+		Page<UserDocument> userList = userQueryService.getUsersByRegionAddressKeyword(keyword, pageable);
+		return PaginatedListResponse.from(userList);
+	}
+
+	public PaginatedListResponse searchUsersByName(String name, Pageable pageable) {
+		Page<UserDocument> userList = userQueryService.getUsersByName(name, pageable);
 		return PaginatedListResponse.from(userList);
 
 	}

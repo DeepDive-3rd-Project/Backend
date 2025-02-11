@@ -8,7 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
+import goorm.deepdive.team1.domain.user.domain.UserDocument;
 import goorm.deepdive.team1.domain.user.infrastructure.UserRepository;
+import goorm.deepdive.team1.infra.repository.elastic.ElasticUserRepository;
 import goorm.deepdive.team1.infra.repository.jpa.JpaUserRepository;
 import goorm.deepdive.team1.infra.repository.redis.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class UserRepositoryImpl implements UserRepository {
 	private final JpaUserRepository jpaUserRepository;
 	private final RedisUserRepository redisUserRepository;
+	private final ElasticUserRepository elasticUserRepository;
 
 	@Override
 	public User save(User user) {
@@ -50,13 +53,18 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public Page<User> findUsersByRoadAddressKeyword(String keyword, Pageable pageable) {
-		return jpaUserRepository.findUsersByRoadAddressKeyword(keyword, pageable);
+	public Page<UserDocument> searchByRoadAddress(String keyword, Pageable pageable) {
+		return elasticUserRepository.searchByRoadAddress(keyword, pageable);
 	}
 
 	@Override
-	public Page<User> findUsersByRegionAddressKeyword(String keyword, Pageable pageable) {
-		return jpaUserRepository.findUsersByRegionAddressKeyword(keyword, pageable);
+	public Page<UserDocument> searchByRegionAddress(String keyword, Pageable pageable) {
+		return elasticUserRepository.searchByRegionAddress(keyword, pageable);
+	}
+
+	@Override
+	public Page<UserDocument> searchByName(String name, Pageable pageable) {
+		return elasticUserRepository.searchByName(name, pageable);
 	}
 
 	@Override

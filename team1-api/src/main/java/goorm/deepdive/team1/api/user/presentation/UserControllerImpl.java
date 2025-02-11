@@ -90,4 +90,18 @@ public class UserControllerImpl implements UserController{
 		);
 		return ResponseEntity.ok(response);
 	}
+
+	@Override
+	@GetMapping("/search/name")
+	public ResponseEntity<PaginatedListResponse> searchUsersByName(
+		int page,
+		int size,
+		String name
+	) {
+		PaginatedListResponse response = userFacade.searchUsersByName(
+			name,
+			PageRequest.of(page, size)
+		);
+		return ResponseEntity.ok(response);
+	}
 }
