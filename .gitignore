@@ -38,3 +38,6 @@ out/
 
 # screct key
 team1-api/src/main/resources/env.properties
+
+### 환경변수 파일 무시 ###
+.env
