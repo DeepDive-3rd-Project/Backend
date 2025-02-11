@@ -59,10 +59,11 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createRefreshToken(String adminId) {
+    public String createRefreshToken(String adminId, String role) {
         long expirationMs = refresh_expirationSeconds * 1000; // 7일
         String refreshToken = Jwts.builder()
                 .claim("AdminId", adminId)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(refrsh_secretKey, SignatureAlgorithm.HS256)
@@ -89,6 +90,15 @@ public class JwtUtil {
                 .get("AdminId", String.class);
     }
 
+    public String getRefreshTokenAdminId(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(refrsh_secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("AdminId", String.class);
+    }
+
     public String getEmail(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(Access_secretKey)
@@ -101,6 +111,15 @@ public class JwtUtil {
     public String getRole(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(Access_secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
+    }
+
+    public String getRefreshTokenRole(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(refrsh_secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
