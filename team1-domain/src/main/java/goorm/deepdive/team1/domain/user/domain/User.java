@@ -34,12 +34,20 @@ public class User extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String phoneNumber;
 
-	public static User create(String name, String email, String phoneNumber) {
+	@Column(nullable = false)
+	private String gender;
+
+	@Column(nullable = false)
+	private Integer age;
+
+	public static User create(String name, String email, String phoneNumber, String gender, Integer age) {
 		return User.builder()
-			.name(name)
-			.email(email)
-			.phoneNumber(phoneNumber)
-			.build();
+				.name(name)
+				.email(email)
+				.phoneNumber(phoneNumber)
+				.gender(gender)
+				.age(age)
+				.build();
 	}
 
 	public void updateName(String name) {
@@ -53,4 +61,8 @@ public class User extends BaseTimeEntity {
 	public void updatePhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+
+	public void updateGender(String gender) {this.gender = gender;}
+
+	public void updateAge(Integer age) {this.age = age;}
 }
