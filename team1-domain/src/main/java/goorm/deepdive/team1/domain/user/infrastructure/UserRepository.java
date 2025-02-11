@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
+import goorm.deepdive.team1.domain.user.domain.UserDocument;
 
 public interface UserRepository {
 	User save(User user);
@@ -21,7 +22,11 @@ public interface UserRepository {
 
 	boolean existsById(Long id);
 
-	Page<User> findUsersByRoadAddressKeyword(String keyword, Pageable pageable);
+	Page<UserDocument> searchByRoadAddress(String keyword, Pageable pageable);
+  
+	Page<UserDocument> searchByRegionAddress(String keyword, Pageable pageable);
 
-	Page<User> findUsersByRegionAddressKeyword(String keyword, Pageable pageable);
+	Page<UserDocument> searchByName(String name, Pageable pageable);
+
+	boolean existsByEmail(String email);
 }
