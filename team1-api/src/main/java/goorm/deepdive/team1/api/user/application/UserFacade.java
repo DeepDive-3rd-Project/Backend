@@ -16,7 +16,6 @@ import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
-import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
 import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
@@ -41,7 +40,7 @@ public class UserFacade {
 			throw new UserEmailAlreadyExistsException();
 		}
 
-		User user = userCommandService.create(request.name(), request.email(), request.phoneNumber());
+		User user = userCommandService.create(request.name(), request.email(), request.phoneNumber(), request.gender(), request.age());
 
 		KakaoApiAddressResponse kakaoApiAddressResponse = kakaoApiAddressService.getGeoDataFromAddress(request.address());
 		Address address = addressQueryService.findByRegionOrRoadAddress(
@@ -54,7 +53,8 @@ public class UserFacade {
 					kakaoApiAddressResponse.x(),
 					kakaoApiAddressResponse.y(),
 					kakaoApiAddressResponse.regionAddress(),
-					kakaoApiAddressResponse.roadAddress()
+					kakaoApiAddressResponse.roadAddress(),
+					kakaoApiAddressResponse.region()
 			);
 			addressCommandService.save(address);
 		}
@@ -74,7 +74,7 @@ public class UserFacade {
 	}
 
 	public void update(Long id, UserUpdateRequest request) {
-		userCommandService.update(id, request.name(), request.email(), request.phoneNumber());
+		userCommandService.update(id, request.name(), request.email(), request.phoneNumber(), request.gender(), request.age());
 	}
 
 	public void delete(Long id) {
