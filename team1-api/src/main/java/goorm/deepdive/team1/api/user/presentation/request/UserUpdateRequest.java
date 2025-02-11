@@ -4,6 +4,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public record UserUpdateRequest(
 	@Schema(description = "이름", example = "박민준", requiredMode = REQUIRED)
@@ -16,6 +17,16 @@ public record UserUpdateRequest(
 
 	@Schema(description = "휴대폰 번호", example = "01012345678", requiredMode = REQUIRED)
 	@NotBlank
-	String phoneNumber
+	String phoneNumber,
+
+	@Schema(description = "성별", example = "남자", requiredMode = REQUIRED)
+	@NotBlank
+	String gender,
+
+	@Schema(description = "나이", example = "20", requiredMode = REQUIRED)
+	@NotNull
+	Integer age
+
+
 ) {
 }
