@@ -1,9 +1,7 @@
 package goorm.deepdive.team1.api.admin.presentation;
 
 import goorm.deepdive.team1.api.admin.application.AdminFacade;
-import goorm.deepdive.team1.api.admin.presentation.request.AdminLoginRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
-import goorm.deepdive.team1.api.admin.presentation.response.AdminLoginResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

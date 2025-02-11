@@ -5,10 +5,9 @@ import lombok.Getter;
 
 public record AdminRegisterResponse(
         Long id,
-        String email,
-        String token
+        String email
 ) {
-    public static AdminRegisterResponse from(Long id, String email, String token) {
-        return new AdminRegisterResponse(id, email, token);
+    public static AdminRegisterResponse from(Long id, String email) {
+        return new AdminRegisterResponse(id, email);
     }
 }
