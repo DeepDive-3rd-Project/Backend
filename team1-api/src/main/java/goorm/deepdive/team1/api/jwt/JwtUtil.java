@@ -5,9 +5,11 @@ import goorm.deepdive.team1.api.security.CustomAdminDetails;
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.domain.Role;
 
+import goorm.deepdive.team1.domain.admin.infrastructure.TokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,7 +21,10 @@ import java.util.Date;
 
 // 토큰 생성과 검증 로직을 담은 클래스
 @Component
+@RequiredArgsConstructor
 public class JwtUtil {
+
+    private final TokenRepository tokenRepository;
 
     private SecretKey Access_secretKey;
     private SecretKey refrsh_secretKey;
@@ -56,12 +61,23 @@ public class JwtUtil {
 
     public String createRefreshToken(String adminId) {
         long expirationMs = refresh_expirationSeconds * 1000; // 7일
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .claim("AdminId", adminId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(refrsh_secretKey, SignatureAlgorithm.HS256)
                 .compact();
+
+        // 기존 리프레시 토큰이 존재하는지 확인
+        String existingRefreshToken = tokenRepository.getRefreshToken(adminId);
+
+        if (existingRefreshToken != null) {
+            tokenRepository.deleteRefreshToken(adminId); // 기존 리프레시 토큰 삭제
+        }
+        // 새로운 리프레시 토큰 생성 후 저장
+        tokenRepository.saveRefreshToken(adminId, refreshToken, refresh_expirationSeconds);
+
+        return refreshToken;
     }
 
     public String getAdminId(String token) {
