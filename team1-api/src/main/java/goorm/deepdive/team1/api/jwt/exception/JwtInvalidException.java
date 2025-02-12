@@ -4,6 +4,6 @@ import goorm.deepdive.team1.common.exception.CustomException;
 
 public class JwtInvalidException extends CustomException {
     public JwtInvalidException() {
-        super(JwtExceptionCode.EMPTY_TOKEN);
+        super(JwtExceptionCode.INVALID_SIGNATURE);
     }
 }

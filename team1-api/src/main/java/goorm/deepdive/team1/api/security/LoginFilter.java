@@ -42,7 +42,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             String password = credentials.get("password");
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password);
-            return authenticationManager.authenticate(authToken);
+            return authenticationManager.authenticate(authToken); //authenticate() 호츌시 loadUserByUsername 실행됨
         } catch (IOException e) {
             throw new RuntimeException("로그인 요청 파싱 오류", e); // 이 부분은 파싱 오류일 때만 예외 처리
         }

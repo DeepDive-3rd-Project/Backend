@@ -5,6 +5,9 @@ import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterRespons
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
 import goorm.deepdive.team1.api.jwt.CookieUtil;
 import goorm.deepdive.team1.api.jwt.JwtUtil;
+import goorm.deepdive.team1.api.jwt.exception.JwtEmptyException;
+import goorm.deepdive.team1.api.jwt.exception.JwtExpiredException;
+import goorm.deepdive.team1.api.jwt.exception.JwtRedisStorageException;
 import goorm.deepdive.team1.common.exception.AdminExceptionCode;
 import goorm.deepdive.team1.common.exception.CustomException;
 import goorm.deepdive.team1.common.exception.JwtExceptionCode;
@@ -41,7 +44,7 @@ public class AdminFacade {
         // 쿠키에서 리프레시 토큰 가져오기
         String refreshToken = CookieUtil.getRefreshToken(request);
         if (refreshToken == null) {
-            throw new CustomException(JwtExceptionCode.INVALID_REFRESH_TOKEN);
+            throw new JwtEmptyException();
         }
 
         // Redis에서 저장된 리프레시 토큰 확인
@@ -49,12 +52,12 @@ public class AdminFacade {
         String storedRefreshToken = tokenRepository.getRefreshToken(adminId);
 
         if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
-            throw new CustomException(JwtExceptionCode.INVALID_REFRESH_TOKEN);
+            throw new JwtRedisStorageException();
         }
 
         // 리프레시 토큰 유효성 검증
         if (jwtUtil.isRefreshTokenExpired(refreshToken)) {
-            throw new CustomException(JwtExceptionCode.INVALID_REFRESH_TOKEN);
+            throw new JwtExpiredException();
         }
 
         // 레디스에 저장된 토큰 검증이 통과한 경우 정상 요청으로 판단, 새 토큰 생성
@@ -75,10 +78,10 @@ public class AdminFacade {
 
     public void logout(HttpServletRequest request, HttpServletResponse response) {
 
-        // 쿠키에서 리프레시 토큰 가져오지만 쿠키 값이 비워져 있는 경우에 대한 부분도 후에 개선 필요함
+        // 사용자가 로그아웃 요청시 Access,refresh를 제거한 상태에서 로그아웃 요청이 가능한가에 대한 고민 필요함
         String refreshToken = CookieUtil.getRefreshToken(request);
         if (refreshToken == null) {
-            throw new CustomException(JwtExceptionCode.EMPTY_REFRESH_TOKEN);
+            throw new JwtEmptyException();
         }
 
         // Redis에서 저장된 리프레시 토큰 삭제
