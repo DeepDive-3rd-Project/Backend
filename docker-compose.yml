@@ -1,23 +1,70 @@
 version: '3.8'
 
 services:
-  backend:
-    image: backend:latest
-    container_name: backend-${ENV} # 환경별 컨테이너 이름
+  team1-api:
+    image: team1-api:latest
+    container_name: team1-api-${ENV}
     ports:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      POSTGRES_HOST: team1-infra  # team1-infra 컨테이너에서 제공하는 DB
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: team1-infra  # Redis도 team1-infra에서 제공
+      REDIS_PORT: "6379"
+    depends_on:
+      - team1-domain
+      - team1-infra
+    restart: always
+    networks:
+      - backend-network
+
+  team1-domain:
+    image: team1-domain:latest
+    container_name: team1-domain-${ENV}
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+    depends_on:
+      - team1-infra
+    restart: always
+    networks:
+      - backend-network
+
+  team1-infra:
+    image: team1-infra:latest
+    container_name: team1-infra-${ENV}
+    environment:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT: "5432"
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PORT: "6379"
     depends_on:
+      - postgres
       - redis
     restart: always
+    networks:
+      - backend-network
+
+  postgres:
+    image: postgres:15
+    container_name: postgres-${ENV}
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - backend-network
 
   redis:
     image: redis:latest
@@ -25,4 +72,12 @@ services:
     ports:
       - "6379:6379"
     restart: always
+    networks:
+      - backend-network
 
+volumes:
+  postgres_data:
+
+networks:
+  backend-network:
+    driver: bridge
