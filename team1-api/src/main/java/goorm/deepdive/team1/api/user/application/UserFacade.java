@@ -2,11 +2,15 @@ package goorm.deepdive.team1.api.user.application;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import goorm.deepdive.team1.api.kakao.response.KakaoApiAddressResponse;
-import goorm.deepdive.team1.api.kakao.KakaoApiAddressService;
-import goorm.deepdive.team1.domain.user.exception.UserEmailAlreadyExistsException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import goorm.deepdive.team1.api.kakao.KakaoApiAddressService;
+import goorm.deepdive.team1.api.kakao.response.KakaoApiAddressResponse;
+import goorm.deepdive.team1.api.paging.PaginatedListResponse;
+import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
+import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
+import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
 import goorm.deepdive.team1.domain.address.application.AddressQueryService;
 import goorm.deepdive.team1.domain.address.domain.Address;
@@ -16,10 +20,7 @@ import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
-import goorm.deepdive.team1.api.paging.PaginatedListResponse;
-import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
-import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
-import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
+import goorm.deepdive.team1.domain.user.exception.UserEmailAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 
 
@@ -35,12 +36,9 @@ public class UserFacade {
 
 	@Transactional
 	public UserPersistResponse create(UserCreateRequest request) {
-
 		if (userQueryService.existsByEmail(request.email())) {
 			throw new UserEmailAlreadyExistsException();
 		}
-
-		User user = userCommandService.create(request.name(), request.email(), request.phoneNumber(), request.gender(), request.age());
 
 		KakaoApiAddressResponse kakaoApiAddressResponse = kakaoApiAddressService.getGeoDataFromAddress(request.address());
 		Address address = addressQueryService.findByRegionOrRoadAddress(
@@ -59,6 +57,7 @@ public class UserFacade {
 			addressCommandService.save(address);
 		}
 
+		User user = userCommandService.create(request.name(), request.email(), request.phoneNumber(), address, request.gender(), request.age());
 		addressHistoryCommandService.create(user, address);
 
 		return UserPersistResponse.from(user);
