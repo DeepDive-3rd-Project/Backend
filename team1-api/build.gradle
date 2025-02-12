@@ -1,9 +1,9 @@
 bootJar {
-    enabled = true
+    archiveFileName = "team1-api.jar"
 }
 
 jar {
-    enabled = true
+    enabled = false
 }
 
 dependencies {
