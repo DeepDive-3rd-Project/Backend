@@ -16,12 +16,23 @@ public class AddressHistoryProducer {
 	private final ObjectMapper objectMapper;
 
 	private static final String CREATE_ADDRESS_HISTORY = "create-address-history";
+	private static final String UPDATE_ADDRESS_HISTORY = "update-address-history";
 
 	public void sendMessageToCreate(AddressHistory addressHistory) {
 		try {
-			String addressHistoryJson = objectMapper.writeValueAsString(addressHistory);  // ✅ User 객체를 JSON 문자열로 변환
+			String addressHistoryJson = objectMapper.writeValueAsString(addressHistory);
 			kafkaTemplate.send(CREATE_ADDRESS_HISTORY, addressHistoryJson);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException("Failed to serialize Address History object", e);
-		}	}
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void sendMessageToUpdate(AddressHistory addressHistory) {
+		try {
+			String addressHistoryJson = objectMapper.writeValueAsString(addressHistory);
+			kafkaTemplate.send(UPDATE_ADDRESS_HISTORY, addressHistoryJson);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class AddressQueryService {
 	private final AddressRepository addressRepository;
-	private final KakaoApiAddressService kakaoApiAddressService;
 
 	public Address getById(Long id) {
 		return addressRepository.findByIdAndDeletedAtIsNull(id)

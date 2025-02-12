@@ -16,13 +16,23 @@ public class UserProducer {
 	private final ObjectMapper objectMapper;
 
 	private static final String CREATE_USER = "create-user";
+	private static final String UPDATE_USER = "update-user";
 
 	public void sendMessageToCreate(User user) {
 		try {
-			String userJson = objectMapper.writeValueAsString(user);  // ✅ User 객체를 JSON 문자열로 변환
+			String userJson = objectMapper.writeValueAsString(user);
 			kafkaTemplate.send(CREATE_USER, userJson);
 		} catch (JsonProcessingException e) {
-			throw new RuntimeException("Failed to serialize User object", e);
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void sendMessageToUpdate(User user) {
+		try {
+			String userJson = objectMapper.writeValueAsString(user);
+			kafkaTemplate.send(UPDATE_USER, userJson);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

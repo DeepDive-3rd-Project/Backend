@@ -75,8 +75,17 @@ public class UserFacade {
 		return PaginatedListResponse.from(userList);
 	}
 
+	@Transactional
 	public void update(Long id, UserUpdateRequest request) {
-		userCommandService.update(id, request.name(), request.email(), request.phoneNumber(), request.gender(), request.age());
+		Address address = addressCommandService.findOrCreateAddress(
+			request.regionAddress(), request.roadAddress()
+		);
+
+		User user = userCommandService.update(id, request.name(), request.email(), request.phoneNumber(), request.gender(), request.age(), address);
+		AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
+
+		userProducer.sendMessageToUpdate(user);
+		addressHistoryProducer.sendMessageToUpdate(addressHistory);
 	}
 
 	public void delete(Long id) {

@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserCommandService {
 	private final UserRepository userRepository;
 
@@ -24,7 +23,8 @@ public class UserCommandService {
 		return userRepository.save(user);
 	}
 
-	public void update(Long id, String name, String email, String phoneNumber, Gender gender, Integer age) {
+	@Transactional
+	public User update(Long id, String name, String email, String phoneNumber, Gender gender, Integer age, Address address) {
 		User user = getUser(id);
 
 		if (!user.getEmail().equals(email) && userRepository.existsByEmail(email)) {
@@ -36,12 +36,16 @@ public class UserCommandService {
 		user.updatePhoneNumber(phoneNumber);
 		user.updateGender(gender);
 		user.updateAge(age);
+		user.updateAddress(address);
+
+		return user;
 	}
 
 	public boolean validateEmail(String email) {
 		return userRepository.existsByEmail(email);
 	}
 
+	@Transactional
 	public void delete(Long id) {
 		User user = getUser(id);
 		user.markAsDeleted();
