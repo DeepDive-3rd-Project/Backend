@@ -9,6 +9,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: "5432"
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -16,7 +17,6 @@ services:
       REDIS_PORT: ${REDIS_PORT}
     depends_on:
       - redis
-      - postgres
     restart: always
 
   redis:
@@ -26,13 +26,3 @@ services:
       - "6379:6379"
     restart: always
 
-  postgres:
-    image: postgres:15
-    container_name: postgres-${ENV}
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    restart: always
