@@ -79,9 +79,8 @@ public class JwtFilter extends OncePerRequestFilter {
         return uri.contains("login") || uri.contains("swagger-ui") || uri.contains("swagger-resources")
                 || uri.contains("v3/api-docs") || uri.contains("webjars")
                 || uri.contains("/reissue")
-                || (uri.contains("admin") && request.getMethod().equals("POST"))
-                || uri.contains("register"); // 회원가입 엔드포인트 추가
-
+                || uri.contains("/register") // 회원가입 엔드포인트 추가
+                || uri.contains("/logout");
     }
 
 
