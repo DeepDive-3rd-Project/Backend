@@ -1,4 +1,4 @@
-package goorm.deepdive.team1.infra.config.security;
+package goorm.deepdive.team1.api.security;
 
 import goorm.deepdive.team1.domain.admin.security.PasswordEncryptor;
 import lombok.RequiredArgsConstructor;

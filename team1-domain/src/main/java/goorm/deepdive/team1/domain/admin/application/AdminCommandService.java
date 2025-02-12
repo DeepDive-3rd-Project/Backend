@@ -1,13 +1,8 @@
 package goorm.deepdive.team1.domain.admin.application;
 
-
-
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.domain.Role;
-import goorm.deepdive.team1.domain.admin.exception.AdminNotFoundException;
-import goorm.deepdive.team1.domain.admin.exception.PasswordMismatchException;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
-import goorm.deepdive.team1.domain.admin.security.JwtTokenProvider;
 import goorm.deepdive.team1.domain.admin.security.PasswordEncryptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminCommandService {
     private final AdminRepository adminRepository;
     private final PasswordEncryptor passwordEncryptor;
-    private final JwtTokenProvider jwtTokenProvider;
 
     public Admin register(String email, String password, String role) {
         Admin admin = Admin.builder()
@@ -29,17 +23,6 @@ public class AdminCommandService {
                 .role(Role.valueOf(role))
                 .build();
         return adminRepository.save(admin);
-    }
-
-    public String login(String email, String password) {
-        Admin admin = adminRepository.findByEmail(email)
-                .orElseThrow(AdminNotFoundException::new);
-
-        if (!passwordEncryptor.matches(password, admin.getPassword())) {
-            throw new PasswordMismatchException();
-        }
-
-        return jwtTokenProvider.generateToken(admin.getEmail(), admin.getRole().name());
     }
 
 }
