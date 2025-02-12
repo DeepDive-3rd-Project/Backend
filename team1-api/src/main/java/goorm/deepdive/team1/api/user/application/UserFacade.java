@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.api.kakao.KakaoApiAddressService;
-import goorm.deepdive.team1.api.kakao.response.KakaoApiAddressResponse;
 import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
@@ -47,17 +46,10 @@ public class UserFacade {
 		);
 
 		if (address == null) {
-			KakaoApiAddressResponse kakaoApiAddressResponse = kakaoApiAddressService.getGeoDataFromAddress(request.roadAddress());
-
-			address = addressCommandService.create(
-					kakaoApiAddressResponse.x(),
-					kakaoApiAddressResponse.y(),
-					kakaoApiAddressResponse.regionAddress(),
-					kakaoApiAddressResponse.roadAddress(),
-					kakaoApiAddressResponse.region()
-			);
+			address = kakaoApiAddressService.getGeoDataFromAddress(request.roadAddress());
 			addressCommandService.save(address);
 		}
+
 		User user = userCommandService.create(request.name(), request.email(), request.phoneNumber(), address, request.gender(), request.age());
 		AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
 
