@@ -1,67 +1,26 @@
 version: '3.8'
 
 services:
-  team1-api:
-    image: team1-api:latest
-    container_name: team1-api-${ENV}
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: backend:latest
+    container_name: backend-${ENV} # 환경별 컨테이너 이름
     ports:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
-      POSTGRES_HOST: team1-infra  # team1-infra 컨테이너에서 제공하는 DB
+      POSTGRES_HOST: postgres  # 컨테이너명으로 지정
       POSTGRES_PORT: "5432"
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      REDIS_HOST: team1-infra  # Redis도 team1-infra에서 제공
+      REDIS_HOST: redis  # 컨테이너명으로 지정
       REDIS_PORT: "6379"
     depends_on:
-      - team1-domain
-      - team1-infra
-    restart: always
-    networks:
-      - backend-network
-
-  team1-domain:
-    image: team1-domain:latest
-    container_name: team1-domain-${ENV}
-    environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
-    depends_on:
-      - team1-infra
-    restart: always
-    networks:
-      - backend-network
-
-  team1-infra:
-    image: team1-infra:latest
-    container_name: team1-infra-${ENV}
-    environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: "5432"
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: "6379"
-    depends_on:
-      - postgres
       - redis
-    restart: always
-    networks:
-      - backend-network
-
-  postgres:
-    image: postgres:15
-    container_name: postgres-${ENV}
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres
     restart: always
     networks:
       - backend-network
@@ -75,8 +34,18 @@ services:
     networks:
       - backend-network
 
-volumes:
-  postgres_data:
+  postgres:
+    image: postgres:15
+    container_name: postgres-${ENV}
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    restart: always
+    networks:
+      - backend-network
 
 networks:
   backend-network:
