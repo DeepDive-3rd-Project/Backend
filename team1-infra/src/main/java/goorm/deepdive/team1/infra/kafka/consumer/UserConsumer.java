@@ -37,8 +37,6 @@ public class UserConsumer {
 
 			redisUserRepository.save(userCache);
 			elasticUserRepository.save(userDocument);
-
-			System.out.println("✅ Consumed User: " + user.getName());
 		} catch (Exception e) {
 			throw new KafkaProcessingException();
 		}
@@ -59,8 +57,6 @@ public class UserConsumer {
 
 			redisUserRepository.save(userCache);
 			elasticUserRepository.save(userDocument);
-
-			System.out.println("✅ Consumed User: " + user.getName());
 		} catch (Exception e) {
 			throw new KafkaProcessingException();
 		}
@@ -81,8 +77,6 @@ public class UserConsumer {
 
 			redisUserRepository.save(userCache);
 			elasticUserRepository.save(userDocument);
-
-			System.out.println("✅ Consumed User: " + user.getName());
 		} catch (Exception e) {
 			throw new KafkaProcessingException();
 		}
