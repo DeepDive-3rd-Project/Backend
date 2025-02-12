@@ -26,15 +26,4 @@ public class AdminCommandService {
         return adminRepository.save(admin);
     }
 
-//    public String login(String email, String password) {
-//        Admin admin = adminRepository.findByEmail(email)
-//                .orElseThrow(() -> new CustomException(AdminExceptionCode.ADMIN_NOT_FOUND));
-//
-//        if (!passwordEncryptor.matches(password, admin.getPassword())) {
-//            throw new CustomException(AdminExceptionCode.NOT_ADMIN);
-//        }
-//
-//        return jwtTokenProvider.generateToken(admin.getEmail(), admin.getRole().name());
-//    }
-
 }

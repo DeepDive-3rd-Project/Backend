@@ -14,11 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminQueryService {
     private final AdminRepository adminRepository;
 
-    public Admin findByEmail(String email) {
-        return adminRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(AdminExceptionCode.ADMIN_NOT_FOUND));
-    }
-
     public boolean existsByEmail(String email) {
         return adminRepository.existsByEmail(email);
     }
