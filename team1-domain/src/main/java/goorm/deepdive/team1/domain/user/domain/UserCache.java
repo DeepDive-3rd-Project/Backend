@@ -26,7 +26,7 @@ public class UserCache {
 	private String phoneNumber;
 
 	private String latestRegionAddress;
-	
+
 	private String latestRoadAddress;
 
 	private String gender;
