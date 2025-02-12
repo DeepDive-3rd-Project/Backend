@@ -35,6 +35,8 @@ public class AdminFacade {
         return new AdminRegisterResponse(admin.getId(), admin.getEmail());
     }
 
+
+
     public AdminReissueResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
         // 쿠키에서 리프레시 토큰 가져오기
         String refreshToken = CookieUtil.getRefreshToken(request);
@@ -56,7 +58,7 @@ public class AdminFacade {
         }
 
         // 레디스에 저장된 토큰 검증이 통과한 경우 정상 요청으로 판단, 새 토큰 생성
-        String newAccessToken = jwtUtil.createAccessToken(adminId, jwtUtil.getRefreshTokenRole(refreshToken));
+        String newAccessToken = "Bearer " +jwtUtil.createAccessToken(adminId, jwtUtil.getRefreshTokenRole(refreshToken));
         String newRefreshToken = jwtUtil.createRefreshToken(adminId, jwtUtil.getRefreshTokenRole(refreshToken));
 
         // 기존 리프레시 토큰 삭제 & 새로운 리프레시 토큰 저장
@@ -64,10 +66,10 @@ public class AdminFacade {
         tokenRepository.saveRefreshToken(adminId, newRefreshToken, 60 * 60 * 24 * 7);
 
         // 응답 설정
-        response.setHeader("Authorization", "Bearer " + newAccessToken);
+        response.setHeader("Authorization", newAccessToken);
         response.addCookie(CookieUtil.createCookie("Refresh-Token", newRefreshToken, 604800));
 
-        AdminReissueResponse responseBody = new AdminReissueResponse(Long.parseLong(adminId), newAccessToken);
+//        AdminReissueResponse responseBody = new AdminReissueResponse(Long.parseLong(adminId), newAccessToken);
         return new AdminReissueResponse(Long.parseLong(adminId), newAccessToken);
     }
 

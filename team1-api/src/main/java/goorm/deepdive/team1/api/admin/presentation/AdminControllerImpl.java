@@ -1,7 +1,9 @@
 package goorm.deepdive.team1.api.admin.presentation;
 
 import goorm.deepdive.team1.api.admin.application.AdminFacade;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminLoginRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
+import goorm.deepdive.team1.api.admin.presentation.response.AdminLoginResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +29,12 @@ public class AdminControllerImpl implements AdminController{
         return ResponseEntity.ok(response);
     }
 
+    @Override
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(@RequestBody AdminLoginRequest request) {
+        return ResponseEntity.ok().build();
+    }
+
     // JWT 재발급 API
     // 엑세스 토큰이 만료되었을 경우, 401 응답을 반환하고 클라이언트가 /reissue API를 호출한다고 가정
     @Override
@@ -43,11 +51,6 @@ public class AdminControllerImpl implements AdminController{
         return ResponseEntity.ok().build();
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<AdminLoginResponse> login(@RequestBody AdminLoginRequest request) {
-//        AdminLoginResponse response = adminFacade.login(request);
-//        return ResponseEntity.ok(response);
-//    }
 
 
 }
