@@ -90,14 +90,15 @@ public class KakaoApiAddressService {
                 throw new AddressNotFoundException();
             }
 
-            String region = addressNode.path("address_name").asText(null);
-            String roadName = roadAddressNode.path("address_name").asText(null);
+            String regionAddress = addressNode.path("address_name").asText(null);
+            String roadNameAddress = roadAddressNode.path("address_name").asText(null);
+            String region = addressNode.path("region_1depth_name").asText(null);
 
-            if (region == null || roadName == null) {
+            if (regionAddress == null || roadNameAddress == null) {
                 throw new AddressNotFoundException();
             }
 
-            return KakaoApiAddressResponse.of(longitude,latitude,region,roadName);
+            return KakaoApiAddressResponse.of(longitude,latitude,regionAddress,roadNameAddress,region);
         } catch (Exception e) {
             throw new ApiCallFailedException();
         }

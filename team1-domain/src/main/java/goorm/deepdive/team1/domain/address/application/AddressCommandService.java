@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 public class AddressCommandService {
 	private final AddressRepository addressRepository;
 
-	public Address create(double x, double y, String regionAddress, String roadAddress) {
-		Address address = Address.create(x, y, regionAddress, roadAddress);
+	public Address create(double x, double y, String regionAddress, String roadAddress, String region) {
+		Address address = Address.create(x, y, regionAddress, roadAddress, region);
 		return addressRepository.save(address);
 	}
 
@@ -23,13 +23,14 @@ public class AddressCommandService {
 		return addressRepository.save(address);
 	}
 
-	public void update(Long id, double x, double y, String regionAddress, String roadAddress) {
+	public void update(Long id, double x, double y, String regionAddress, String roadAddress, String region) {
 		Address address = getAddress(id);
 
 		address.updateX(x);
 		address.updateY(y);
 		address.updateRegionAddress(regionAddress);
 		address.updateRoadAddress(roadAddress);
+		address.updateRegion(region);
 	}
 
 	public void delete(Long id) {

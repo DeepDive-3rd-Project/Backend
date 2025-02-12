@@ -28,15 +28,20 @@ public class UserCache {
 	private String latestRegionAddress;
 	private String latestRoadAddress;
 
+	private String gender;
 
-	public static UserCache create(Long id, String name, String email, String phoneNumber, String latestRegionAddress, String latestRoadAddress) {
+	private Integer age;
+
+	public static UserCache create(Long id, String name, String email, String phoneNumber, String latestRegionAddress, String latestRoadAddress, String gender, Integer age) {
 		return UserCache.builder()
-			.id(id)
-			.name(name)
-			.email(email)
-			.phoneNumber(phoneNumber)
-			.latestRegionAddress(latestRegionAddress)
-			.latestRoadAddress(latestRoadAddress)
-			.build();
+				.id(id)
+				.name(name)
+				.email(email)
+				.phoneNumber(phoneNumber)
+				.latestRegionAddress(latestRegionAddress)
+				.latestRoadAddress(latestRoadAddress)
+				.gender(gender)
+				.age(age)
+				.build();
 	}
 }
