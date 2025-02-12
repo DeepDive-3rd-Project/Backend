@@ -24,7 +24,11 @@ public record AddressResponse(
 
 	@Schema(description = "도로명 주소", example = "서울특별시 강남구 테헤란로 123", requiredMode = REQUIRED)
 	@NotBlank
-	String roadAddress
+	String roadAddress,
+
+	@Schema(description = "지역", example = "서울", requiredMode = REQUIRED)
+	@NotBlank
+	String region
 ) {
 	public static AddressResponse from(Address address) {
 		return AddressResponse.builder()
@@ -32,6 +36,7 @@ public record AddressResponse(
 			.y(address.getY())
 			.regionAddress(address.getRegionAddress())
 			.roadAddress(address.getRoadAddress())
+			.region(address.getRegion())
 			.build();
 	}
 }

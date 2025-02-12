@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AdminCommandService {
     private final AdminRepository adminRepository;
     private final PasswordEncryptor passwordEncryptor;
-//    private final JwtTokenProvider jwtTokenProvider;
 
     public Admin register(String email, String password, String role) {
         Admin admin = Admin.builder()

@@ -2,7 +2,6 @@ package goorm.deepdive.team1.infra.config.redis;
 
 import java.time.Duration;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -14,44 +13,40 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
+@RequiredArgsConstructor
 @EnableRedisRepositories(basePackages = "goorm.deepdive.team1.infra.repository.redis")
 public class RedisConfig {
-    @Value("${spring.data.redis.host}")
-    String redisHost;
+	private final RedisProperties redisProperties;
 
-    @Value("${spring.data.redis.port}")
-    int redisPort;
+	@Bean
+	public RedisConnectionFactory redisConnectionFactory() {
+		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
+		configuration.setHostName(redisProperties.getHost());
+		configuration.setPort(redisProperties.getPort());
+		configuration.setPassword(redisProperties.getPassword());
 
-    @Value("${spring.data.redis.password}")
-    String redisPassword;
+		LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
+			.commandTimeout(Duration.ofSeconds(5))
+			.shutdownTimeout(Duration.ofSeconds(2))
+			.build();
 
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-        configuration.setHostName(redisHost);
-        configuration.setPort(redisPort);
-        configuration.setPassword(redisPassword);
+		LettuceConnectionFactory factory = new LettuceConnectionFactory(configuration, clientConfig);
+		factory.afterPropertiesSet();
+		return factory;
+	}
 
-        LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
-                .commandTimeout(Duration.ofSeconds(5))
-                .shutdownTimeout(Duration.ofSeconds(2))
-                .build();
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+		RedisTemplate<String, Object> template = new RedisTemplate<>();
+		template.setConnectionFactory(connectionFactory);
+		template.setKeySerializer(new StringRedisSerializer());
+		template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+		template.setEnableTransactionSupport(true);
+		template.afterPropertiesSet();
 
-        LettuceConnectionFactory factory = new LettuceConnectionFactory(configuration, clientConfig);
-        factory.afterPropertiesSet();
-        return factory;
-    }
-
-    @Bean
-    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, String> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        template.setEnableTransactionSupport(true);
-        template.afterPropertiesSet();
-
-        return template;
-    }
+		return template;
+	}
 }

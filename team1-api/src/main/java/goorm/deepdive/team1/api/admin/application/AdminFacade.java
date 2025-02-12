@@ -93,11 +93,4 @@ public class AdminFacade {
         CookieUtil.clearAuthCookie(response, "Refresh-Token"); // 쿠키 삭제
 
     }
-
-
-//    public AdminLoginResponse login(AdminLoginRequest request) {
-//        Admin admin = adminQueryService.findByEmail(request.email());
-//        String token = adminCommandService.login(request.email(), request.password());
-//        return new AdminLoginResponse(admin.getId(), admin.getEmail(), token);
-//    }
 }

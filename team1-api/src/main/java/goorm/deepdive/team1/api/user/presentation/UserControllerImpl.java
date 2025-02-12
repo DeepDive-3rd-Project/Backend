@@ -2,6 +2,7 @@ package goorm.deepdive.team1.api.user.presentation;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.application.UserFacade;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
-import goorm.deepdive.team1.api.user.presentation.resonse.UserListResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
-import goorm.deepdive.team1.api.user.presentation.resonse.UserResponse;
+import goorm.deepdive.team1.domain.user.domain.UserCache;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,15 +34,18 @@ public class UserControllerImpl implements UserController{
 
 	@Override
 	@GetMapping("/{id}")
-	public ResponseEntity<UserResponse> getById(Long id) {
-		UserResponse response = userFacade.getById(id);
+	public ResponseEntity<UserCache> getUserCacheById(Long id) {
+		UserCache response = userFacade.getUserCacheById(id);
 		return ResponseEntity.ok(response);
 	}
 
 	@Override
 	@GetMapping
-	public ResponseEntity<UserListResponse> getAllByDeletedAtIsNull() {
-		UserListResponse response = userFacade.getAllByDeletedAtIsNull();
+	public ResponseEntity<PaginatedListResponse> getAll(
+		int page,
+		int size
+	) {
+		PaginatedListResponse response = userFacade.getAll(PageRequest.of(page, size));
 		return ResponseEntity.ok(response);
 	}
 
@@ -60,9 +64,44 @@ public class UserControllerImpl implements UserController{
 	}
 
 	@Override
-	@GetMapping("/search")
-	public ResponseEntity<UserListResponse> searchUsersByAddressKeyword(String keyword) {
-		UserListResponse response = userFacade.searchUsersByAddressKeyword(keyword);
+	@GetMapping("/search/road")
+	public ResponseEntity<PaginatedListResponse> searchUsersByRoadAddressKeyword(
+		int page,
+		int size,
+		String keyword
+	) {
+		PaginatedListResponse response = userFacade.searchUsersByRoadAddressKeyword(
+			keyword,
+			PageRequest.of(page, size)
+		);
+		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@GetMapping("/search/region")
+	public ResponseEntity<PaginatedListResponse> searchUsersByRegionAddressKeyword(
+		int page,
+		int size,
+		String keyword
+	) {
+		PaginatedListResponse response = userFacade.searchUsersByRegionAddressKeyword(
+			keyword,
+			PageRequest.of(page, size)
+		);
+		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@GetMapping("/search/name")
+	public ResponseEntity<PaginatedListResponse> searchUsersByName(
+		int page,
+		int size,
+		String name
+	) {
+		PaginatedListResponse response = userFacade.searchUsersByName(
+			name,
+			PageRequest.of(page, size)
+		);
 		return ResponseEntity.ok(response);
 	}
 }

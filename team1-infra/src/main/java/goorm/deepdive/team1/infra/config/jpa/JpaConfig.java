@@ -8,6 +8,6 @@ import goorm.deepdive.team1.infra.config.base.Team1Config;
 
 @EntityScan(basePackages = "goorm.deepdive.team1.domain")
 @Configuration
-@EnableJpaRepositories(basePackages = "goorm.deepdive.team1.infra")
+@EnableJpaRepositories(basePackages = "goorm.deepdive.team1.infra.repository.jpa")
 public class JpaConfig implements Team1Config {
 }

@@ -4,7 +4,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import goorm.deepdive.team1.domain.BaseTimeEntity;
+import goorm.deepdive.team1.domain.common.BaseTimeEntity;
 import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.user.domain.User;
 import jakarta.persistence.Entity;

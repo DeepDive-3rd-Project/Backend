@@ -21,7 +21,7 @@ public class AddressFacade {
 	private final AddressCommandService addressCommandService;
 
 	public AddressPersistResponse create(AddressCreateRequest request) {
-		Address address = addressCommandService.create(request.x(), request.y(), request.regionAddress(), request.roadAddress());
+		Address address = addressCommandService.create(request.x(), request.y(), request.regionAddress(), request.roadAddress(), request.region());
 		return AddressPersistResponse.from(address);
 	}
 
@@ -36,7 +36,7 @@ public class AddressFacade {
 	}
 
 	public void update(Long id, AddressUpdateRequest request) {
-		addressCommandService.update(id, request.x(), request.y(), request.regionAddress(), request.roadAddress());
+		addressCommandService.update(id, request.x(), request.y(), request.regionAddress(), request.roadAddress(), request.region());
 	}
 
 	public void delete(Long id) {

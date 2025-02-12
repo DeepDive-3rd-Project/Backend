@@ -22,8 +22,23 @@ spring:
         jdbc:
           time_zone: Asia/Seoul
 
+  elasticsearch:
+    uris: ${ELASTIC_URI:http://localhost:9200}
+    username: ${ELASTIC_USERNAME:elastic}
+    password: ${ELASTIC_PASSWORD}
+
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+
   jwt:
     secret: ${JWT_SECRET}
     refresh-secret: ${JWT_REFRESH_SECRET}
     expiration-seconds: ${JWT_EXPIRATION_SECONDS:600}
     refresh-expiration-seconds: ${JWT_REFRESH_EXPIRATION_SECONDS:604800}
+
+kakao:
+  api:
+    key: ${KAKAO_API_KEY}

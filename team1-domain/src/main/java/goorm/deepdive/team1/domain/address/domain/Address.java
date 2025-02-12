@@ -3,7 +3,7 @@ package goorm.deepdive.team1.domain.address.domain;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import goorm.deepdive.team1.domain.BaseTimeEntity;
+import goorm.deepdive.team1.domain.common.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,12 +35,16 @@ public class Address extends BaseTimeEntity {
 	@Column(nullable = false, unique = true)
 	private String roadAddress;
 
-	public static Address create(double x, double y, String regionAddress, String roadAddress) {
+	@Column(nullable = false)
+	private String region;
+
+	public static Address create(double x, double y, String regionAddress, String roadAddress, String region) {
 		return Address.builder()
 			.x(x)
 			.y(y)
 			.regionAddress(regionAddress)
 			.roadAddress(roadAddress)
+			.region(region)
 			.build();
 	}
 
@@ -59,4 +63,6 @@ public class Address extends BaseTimeEntity {
 	public void updateRoadAddress(String roadAddress) {
 		this.roadAddress = roadAddress;
 	}
+
+	public void updateRegion(String region) {this.region = region;}
 }

@@ -3,12 +3,9 @@ package goorm.deepdive.team1.domain.user.domain;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import goorm.deepdive.team1.domain.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import goorm.deepdive.team1.domain.common.BaseTimeEntity;
+import goorm.deepdive.team1.domain.user.domain.enums.Gender;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,12 +31,21 @@ public class User extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String phoneNumber;
 
-	public static User create(String name, String email, String phoneNumber) {
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
+
+	@Column(nullable = false)
+	private Integer age;
+
+	public static User create(String name, String email, String phoneNumber, Gender gender, Integer age) {
 		return User.builder()
-			.name(name)
-			.email(email)
-			.phoneNumber(phoneNumber)
-			.build();
+				.name(name)
+				.email(email)
+				.phoneNumber(phoneNumber)
+				.gender(gender)
+				.age(age)
+				.build();
 	}
 
 	public void updateName(String name) {
@@ -53,4 +59,8 @@ public class User extends BaseTimeEntity {
 	public void updatePhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+
+	public void updateGender(Gender gender) { this.gender = gender; }
+
+	public void updateAge(Integer age) {this.age = age;}
 }
