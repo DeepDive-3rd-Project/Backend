@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +21,6 @@ import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistoryCache;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
-import goorm.deepdive.team1.infra.data.exception.BatchProcessingException;
 import goorm.deepdive.team1.infra.repository.redis.RedisAddressHistoryRepository;
 import goorm.deepdive.team1.infra.repository.redis.RedisUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +43,7 @@ public class BatchService {
 
 	public void insertBatch(int total){
 		try {
-			String insertUserSql = "INSERT INTO \"user\" (name, email, phone_number, gender, age, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
+			String insertUserSql = "INSERT INTO \"user\" (name, email, phone_number, address_id, gender, age, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
 			String insertAddressSql = "INSERT INTO address (x, y, region_address, road_address, region, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
 			String insertHistorySql = "INSERT INTO address_history (user_id, address_id, created_at, updated_at) VALUES (?, ?, ?, ?) RETURNING id";
 
@@ -55,18 +53,8 @@ public class BatchService {
 				String name = faker.name().fullName().replaceAll(" ","");
 				String email = faker.bothify("??????####@example.com");
 				String phoneNumber = faker.regexify("010[1-9]{8}");
-				String gender = faker.options().option("남자", "여자");
+				String gender = faker.options().option("MALE", "FEMALE");
 				int age = faker.number().numberBetween(10, 80);
-				Long userId = jdbcTemplate.queryForObject(insertUserSql, new Object[]{
-					name,
-					email,
-					phoneNumber,
-					gender,
-					age,
-					Timestamp.valueOf(LocalDateTime.now()),
-					Timestamp.valueOf(LocalDateTime.now())
-				}, Long.class);
-
 
 				String region = faker.address().state();
 
@@ -87,6 +75,17 @@ public class BatchService {
 					regionAddress,
 					roadAddress,
 					region,
+					Timestamp.valueOf(LocalDateTime.now()),
+					Timestamp.valueOf(LocalDateTime.now())
+				}, Long.class);
+
+				Long userId = jdbcTemplate.queryForObject(insertUserSql, new Object[]{
+					name,
+					email,
+					phoneNumber,
+					addressId,
+					gender,
+					age,
 					Timestamp.valueOf(LocalDateTime.now()),
 					Timestamp.valueOf(LocalDateTime.now())
 				}, Long.class);
@@ -135,10 +134,9 @@ public class BatchService {
 			} else {
 				System.out.println("Bulk 인덱싱 성공!");
 			}
-
 			System.out.println(total + " 개 성공!");
 		} catch (Exception e) {
-			throw new BatchProcessingException();
+			throw new RuntimeException(e);
 		}
 	}
 
