@@ -1,4 +1,4 @@
-package goorm.deepdive.team1.api.kakao;
+package goorm.deepdive.team1.domain.address.application;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -13,19 +13,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import goorm.deepdive.team1.common.exception.CustomException;
-import goorm.deepdive.team1.common.exception.KakaoApiException.AddressNotFoundException;
-import goorm.deepdive.team1.common.exception.KakaoApiException.ApiCallFailedException;
-import goorm.deepdive.team1.common.exception.KakaoApiException.InvalidRequestException;
-import goorm.deepdive.team1.common.exception.KakaoApiException.RateLimitExceededException;
-import goorm.deepdive.team1.common.exception.KakaoApiException.ServiceDisabledException;
-import goorm.deepdive.team1.common.exception.KakaoApiException.UnauthorizedException;
+import goorm.deepdive.team1.domain.address.exception.KakaoApiException.AddressNotFoundException;
+import goorm.deepdive.team1.domain.address.exception.KakaoApiException.ApiCallFailedException;
+import goorm.deepdive.team1.domain.address.exception.KakaoApiException.InvalidRequestException;
+import goorm.deepdive.team1.domain.address.exception.KakaoApiException.RateLimitExceededException;
+import goorm.deepdive.team1.domain.address.exception.KakaoApiException.ServiceDisabledException;
+import goorm.deepdive.team1.domain.address.exception.KakaoApiException.UnauthorizedException;
 import goorm.deepdive.team1.domain.address.domain.Address;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class KakaoApiAddressService {
-
     private final ObjectMapper objectMapper;
 
     @Value("${kakao.api.key}")

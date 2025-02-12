@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class AddressQueryService {
 	private final AddressRepository addressRepository;
+	private final KakaoApiAddressService kakaoApiAddressService;
 
 	public Address getById(Long id) {
 		return addressRepository.findByIdAndDeletedAtIsNull(id)
@@ -30,10 +31,4 @@ public class AddressQueryService {
 		return addressRepository.findByRegionAddressOrRoadAddressAndDeletedAtIsNull(address, address)
 				.orElseThrow(AddressNotFoundException::new);
 	}
-
-	public Address findByRegionOrRoadAddress(String regionAddress, String roadAddress) {
-		return addressRepository.findByRegionAddressOrRoadAddressAndDeletedAtIsNull(regionAddress, roadAddress)
-				.orElse(null);
-	}
-
 }

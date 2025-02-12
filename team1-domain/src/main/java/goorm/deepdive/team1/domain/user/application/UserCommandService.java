@@ -25,7 +25,6 @@ public class UserCommandService {
 	}
 
 	public void update(Long id, String name, String email, String phoneNumber, Gender gender, Integer age) {
-
 		User user = getUser(id);
 
 		if (!user.getEmail().equals(email) && userRepository.existsByEmail(email)) {
@@ -37,6 +36,10 @@ public class UserCommandService {
 		user.updatePhoneNumber(phoneNumber);
 		user.updateGender(gender);
 		user.updateAge(age);
+	}
+
+	public boolean validateEmail(String email) {
+		return userRepository.existsByEmail(email);
 	}
 
 	public void delete(Long id) {
