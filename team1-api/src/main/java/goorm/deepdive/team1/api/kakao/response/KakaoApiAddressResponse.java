@@ -24,14 +24,20 @@ public record KakaoApiAddressResponse(
 
     @Schema(description = "도로명 주소", example = "서울특별시 강남구 테헤란로 123", requiredMode = REQUIRED)
     @NotBlank
-    String roadAddress
+    String roadAddress,
+
+    @Schema(description = "지역", example = "서울", requiredMode = REQUIRED)
+    @NotBlank
+    String region
 ) {
-        public static KakaoApiAddressResponse of(double x, double y, String regionAddress, String roadAddress) {
+        public static KakaoApiAddressResponse of(double x, double y, String regionAddress, String roadAddress, String region) {
             return KakaoApiAddressResponse.builder()
                     .x(x)
                     .y(y)
                     .regionAddress(regionAddress)
                     .roadAddress(roadAddress)
+                    .region(region)
                     .build();
         }
+
 }
