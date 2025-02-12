@@ -31,4 +31,6 @@ public interface UserRepository {
 	boolean existsByEmail(String email);
 
 	void saveCache(UserCache userCache);
+
+	void saveDocument(UserDocument userDocument);
 }

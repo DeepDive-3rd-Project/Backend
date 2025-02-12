@@ -33,7 +33,7 @@ public class User extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String phoneNumber;
 
-	@OneToOne(fetch = LAZY)
+	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "address_id", nullable = false)
 	private Address address;
 

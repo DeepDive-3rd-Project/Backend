@@ -15,6 +15,8 @@ import goorm.deepdive.team1.domain.address.application.AddressCommandService;
 import goorm.deepdive.team1.domain.address.application.AddressQueryService;
 import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
+import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
+import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistoryCache;
 import goorm.deepdive.team1.domain.user.application.UserCommandService;
 import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
@@ -40,13 +42,13 @@ public class UserFacade {
 			throw new UserEmailAlreadyExistsException();
 		}
 
-		KakaoApiAddressResponse kakaoApiAddressResponse = kakaoApiAddressService.getGeoDataFromAddress(request.address());
 		Address address = addressQueryService.findByRegionOrRoadAddress(
-				kakaoApiAddressResponse.regionAddress(),
-				kakaoApiAddressResponse.roadAddress()
+				request.regionAddress(), request.roadAddress()
 		);
 
 		if (address == null) {
+			KakaoApiAddressResponse kakaoApiAddressResponse = kakaoApiAddressService.getGeoDataFromAddress(request.roadAddress());
+
 			address = addressCommandService.create(
 					kakaoApiAddressResponse.x(),
 					kakaoApiAddressResponse.y(),
@@ -56,10 +58,18 @@ public class UserFacade {
 			);
 			addressCommandService.save(address);
 		}
-
 		User user = userCommandService.create(request.name(), request.email(), request.phoneNumber(), address, request.gender(), request.age());
+		AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
+
 		addressHistoryCommandService.create(user, address);
 
+		UserCache userCache = UserCache.from(user);
+		UserDocument userDocument = UserDocument.from(user);
+		AddressHistoryCache addressHistoryCache = AddressHistoryCache.from(addressHistory);
+
+		userCommandService.saveCache(userCache);
+		userCommandService.saveDocument(userDocument);
+		addressHistoryCommandService.saveCache(addressHistoryCache);
 		return UserPersistResponse.from(user);
 	}
 

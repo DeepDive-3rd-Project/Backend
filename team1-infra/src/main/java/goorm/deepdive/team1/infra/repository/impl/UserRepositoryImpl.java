@@ -76,4 +76,9 @@ public class UserRepositoryImpl implements UserRepository {
 	public void saveCache(UserCache userCache) {
 		redisUserRepository.save(userCache);
 	}
+
+	@Override
+	public void saveDocument(UserDocument userDocument) {
+		elasticUserRepository.save(userDocument);
+	}
 }

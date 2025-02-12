@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
+import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistoryCache;
 import goorm.deepdive.team1.domain.addresshistory.exception.AddressHistoryNotFoundException;
 import goorm.deepdive.team1.domain.addresshistory.infrastructure.AddressHistoryRepository;
 import goorm.deepdive.team1.domain.user.domain.User;
@@ -29,5 +30,9 @@ public class AddressHistoryCommandService {
 	private AddressHistory getById(Long id) {
 		return addressHistoryRepository.findByIdAndDeletedAtIsNull(id)
 			.orElseThrow(AddressHistoryNotFoundException::new);
+	}
+
+	public void saveCache(AddressHistoryCache addressHistoryCache) {
+
 	}
 }

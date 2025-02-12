@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
+import goorm.deepdive.team1.domain.user.domain.UserDocument;
 import goorm.deepdive.team1.domain.user.domain.enums.Gender;
 import goorm.deepdive.team1.domain.user.exception.UserEmailAlreadyExistsException;
 import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
@@ -50,5 +51,9 @@ public class UserCommandService {
 
 	public void saveCache(UserCache userCache) {
 		userRepository.saveCache(userCache);
+	}
+
+	public void saveDocument(UserDocument userDocument) {
+		userRepository.saveDocument(userDocument);
 	}
 }

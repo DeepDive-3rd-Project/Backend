@@ -43,7 +43,21 @@ public class UserDocument {
 		this.age = age;
 	}
 
-	public UserDocument create(Long id, String name, String email, String phoneNumber, String regionAddress, String roadAddress, String region, String gender, Integer age) {
+	public static UserDocument from(User user) {
+		return UserDocument.builder()
+			.userId(user.getId().toString())
+			.name(user.getName())
+			.email(user.getEmail())
+			.phoneNumber(user.getPhoneNumber())
+			.roadAddress(user.getAddress().getRoadAddress())
+			.regionAddress(user.getAddress().getRegionAddress())
+			.region(user.getAddress().getRegion())
+			.gender(user.getGender().getValue())
+			.age(user.getAge())
+			.build();
+	}
+
+	public static UserDocument create(Long id, String name, String email, String phoneNumber, String regionAddress, String roadAddress, String region, String gender, Integer age) {
 		return UserDocument.builder()
 				.userId(String.valueOf(id))
 				.name(name)
