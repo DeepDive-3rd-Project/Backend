@@ -1,5 +1,6 @@
 package goorm.deepdive.team1.domain.user.application;
 
+import goorm.deepdive.team1.domain.user.domain.enums.Gender;
 import goorm.deepdive.team1.domain.user.exception.UserEmailAlreadyExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +16,12 @@ import lombok.RequiredArgsConstructor;
 public class UserCommandService {
 	private final UserRepository userRepository;
 
-	public User create(String name, String email, String phoneNumber, String gender, Integer age) {
+	public User create(String name, String email, String phoneNumber, Gender gender, Integer age) {
 		User user = User.create(name, email, phoneNumber, gender, age);
 		return userRepository.save(user);
 	}
 
-	public void update(Long id, String name, String email, String phoneNumber, String gender, Integer age) {
+	public void update(Long id, String name, String email, String phoneNumber, Gender gender, Integer age) {
 
 		User user = getUser(id);
 

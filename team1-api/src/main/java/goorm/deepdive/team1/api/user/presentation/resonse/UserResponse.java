@@ -3,6 +3,7 @@ package goorm.deepdive.team1.api.user.presentation.resonse;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import goorm.deepdive.team1.domain.user.domain.User;
+import goorm.deepdive.team1.domain.user.domain.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,8 +24,8 @@ public record UserResponse(
 	String phoneNumber,
 
 	@Schema(description = "성별", example = "남자", requiredMode = REQUIRED)
-	@NotBlank
-	String gender,
+	@NotNull
+	Gender gender,
 
 	@Schema(description = "나이", example = "20", requiredMode = REQUIRED)
 	@NotNull
