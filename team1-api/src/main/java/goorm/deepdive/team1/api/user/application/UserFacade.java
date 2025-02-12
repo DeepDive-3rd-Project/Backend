@@ -13,12 +13,13 @@ import goorm.deepdive.team1.domain.address.application.AddressCommandService;
 import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
 import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
-import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistoryCache;
 import goorm.deepdive.team1.domain.user.application.UserCommandService;
 import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
+import goorm.deepdive.team1.infra.kafka.producer.AddressHistoryProducer;
+import goorm.deepdive.team1.infra.kafka.producer.UserProducer;
 import lombok.RequiredArgsConstructor;
 
 
@@ -29,6 +30,8 @@ public class UserFacade {
 	private final UserCommandService userCommandService;
 	private final AddressHistoryCommandService addressHistoryCommandService;
 	private final AddressCommandService addressCommandService;
+	private final UserProducer userProducer;
+	private final AddressHistoryProducer addressHistoryProducer;
 
 	@Transactional
 	public UserPersistResponse create(UserCreateRequest request) {
@@ -47,15 +50,8 @@ public class UserFacade {
 
 		AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
 
-		addressHistoryCommandService.create(user, address);
-
-		UserCache userCache = UserCache.from(user);
-		UserDocument userDocument = UserDocument.from(user);
-		AddressHistoryCache addressHistoryCache = AddressHistoryCache.from(addressHistory);
-
-		userCommandService.saveCache(userCache);
-		userCommandService.saveDocument(userDocument);
-		addressHistoryCommandService.saveCache(addressHistoryCache);
+		userProducer.sendMessageToCreate(user);
+		addressHistoryProducer.sendMessageToCreate(addressHistory);
 
 		return UserPersistResponse.from(user);
 	}

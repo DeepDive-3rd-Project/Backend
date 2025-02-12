@@ -39,6 +39,8 @@ spring:
     expiration-seconds: ${JWT_EXPIRATION_SECONDS:600}
     refresh-expiration-seconds: ${JWT_REFRESH_EXPIRATION_SECONDS:604800}
 
+  kafka:
+    bootstrap-servers: 127.0.0.1:19092,127.0.0.1:19094,127.0.0.1:19096
 kakao:
   api:
     key: ${KAKAO_API_KEY}
