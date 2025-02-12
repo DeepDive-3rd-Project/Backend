@@ -63,8 +63,18 @@ public class UserFacade {
 		return UserPersistResponse.from(user);
 	}
 
+	@Transactional
 	public UserCache getUserCacheById(Long id) {
-		return userQueryService.getUserCacheById(id);
+		UserCache userCache;
+		userCache = userQueryService.getUserCacheById(id);
+
+		if (userCache == null) {
+			User user = userQueryService.getById(id);
+			userCache = UserCache.from(user);
+			userCommandService.saveCache(userCache);
+		}
+
+		return userCache;
 	}
 
 	public PaginatedListResponse getAll(Pageable pageable) {

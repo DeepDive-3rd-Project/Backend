@@ -1,11 +1,13 @@
 package goorm.deepdive.team1.domain.user.application;
 
-import goorm.deepdive.team1.domain.user.domain.enums.Gender;
-import goorm.deepdive.team1.domain.user.exception.UserEmailAlreadyExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.user.domain.User;
+import goorm.deepdive.team1.domain.user.domain.UserCache;
+import goorm.deepdive.team1.domain.user.domain.enums.Gender;
+import goorm.deepdive.team1.domain.user.exception.UserEmailAlreadyExistsException;
 import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
 import goorm.deepdive.team1.domain.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +18,8 @@ import lombok.RequiredArgsConstructor;
 public class UserCommandService {
 	private final UserRepository userRepository;
 
-	public User create(String name, String email, String phoneNumber, Gender gender, Integer age) {
-		User user = User.create(name, email, phoneNumber, gender, age);
+	public User create(String name, String email, String phoneNumber, Address address, Gender gender, Integer age) {
+		User user = User.create(name, email, phoneNumber, address, gender, age);
 		return userRepository.save(user);
 	}
 
@@ -44,5 +46,9 @@ public class UserCommandService {
 	private User getUser(Long id) {
 		return userRepository.findByIdAndDeletedAtIsNull(id)
 			.orElseThrow(UserNotFoundException::new);
+	}
+
+	public void saveCache(UserCache userCache) {
+		userRepository.saveCache(userCache);
 	}
 }
