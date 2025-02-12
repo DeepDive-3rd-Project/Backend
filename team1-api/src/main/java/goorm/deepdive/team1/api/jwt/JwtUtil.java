@@ -25,31 +25,19 @@ import java.util.Date;
 public class JwtUtil {
 
     private final TokenRepository tokenRepository;
+    private final JwtProperties jwtProperties;
 
     private SecretKey Access_secretKey;
     private SecretKey refrsh_secretKey;
-
-    @Value("${spring.jwt.secret}")
-    private String secret;
-
-    @Value("${spring.jwt.expiration-seconds}")
-    private long expirationSeconds;
-
-    @Value("${spring.jwt.refresh-secret}")
-    private String refresh_secret;
-
-    @Value("${spring.jwt.expiration-seconds}")
-    private long refresh_expirationSeconds;
-
-
+    
     @PostConstruct
     public void init() {
-        this.Access_secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        this.refrsh_secretKey = Keys.hmacShaKeyFor(refresh_secret.getBytes(StandardCharsets.UTF_8));
+        this.Access_secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
+        this.refrsh_secretKey = Keys.hmacShaKeyFor(jwtProperties.getRefreshSecret().getBytes(StandardCharsets.UTF_8));
     }
 
     public String createAccessToken(String adminId, String role) {
-        long expirationMs = expirationSeconds * 1000; // 만료시간 (ex expirationSeconds가 600인경우 => 10분)
+        long expirationMs = jwtProperties.getExpirationSeconds() * 1000; // 만료시간 (ex expirationSeconds가 600인경우 => 10분)
         return Jwts.builder()
                 .claim("AdminId", adminId)
                 .claim("role", role)
@@ -60,7 +48,7 @@ public class JwtUtil {
     }
 
     public String createRefreshToken(String adminId, String role) {
-        long expirationMs = refresh_expirationSeconds * 1000; // 7일
+        long expirationMs = jwtProperties.getRefreshExpirationSeconds() * 1000; // 7일
         String refreshToken = Jwts.builder()
                 .claim("AdminId", adminId)
                 .claim("role", role)
@@ -76,7 +64,7 @@ public class JwtUtil {
             tokenRepository.deleteRefreshToken(adminId); // 기존 리프레시 토큰 삭제
         }
         // 새로운 리프레시 토큰 생성 후 저장
-        tokenRepository.saveRefreshToken(adminId, refreshToken, refresh_expirationSeconds);
+        tokenRepository.saveRefreshToken(adminId, refreshToken, jwtProperties.getRefreshExpirationSeconds());
 
         return refreshToken;
     }
