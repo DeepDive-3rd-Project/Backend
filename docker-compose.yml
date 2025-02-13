@@ -1,4 +1,52 @@
+version: '3.8'
+
 services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: backend:latest
+    container_name: backend-${ENV} # 환경별 컨테이너 이름
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+      POSTGRES_HOST: postgres  # 컨테이너명으로 지정
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: redis  # 컨테이너명으로 지정
+      REDIS_PORT: "6379"
+    depends_on:
+      - redis
+      - postgres
+    restart: always
+    networks:
+      - backend-network
+
+  redis:
+    image: redis:latest
+    container_name: redis-${ENV}
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - backend-network
+
+  postgres:
+    image: postgres:15
+    container_name: postgres-${ENV}
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    restart: always
+    networks:
+      - backend-network
+
   kafka-0:
     image: docker.io/bitnami/kafka:3.9
     container_name: kafka-0
@@ -24,7 +72,7 @@ services:
     volumes:
       - kafka_0_data:/bitnami/kafka
     networks:
-      - kafka-net
+      - backend-network
 
   kafka-1:
     image: docker.io/bitnami/kafka:3.9
@@ -51,7 +99,7 @@ services:
     volumes:
       - kafka_1_data:/bitnami/kafka
     networks:
-      - kafka-net
+      - backend-network
 
   kafka-2:
     image: docker.io/bitnami/kafka:3.9
@@ -78,7 +126,7 @@ services:
     volumes:
       - kafka_2_data:/bitnami/kafka
     networks:
-      - kafka-net
+      - backend-network
 
   # Debezium (Change Data Capture)
   debezium:
@@ -102,7 +150,7 @@ services:
       - kafka-1
       - kafka-2
     networks:
-      - kafka-net
+      - backend-network
 
 
   # Kafka UI (Optional)
@@ -119,13 +167,7 @@ services:
       - kafka-1
       - kafka-2
     networks:
-      - kafka-net
-
-
-networks:
-  kafka-net:
-    driver: bridge
-
+      - backend-network
 
 volumes:
   kafka_0_data:
@@ -134,3 +176,8 @@ volumes:
     driver: local
   kafka_2_data:
     driver: local
+
+
+networks:
+  backend-network:
+    driver: bridge
