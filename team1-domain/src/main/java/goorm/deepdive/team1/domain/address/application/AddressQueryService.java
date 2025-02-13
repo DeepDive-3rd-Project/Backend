@@ -30,10 +30,4 @@ public class AddressQueryService {
 		return addressRepository.findByRegionAddressOrRoadAddressAndDeletedAtIsNull(address, address)
 				.orElseThrow(AddressNotFoundException::new);
 	}
-
-	public Address findByRegionOrRoadAddress(String regionAddress, String roadAddress) {
-		return addressRepository.findByRegionAddressOrRoadAddressAndDeletedAtIsNull(regionAddress, roadAddress)
-				.orElse(null);
-	}
-
 }

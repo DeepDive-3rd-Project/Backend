@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class AddressCommandService {
 	private final AddressRepository addressRepository;
+	private final KakaoApiAddressService kakaoApiAddressService;
 
 	public Address create(double x, double y, String regionAddress, String roadAddress, String region) {
 		Address address = Address.create(x, y, regionAddress, roadAddress, region);
@@ -38,8 +39,19 @@ public class AddressCommandService {
 		address.markAsDeleted();
 	}
 
+	@Transactional
+	public Address findOrCreateAddress(String regionAddress, String roadAddress) {
+		return addressRepository.findByRegionAddressOrRoadAddressAndDeletedAtIsNull(regionAddress, roadAddress)
+			.orElseGet(() -> createAddressFromKakaoApi(roadAddress));
+	}
+
 	private Address getAddress(Long id) {
 		return addressRepository.findByIdAndDeletedAtIsNull(id)
 			.orElseThrow(AddressNotFoundException::new);
+	}
+
+	private Address createAddressFromKakaoApi(String roadAddress) {
+		Address newAddress = kakaoApiAddressService.getGeoDataFromAddress(roadAddress);
+		return addressRepository.save(newAddress);
 	}
 }

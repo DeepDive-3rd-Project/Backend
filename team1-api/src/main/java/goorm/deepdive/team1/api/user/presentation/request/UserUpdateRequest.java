@@ -20,6 +20,14 @@ public record UserUpdateRequest(
 	@NotBlank
 	String phoneNumber,
 
+	@Schema(description = "지번 주소", example = "경기 수원시 장안구 연무동 56-45", requiredMode = REQUIRED)
+	@NotBlank
+	String regionAddress,
+
+	@Schema(description = "도로명 주소", example = "경기 수원시 장안구 창훈로52번길 22", requiredMode = REQUIRED)
+	@NotBlank
+	String roadAddress,
+
 	@Schema(description = "성별", example = "남자", requiredMode = REQUIRED)
 	@NotNull
 	Gender gender,
@@ -27,7 +35,5 @@ public record UserUpdateRequest(
 	@Schema(description = "나이", example = "20", requiredMode = REQUIRED)
 	@NotNull
 	Integer age
-
-
 ) {
 }

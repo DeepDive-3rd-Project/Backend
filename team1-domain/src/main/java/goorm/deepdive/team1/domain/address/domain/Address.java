@@ -8,6 +8,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +20,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
+@Table(name = "address", indexes = {
+	@Index(name = "idx_region_address", columnList = "regionAddress"),
+	@Index(name = "idx_road_address", columnList = "roadAddress"),
+	@Index(name = "idx_region", columnList = "region")
+})
 public class Address extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
