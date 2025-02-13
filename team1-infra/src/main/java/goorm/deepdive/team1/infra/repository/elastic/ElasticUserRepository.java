@@ -177,7 +177,7 @@ public class ElasticUserRepository {
 			case "50.0-60.0":
 				rangeQuery.gte(50.0).lt(60.0);
 				break;
-			case "60.0-":
+			case "60.0-*":
 				rangeQuery.gte(60.0);
 				break;
 			default:
@@ -216,7 +216,7 @@ public class ElasticUserRepository {
 			case "30.0-40.0" -> AggregationRange.of(r -> r.from(30.0).to(40.0));
 			case "40.0-50.0" -> AggregationRange.of(r -> r.from(40.0).to(50.0));
 			case "50.0-60.0" -> AggregationRange.of(r -> r.from(50.0).to(60.0));
-			case "60.0-" -> AggregationRange.of(r -> r.from(60.0));
+			case "60.0-*" -> AggregationRange.of(r -> r.from(60.0));
 			default -> throw new IllegalArgumentException("Invalid age group: " + ageGroup);
 		};
 	}

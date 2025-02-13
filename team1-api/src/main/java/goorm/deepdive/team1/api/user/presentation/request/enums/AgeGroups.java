@@ -11,7 +11,7 @@ public enum AgeGroups {
 	THIRTIES("30.0-40.0"),
 	FORTIES("40.0-50.0"),
 	FIFTIES("50.0-60.0"),
-	SIXTIES_AND_ABOVE("60.0-");
+	SIXTIES_AND_ABOVE("60.0-*");
 
 	private final String description;
 }
