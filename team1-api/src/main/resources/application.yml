@@ -23,9 +23,6 @@ spring:
         jdbc:
           time_zone: Asia/Seoul
 
-
-
-
   elasticsearch:
     uris: ${ELASTIC_URI:http://localhost:9200}
     username: ${ELASTIC_USERNAME:elastic}
