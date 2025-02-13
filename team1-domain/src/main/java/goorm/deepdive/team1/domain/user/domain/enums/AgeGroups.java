@@ -1,4 +1,4 @@
-package goorm.deepdive.team1.api.user.presentation.request.enums;
+package goorm.deepdive.team1.domain.user.domain.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

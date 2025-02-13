@@ -145,8 +145,7 @@ public class ElasticUserRepository {
 	}
 
 
-	private Query getAgeRangeQuery(List<String> ageGroups) {
-		if (ageGroups == null || ageGroups.isEmpty()) return Query.of(q -> q.matchAll(m -> m));
+	public Query getAgeRangeQuery(List<String> ageGroups) {
 		return Query.of(q -> q.bool(b -> b
 			.should(ageGroups.stream()
 				.map(this::getAgeRangeQueryForGroup)

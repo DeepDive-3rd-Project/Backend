@@ -1,5 +1,12 @@
 package goorm.deepdive.team1.api.user.application;
 
+import static goorm.deepdive.team1.domain.user.domain.enums.AgeGroups.FIFTIES;
+import static goorm.deepdive.team1.domain.user.domain.enums.AgeGroups.FORTIES;
+import static goorm.deepdive.team1.domain.user.domain.enums.AgeGroups.SIXTIES_AND_ABOVE;
+import static goorm.deepdive.team1.domain.user.domain.enums.AgeGroups.TEENS;
+import static goorm.deepdive.team1.domain.user.domain.enums.AgeGroups.THIRTIES;
+import static goorm.deepdive.team1.domain.user.domain.enums.AgeGroups.TWENTIES;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
-import goorm.deepdive.team1.api.user.presentation.request.enums.AgeGroups;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserStatsResponse;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
@@ -23,6 +29,7 @@ import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
+import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
 import goorm.deepdive.team1.infra.kafka.producer.AddressHistoryProducer;
 import goorm.deepdive.team1.infra.kafka.producer.UserProducer;
 import lombok.RequiredArgsConstructor;
@@ -114,8 +121,14 @@ public class UserFacade {
 
 	public UserStatsResponse getUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups) {
 		List<String> ageGroup = (ageGroups == null || ageGroups.isEmpty())
-			? List.of()
-			: ageGroups.stream().map(AgeGroups::getDescription).toList();
+			? List.of(
+			TEENS.getDescription(),
+			TWENTIES.getDescription(),
+			THIRTIES.getDescription(),
+			FORTIES.getDescription(),
+			FIFTIES.getDescription(),
+			SIXTIES_AND_ABOVE.getDescription()
+		) : ageGroups.stream().map(AgeGroups::getDescription).toList();
 
 		Map<String, Object> stats = userQueryService.getUserStatistics(gender, region, ageGroup);
 		return UserStatsResponse.from(stats);
