@@ -118,7 +118,6 @@ public class ElasticUserRepository {
 				"ageStats", ageStats
 			);
 		} catch (Exception e) {
-			log.error("[ERROR] Elasticsearch Query Failed - {}", e.getMessage());
 			throw new ElasticQueryExecutionException();
 		}
 	}
@@ -156,9 +155,6 @@ public class ElasticUserRepository {
 		));
 	}
 
-	/**
-	 * 특정 연령대의 RangeQuery 생성
-	 */
 	private Query getAgeRangeQueryForGroup(String ageGroup) {
 		NumberRangeQuery.Builder rangeQuery = new NumberRangeQuery.Builder().field("age");
 		switch (ageGroup) {
@@ -181,14 +177,11 @@ public class ElasticUserRepository {
 				rangeQuery.gte(60.0);
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid age group: " + ageGroup);
+				throw new IllegalArgumentException(ageGroup);
 		}
 		return Query.of(q -> q.range(r -> r.number(rangeQuery.build())));
 	}
 
-	/**
-	 * Elasticsearch에서 받은 집계 데이터 추출
-	 */
 	private Map<String, Long> extractTermsAggregation(SearchResponse<Void> response, String aggName) {
 		return response.aggregations().get(aggName).sterms().buckets().array().stream()
 			.collect(Collectors.toMap(bucket -> bucket.key()._get().toString(), StringTermsBucket::docCount));
@@ -200,9 +193,6 @@ public class ElasticUserRepository {
 				MultiBucketBase::docCount));
 	}
 
-	/**
-	 * 연령대 Range Aggregation 설정
-	 */
 	private List<AggregationRange> getAgeBuckets(List<String> ageGroups) {
 		return ageGroups.stream()
 			.map(this::getAgeBucket)
@@ -217,15 +207,11 @@ public class ElasticUserRepository {
 			case "40.0-50.0" -> AggregationRange.of(r -> r.from(40.0).to(50.0));
 			case "50.0-60.0" -> AggregationRange.of(r -> r.from(50.0).to(60.0));
 			case "60.0-*" -> AggregationRange.of(r -> r.from(60.0));
-			default -> throw new IllegalArgumentException("Invalid age group: " + ageGroup);
+			default -> throw new IllegalArgumentException(ageGroup);
 		};
 	}
 
-	/**
-	 * 조회되지 않은 항목을 0으로 채우는 함수
-	 */
 	private Map<String, Long> fillMissingKeys(Map<String, Long> originalData, List<String> requestedKeys) {
-		System.out.println("Original Keys: " + originalData.keySet());
 		if (requestedKeys == null) return originalData;
 		return requestedKeys.stream()
 			.collect(Collectors.toMap(
