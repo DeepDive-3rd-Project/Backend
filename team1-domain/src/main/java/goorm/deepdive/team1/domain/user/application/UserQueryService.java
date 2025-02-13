@@ -1,5 +1,8 @@
 package goorm.deepdive.team1.domain.user.application;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,5 +48,9 @@ public class UserQueryService {
 
 	public boolean existsByEmail(String email) {
 		return userRepository.existsByEmail(email);
+	}
+
+	public Map<String, Object> getUserStatistics(List<String> gender, List<String> region, List<String> ageGroups) {
+		return userRepository.searchUserStatistics(gender, region, ageGroups);
 	}
 }

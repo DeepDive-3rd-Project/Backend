@@ -1,5 +1,7 @@
 package goorm.deepdive.team1.domain.user.infrastructure;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -33,4 +35,6 @@ public interface UserRepository {
 	void saveCache(UserCache userCache);
 
 	void saveDocument(UserDocument userDocument);
+
+	Map<String, Object> searchUserStatistics(List<String> gender, List<String> region, List<String> ageGroups);
 }

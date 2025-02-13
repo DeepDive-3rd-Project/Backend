@@ -1,5 +1,7 @@
 package goorm.deepdive.team1.api.user.presentation;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
+import goorm.deepdive.team1.api.user.presentation.request.enums.AgeGroups;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserListResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
+import goorm.deepdive.team1.api.user.presentation.resonse.UserStatsResponse;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -156,5 +160,24 @@ public interface UserController {
 		)
 		@RequestParam(required = false)
 		String name
+	);
+
+	@Operation(summary = "사용자 통계 API", description = """
+			- Description : 이 API는 사용자 통계 데이터를 조회할 수 있습니다.
+		""")
+	@ApiResponse(responseCode = "200")
+	ResponseEntity<UserStatsResponse> searchStats(
+		@Parameter(
+			description = "성별",
+			example = "[MALE, FEMALE]"
+		) @RequestParam(required = false) List<String> gender,
+		@Parameter(
+			description = "지역",
+			example = "[\"서울\", \"부산\"]"
+		) @RequestParam(required = false) List<String> region,
+		@Parameter(
+			description = "연령대",
+			example = "[TEEN, TWENTIES]"
+		) @RequestParam(required = false) List<AgeGroups> ageGroups
 	);
 }

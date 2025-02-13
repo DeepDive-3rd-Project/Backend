@@ -45,11 +45,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.status(response.status()).body(response);
 	}
 
-	@ExceptionHandler(Exception.class)
-	protected ResponseEntity<ExceptionResponse> handleException(Exception exception) {
-		eventPublisher.publishEvent(exception);
-		return ResponseEntity.internalServerError().body(ExceptionResponse.from(SERVER_ERROR));
-	}
+	// @ExceptionHandler(Exception.class)
+	// protected ResponseEntity<ExceptionResponse> handleException(Exception exception) {
+	// 	eventPublisher.publishEvent(exception);
+	// 	return ResponseEntity.internalServerError().body(ExceptionResponse.from(SERVER_ERROR));
+	// }
 
 	@Override
 	protected ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException exception,

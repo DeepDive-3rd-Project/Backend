@@ -1,6 +1,7 @@
 package goorm.deepdive.team1.infra.repository.elastic;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -9,15 +10,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.FieldValue;
+import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch._types.query_dsl.NumberRangeQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
-import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
 import goorm.deepdive.team1.infra.repository.elastic.exception.ElasticQueryExecutionException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ElasticUserRepository {
@@ -70,16 +76,159 @@ public class ElasticUserRepository {
 
 	public void save(UserDocument userDocument) {
 		try {
-			IndexResponse response = elasticsearchClient.index(IndexRequest.of(i -> i
+			elasticsearchClient.index(IndexRequest.of(i -> i
 				.index(INDEX_NAME)
 				.id(userDocument.getUserId())
 				.document(userDocument)
 			));
-
-			System.out.println("문서 저장 성공! ID: " + response.id());
-
 		} catch (Exception e) {
 			throw new ElasticQueryExecutionException();
 		}
+	}
+
+	public Map<String, Object> searchUserStatistics(List<String> genders, List<String> regions, List<String> ageGroups) {
+		try {
+			SearchResponse<Void> response = elasticsearchClient.search(s -> s
+					.index(INDEX_NAME)
+					.size(0)
+					.query(q -> q
+						.bool(b -> b
+							.filter(getGenderQuery(genders))
+							.filter(getRegionQuery(regions))
+							.filter(getAgeRangeQuery(ageGroups))
+						)
+					)
+					.aggregations("genderStats", a -> a.terms(t -> t.field("gender")))
+					.aggregations("regionStats", a -> a.terms(t -> t.field("region")))
+					.aggregations("ageStats", a -> a.range(r -> r.field("age").ranges(getAgeBuckets(ageGroups))))
+				, Void.class);
+
+			long total = response.hits().total() != null ? response.hits().total().value() : 0;
+
+			Map<String, Long> genderStats = fillMissingKeys(extractAggregation(response, "genderStats"), genders);
+			Map<String, Long> regionStats = fillMissingKeys(extractAggregation(response, "regionStats"), regions);
+			Map<String, Long> ageStats = fillMissingKeys(extractAggregation(response, "ageStats"), ageGroups);
+
+			return Map.of(
+				"total", total,
+				"genderStats", genderStats,
+				"regionStats", regionStats,
+				"ageStats", ageStats
+			);
+		} catch (Exception e) {
+			log.error("[ERROR] Elasticsearch Query Failed - {}", e.getMessage());
+			throw new ElasticQueryExecutionException();
+		}
+	}
+
+	private Query getGenderQuery(List<String> genders) {
+		if (genders == null || genders.isEmpty()) return Query.of(q -> q.matchAll(m -> m));
+		return Query.of(q -> q.terms(t -> t
+			.field("gender")
+			.terms(v -> v.value(genders.stream()
+				.map(FieldValue::of)
+				.toList()
+			))
+		));
+	}
+
+	private Query getRegionQuery(List<String> regions) {
+		if (regions == null || regions.isEmpty()) return Query.of(q -> q.matchAll(m -> m));
+		return Query.of(q -> q.terms(t -> t
+			.field("region")
+			.terms(v -> v.value(regions.stream()
+				.map(FieldValue::of)
+				.toList()
+			))
+		));
+	}
+
+
+	private Query getAgeRangeQuery(List<String> ageGroups) {
+		if (ageGroups == null || ageGroups.isEmpty()) return Query.of(q -> q.matchAll(m -> m));
+		return Query.of(q -> q.bool(b -> b
+			.should(ageGroups.stream()
+				.map(this::getAgeRangeQueryForGroup)
+				.collect(Collectors.toList()))
+			.minimumShouldMatch(String.valueOf(1))
+		));
+	}
+
+	/**
+	 * 특정 연령대의 RangeQuery 생성
+	 */
+	private Query getAgeRangeQueryForGroup(String ageGroup) {
+		NumberRangeQuery.Builder rangeQuery = new NumberRangeQuery.Builder().field("age");
+		switch (ageGroup) {
+			case "10대":
+				rangeQuery.gte(10.0).lt(20.0);
+				break;
+			case "20대":
+				rangeQuery.gte(20.0).lt(30.0);
+				break;
+			case "30대":
+				rangeQuery.gte(30.0).lt(40.0);
+				break;
+			case "40대":
+				rangeQuery.gte(40.0).lt(50.0);
+				break;
+			case "50대":
+				rangeQuery.gte(50.0).lt(60.0);
+				break;
+			case "60대 이상":
+				rangeQuery.gte(60.0);
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid age group: " + ageGroup);
+		}
+		return Query.of(q -> q.range(r -> r.number(rangeQuery.build())));
+	}
+
+	/**
+	 * Elasticsearch에서 받은 집계 데이터 추출
+	 */
+	private Map<String, Long> extractAggregation(SearchResponse<Void> response, String aggName) {
+		return response.aggregations().get(aggName).sterms().buckets().array().stream()
+			.collect(Collectors.toMap(bucket -> bucket.key()._get().toString(), StringTermsBucket::docCount));
+	}
+
+	/**
+	 * 연령대 Range Aggregation 설정
+	 */
+	private List<AggregationRange> getAgeBuckets(List<String> ageGroups) {
+		return ageGroups.stream()
+			.map(this::getAgeBucket)
+			.toList();
+	}
+
+	private AggregationRange getAgeBucket(String ageGroup) {
+		switch (ageGroup) {
+			case "10대":
+				return AggregationRange.of(r -> r.from(10.0).to(20.0));
+			case "20대":
+				return AggregationRange.of(r -> r.from(20.0).to(30.0));
+			case "30대":
+				return AggregationRange.of(r -> r.from(30.0).to(40.0));
+			case "40대":
+				return AggregationRange.of(r -> r.from(40.0).to(50.0));
+			case "50대":
+				return AggregationRange.of(r -> r.from(50.0).to(60.0));
+			case "60대 이상":
+				return AggregationRange.of(r -> r.from(60.0));
+			default:
+				throw new IllegalArgumentException("Invalid age group: " + ageGroup);
+		}
+	}
+
+	/**
+	 * 조회되지 않은 항목을 0으로 채우는 함수
+	 */
+	private Map<String, Long> fillMissingKeys(Map<String, Long> originalData, List<String> requestedKeys) {
+		if (requestedKeys == null) return originalData;
+		return requestedKeys.stream()
+			.collect(Collectors.toMap(
+				key -> key,
+				key -> originalData.getOrDefault(key, 0L)
+			));
 	}
 }

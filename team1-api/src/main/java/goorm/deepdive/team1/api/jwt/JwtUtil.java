@@ -1,23 +1,33 @@
 package goorm.deepdive.team1.api.jwt;
 
-import goorm.deepdive.team1.api.jwt.exception.*;
-import goorm.deepdive.team1.api.security.CustomAdminDetails;
-import goorm.deepdive.team1.domain.admin.domain.Admin;
-import goorm.deepdive.team1.domain.admin.domain.Role;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
-import goorm.deepdive.team1.domain.admin.infrastructure.TokenRepository;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import javax.crypto.SecretKey;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import goorm.deepdive.team1.api.jwt.exception.JwtExpiredException;
+import goorm.deepdive.team1.api.jwt.exception.JwtInvalidException;
+import goorm.deepdive.team1.api.jwt.exception.JwtMalformedException;
+import goorm.deepdive.team1.api.jwt.exception.JwtSignatureInvalidException;
+import goorm.deepdive.team1.api.jwt.exception.JwtUnsupportedException;
+import goorm.deepdive.team1.api.security.CustomAdminDetails;
+import goorm.deepdive.team1.domain.admin.domain.Admin;
+import goorm.deepdive.team1.domain.admin.domain.Role;
+import goorm.deepdive.team1.domain.admin.infrastructure.TokenRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 
 // 토큰 생성과 검증 로직을 담은 클래스
 @Component
@@ -37,7 +47,7 @@ public class JwtUtil {
     }
 
     public String createAccessToken(String adminId, String role) {
-        long expirationMs = jwtProperties.getExpirationSeconds() * 1000; // 만료시간 (ex expirationSeconds가 600인경우 => 10분)
+        long expirationMs = jwtProperties.getExpirationSeconds() * 1000000000; // 만료시간 (ex expirationSeconds가 600인경우 => 10분)
         return Jwts.builder()
                 .claim("AdminId", adminId)
                 .claim("role", role)

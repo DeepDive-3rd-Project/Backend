@@ -1,5 +1,8 @@
 package goorm.deepdive.team1.api.user.application;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -8,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
+import goorm.deepdive.team1.api.user.presentation.request.enums.AgeGroups;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
+import goorm.deepdive.team1.api.user.presentation.resonse.UserStatsResponse;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
 import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
@@ -105,5 +110,14 @@ public class UserFacade {
 	public PaginatedListResponse searchUsersByName(String name, Pageable pageable) {
 		Page<UserDocument> userList = userQueryService.getUsersByName(name, pageable);
 		return PaginatedListResponse.from(userList);
+	}
+
+	public UserStatsResponse getUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups) {
+		List<String> ageGroup = (ageGroups == null || ageGroups.isEmpty())
+			? List.of()
+			: ageGroups.stream().map(AgeGroups::getDescription).toList();
+
+		Map<String, Object> stats = userQueryService.getUserStatistics(gender, region, ageGroup);
+		return UserStatsResponse.from(stats);
 	}
 }

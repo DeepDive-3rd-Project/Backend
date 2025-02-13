@@ -1,5 +1,7 @@
 package goorm.deepdive.team1.infra.repository.impl;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -80,5 +82,10 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public void saveDocument(UserDocument userDocument) {
 		elasticUserRepository.save(userDocument);
+	}
+
+	@Override
+	public Map<String, Object> searchUserStatistics(List<String> gender, List<String> region, List<String> ageGroups) {
+		return elasticUserRepository.searchUserStatistics(gender, region, ageGroups);
 	}
 }
