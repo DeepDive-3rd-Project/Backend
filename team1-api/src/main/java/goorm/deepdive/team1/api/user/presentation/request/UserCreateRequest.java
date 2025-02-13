@@ -20,9 +20,13 @@ public record UserCreateRequest(
 	@NotBlank
 	String phoneNumber,
 
-	@Schema(description = "주소", example = "창훈로 52번길 22", requiredMode = REQUIRED)
+	@Schema(description = "지번 주소", example = "경기 수원시 장안구 연무동 56-45", requiredMode = REQUIRED)
 	@NotBlank
-	String address,
+	String regionAddress,
+
+	@Schema(description = "도로명 주소", example = "경기 수원시 장안구 창훈로52번길 22", requiredMode = REQUIRED)
+	@NotBlank
+	String roadAddress,
 
 	@Schema(description = "성별", example = "남자", requiredMode = REQUIRED)
 	@NotNull

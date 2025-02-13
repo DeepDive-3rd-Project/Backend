@@ -1,4 +1,4 @@
-package goorm.deepdive.team1.common.exception.KakaoApiException;
+package goorm.deepdive.team1.domain.address.exception.KakaoApiException;
 
 import static org.springframework.http.HttpStatus.*;
 

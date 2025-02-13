@@ -26,6 +26,7 @@ public class UserCache {
 	private String phoneNumber;
 
 	private String latestRegionAddress;
+
 	private String latestRoadAddress;
 
 	private String gender;
@@ -43,5 +44,18 @@ public class UserCache {
 				.gender(gender)
 				.age(age)
 				.build();
+	}
+
+	public static UserCache from(User user) {
+		return UserCache.builder()
+			.id(user.getId())
+			.name(user.getName())
+			.email(user.getEmail())
+			.phoneNumber(user.getPhoneNumber())
+			.latestRegionAddress(user.getAddress().getRegionAddress())
+			.latestRoadAddress(user.getAddress().getRoadAddress())
+			.gender(user.getGender().getValue())
+			.age(user.getAge())
+			.build();
 	}
 }

@@ -35,4 +35,14 @@ public class AddressHistoryCache {
 			.createdAt(createdAt)
 			.build();
 	}
+
+	public static AddressHistoryCache from(AddressHistory addressHistory) {
+		return AddressHistoryCache.builder()
+			.id(addressHistory.getId())
+			.userId(addressHistory.getUser().getId())
+			.regionAddress(addressHistory.getAddress().getRegionAddress())
+			.roadAddress(addressHistory.getAddress().getRoadAddress())
+			.createdAt(addressHistory.getCreatedAt())
+			.build();
+	}
 }

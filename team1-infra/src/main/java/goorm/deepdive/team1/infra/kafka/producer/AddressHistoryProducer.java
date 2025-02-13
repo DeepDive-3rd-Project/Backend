@@ -1,0 +1,38 @@
+package goorm.deepdive.team1.infra.kafka.producer;
+
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
+import lombok.RequiredArgsConstructor;
+
+@Component
+@RequiredArgsConstructor
+public class AddressHistoryProducer {
+	private final KafkaTemplate<String, Object> kafkaTemplate;
+	private final ObjectMapper objectMapper;
+
+	private static final String CREATE_ADDRESS_HISTORY = "create-address-history";
+	private static final String UPDATE_ADDRESS_HISTORY = "update-address-history";
+
+	public void sendMessageToCreate(AddressHistory addressHistory) {
+		try {
+			String addressHistoryJson = objectMapper.writeValueAsString(addressHistory);
+			kafkaTemplate.send(CREATE_ADDRESS_HISTORY, addressHistoryJson);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void sendMessageToUpdate(AddressHistory addressHistory) {
+		try {
+			String addressHistoryJson = objectMapper.writeValueAsString(addressHistory);
+			kafkaTemplate.send(UPDATE_ADDRESS_HISTORY, addressHistoryJson);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+	}
+}

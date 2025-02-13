@@ -29,4 +29,8 @@ public interface UserRepository {
 	Page<UserDocument> searchByName(String name, Pageable pageable);
 
 	boolean existsByEmail(String email);
+
+	void saveCache(UserCache userCache);
+
+	void saveDocument(UserDocument userDocument);
 }

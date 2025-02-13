@@ -1,4 +1,4 @@
-package goorm.deepdive.team1.infra.data.exception;
+package goorm.deepdive.team1.infra.kafka.exception;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -10,8 +10,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum BatchExceptionCode implements ExceptionCode {
-	BATCH_PROCESSING_FAILED(INTERNAL_SERVER_ERROR, "배치 처리 중 오류가 발생했습니다.");
+public enum KafkaExceptionCode implements ExceptionCode {
+	KAFKA_PROCESSING_FAILED(INTERNAL_SERVER_ERROR, "메세지 처리 중 오류가 발생했습니다.");
 
 	private final HttpStatus status;
 	private final String message;

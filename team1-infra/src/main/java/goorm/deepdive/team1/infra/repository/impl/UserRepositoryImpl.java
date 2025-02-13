@@ -71,4 +71,14 @@ public class UserRepositoryImpl implements UserRepository {
 	public boolean existsByEmail(String email) {
 		return jpaUserRepository.existsByEmail(email);
 	}
+
+	@Override
+	public void saveCache(UserCache userCache) {
+		redisUserRepository.save(userCache);
+	}
+
+	@Override
+	public void saveDocument(UserDocument userDocument) {
+		elasticUserRepository.save(userDocument);
+	}
 }

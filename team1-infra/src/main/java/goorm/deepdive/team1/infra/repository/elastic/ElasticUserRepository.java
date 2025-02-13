@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
@@ -64,5 +66,20 @@ public class ElasticUserRepository {
 			: userList.size();
 
 		return new PageImpl<>(userList, pageable, totalHits);
+	}
+
+	public void save(UserDocument userDocument) {
+		try {
+			IndexResponse response = elasticsearchClient.index(IndexRequest.of(i -> i
+				.index(INDEX_NAME)
+				.id(userDocument.getUserId())
+				.document(userDocument)
+			));
+
+			System.out.println("문서 저장 성공! ID: " + response.id());
+
+		} catch (Exception e) {
+			throw new ElasticQueryExecutionException();
+		}
 	}
 }
