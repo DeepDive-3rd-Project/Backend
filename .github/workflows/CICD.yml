@@ -72,16 +72,6 @@ jobs:
           TARGET_UPSTREAM=$([ "$CURRENT_UPSTREAM" == "blue" ] && echo "green" || echo "blue")
           echo "TARGET_UPSTREAM=$TARGET_UPSTREAM" >> $GITHUB_ENV
         # 현재 활성화된 Nginx 업스트림(blue/green)을 확인하고, 새로운 배포 대상 설정.
-
-      # 시크릿값 잘 읽는지 테스트 (실제 배포에서는 뺄 것)
-      - name: Debug LIVE_SERVER_IP
-        run: |
-          if [ -z "${{ secrets.LIVE_SERVER_IP }}" ]; then
-            echo "LIVE_SERVER_IP가 비어있습니다!"
-            exit 1
-          else
-            echo "LIVE_SERVER_IP가 설정되어 있습니다."
-          fi
           
       # 2. EC2에 환경 변수 파일 생성
       - name: Create .env file on EC2
@@ -91,6 +81,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            mkdir -p /home/ubuntu/deploy
             cat <<EOF > /home/ubuntu/deploy/.env
             DB_HOST=${{ secrets.POSTGRES_HOST }}
             DB_PORT=5432
