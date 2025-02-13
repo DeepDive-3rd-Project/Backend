@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
+import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
 import goorm.deepdive.team1.domain.user.infrastructure.UserRepository;
 import goorm.deepdive.team1.infra.repository.elastic.ElasticUserRepository;
 import goorm.deepdive.team1.infra.repository.jpa.JpaUserRepository;
@@ -85,7 +86,7 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public Map<String, Object> searchUserStatistics(List<String> gender, List<String> region, List<String> ageGroups) {
+	public Map<String, Object> searchUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups) {
 		return elasticUserRepository.searchUserStatistics(gender, region, ageGroups);
 	}
 }

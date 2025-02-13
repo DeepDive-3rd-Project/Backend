@@ -120,15 +120,8 @@ public class UserFacade {
 	}
 
 	public UserStatsResponse getUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups) {
-		List<String> ageGroup = (ageGroups == null || ageGroups.isEmpty())
-			? List.of(
-			TEENS.getDescription(),
-			TWENTIES.getDescription(),
-			THIRTIES.getDescription(),
-			FORTIES.getDescription(),
-			FIFTIES.getDescription(),
-			SIXTIES_AND_ABOVE.getDescription()
-		) : ageGroups.stream().map(AgeGroups::getDescription).toList();
+		List<AgeGroups> ageGroup = (ageGroups == null || ageGroups.isEmpty())
+			? List.of(TEENS, TWENTIES, THIRTIES, FORTIES, FIFTIES, SIXTIES_AND_ABOVE) : ageGroups;
 
 		Map<String, Object> stats = userQueryService.getUserStatistics(gender, region, ageGroup);
 		return UserStatsResponse.from(stats);

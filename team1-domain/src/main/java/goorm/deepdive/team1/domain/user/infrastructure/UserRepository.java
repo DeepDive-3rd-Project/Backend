@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
+import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
 
 public interface UserRepository {
 	User save(User user);
@@ -36,5 +37,5 @@ public interface UserRepository {
 
 	void saveDocument(UserDocument userDocument);
 
-	Map<String, Object> searchUserStatistics(List<String> gender, List<String> region, List<String> ageGroups);
+	Map<String, Object> searchUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups);
 }

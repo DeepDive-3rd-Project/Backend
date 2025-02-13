@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
+import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
 import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
 import goorm.deepdive.team1.domain.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class UserQueryService {
 		return userRepository.existsByEmail(email);
 	}
 
-	public Map<String, Object> getUserStatistics(List<String> gender, List<String> region, List<String> ageGroups) {
+	public Map<String, Object> getUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups) {
 		return userRepository.searchUserStatistics(gender, region, ageGroups);
 	}
 }

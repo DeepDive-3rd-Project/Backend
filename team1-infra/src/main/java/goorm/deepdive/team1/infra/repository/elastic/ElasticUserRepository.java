@@ -21,6 +21,7 @@ import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
+import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
 import goorm.deepdive.team1.infra.repository.elastic.exception.ElasticQueryExecutionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,7 +89,7 @@ public class ElasticUserRepository {
 		}
 	}
 
-	public Map<String, Object> searchUserStatistics(List<String> genders, List<String> regions, List<String> ageGroups) {
+	public Map<String, Object> searchUserStatistics(List<String> genders, List<String> regions, List<AgeGroups> ageGroups) {
 		try {
 			SearchResponse<Void> response = elasticsearchClient.search(s -> s
 					.index(INDEX_NAME)
@@ -109,7 +110,10 @@ public class ElasticUserRepository {
 
 			Map<String, Long> genderStats = fillMissingKeys(extractTermsAggregation(response, "genderStats"), genders);
 			Map<String, Long> regionStats = fillMissingKeys(extractTermsAggregation(response, "regionStats"), regions);
-			Map<String, Long> ageStats = fillMissingKeys(extractRangeAggregation(response.aggregations().get("ageStats")), ageGroups);
+			List<String> ageGroupStrings = ageGroups.stream()
+				.map(AgeGroups::getDescription)
+				.toList();
+			Map<String, Long> ageStats = fillMissingKeys(extractRangeAggregation(response.aggregations().get("ageStats")), ageGroupStrings);
 
 			return Map.of(
 				"total", total,
@@ -145,7 +149,7 @@ public class ElasticUserRepository {
 	}
 
 
-	public Query getAgeRangeQuery(List<String> ageGroups) {
+	public Query getAgeRangeQuery(List<AgeGroups> ageGroups) {
 		return Query.of(q -> q.bool(b -> b
 			.should(ageGroups.stream()
 				.map(this::getAgeRangeQueryForGroup)
@@ -154,29 +158,29 @@ public class ElasticUserRepository {
 		));
 	}
 
-	private Query getAgeRangeQueryForGroup(String ageGroup) {
+	private Query getAgeRangeQueryForGroup(AgeGroups ageGroup) {
 		NumberRangeQuery.Builder rangeQuery = new NumberRangeQuery.Builder().field("age");
 		switch (ageGroup) {
-			case "10.0-20.0":
+			case TEENS:
 				rangeQuery.gte(10.0).lt(20.0);
 				break;
-			case "20.0-30.0":
+			case TWENTIES:
 				rangeQuery.gte(20.0).lt(30.0);
 				break;
-			case "30.0-40.0":
+			case THIRTIES:
 				rangeQuery.gte(30.0).lt(40.0);
 				break;
-			case "40.0-50.0":
+			case FORTIES:
 				rangeQuery.gte(40.0).lt(50.0);
 				break;
-			case "50.0-60.0":
+			case FIFTIES:
 				rangeQuery.gte(50.0).lt(60.0);
 				break;
-			case "60.0-*":
+			case SIXTIES_AND_ABOVE:
 				rangeQuery.gte(60.0);
 				break;
 			default:
-				throw new IllegalArgumentException(ageGroup);
+				throw new IllegalArgumentException(ageGroup.getDescription());
 		}
 		return Query.of(q -> q.range(r -> r.number(rangeQuery.build())));
 	}
@@ -192,21 +196,20 @@ public class ElasticUserRepository {
 				MultiBucketBase::docCount));
 	}
 
-	private List<AggregationRange> getAgeBuckets(List<String> ageGroups) {
+	private List<AggregationRange> getAgeBuckets(List<AgeGroups> ageGroups) {
 		return ageGroups.stream()
 			.map(this::getAgeBucket)
 			.toList();
 	}
 
-	private AggregationRange getAgeBucket(String ageGroup) {
+	private AggregationRange getAgeBucket(AgeGroups ageGroup) {
 		return switch (ageGroup) {
-			case "10.0-20.0" -> AggregationRange.of(r -> r.from(10.0).to(20.0));
-			case "20.0-30.0" -> AggregationRange.of(r -> r.from(20.0).to(30.0));
-			case "30.0-40.0" -> AggregationRange.of(r -> r.from(30.0).to(40.0));
-			case "40.0-50.0" -> AggregationRange.of(r -> r.from(40.0).to(50.0));
-			case "50.0-60.0" -> AggregationRange.of(r -> r.from(50.0).to(60.0));
-			case "60.0-*" -> AggregationRange.of(r -> r.from(60.0));
-			default -> throw new IllegalArgumentException(ageGroup);
+			case TEENS -> AggregationRange.of(r -> r.from(10.0).to(20.0));
+			case TWENTIES -> AggregationRange.of(r -> r.from(20.0).to(30.0));
+			case THIRTIES -> AggregationRange.of(r -> r.from(30.0).to(40.0));
+			case FORTIES -> AggregationRange.of(r -> r.from(40.0).to(50.0));
+			case FIFTIES -> AggregationRange.of(r -> r.from(50.0).to(60.0));
+			case SIXTIES_AND_ABOVE -> AggregationRange.of(r -> r.from(60.0));
 		};
 	}
 
