@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import goorm.deepdive.team1.domain.address.domain.AddressSearch;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
@@ -53,5 +54,9 @@ public class UserQueryService {
 
 	public Map<String, Object> getUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups) {
 		return userRepository.searchUserStatistics(gender, region, ageGroups);
+	}
+
+	public List<UserDocument> getUsersHeatMap(List<String> region, List<AgeGroups> ageGroups) {
+		return userRepository.searchHeatMap(region, ageGroups);
 	}
 }

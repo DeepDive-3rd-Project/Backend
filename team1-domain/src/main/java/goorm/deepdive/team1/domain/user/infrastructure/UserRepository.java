@@ -38,4 +38,6 @@ public interface UserRepository {
 	void saveDocument(UserDocument userDocument);
 
 	Map<String, Object> searchUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups);
+
+	List<UserDocument> searchHeatMap(List<String> region, List<AgeGroups> ageGroups);
 }

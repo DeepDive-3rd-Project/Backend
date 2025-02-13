@@ -17,9 +17,11 @@ import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.application.UserFacade;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
+import goorm.deepdive.team1.api.user.presentation.resonse.UserHeatMapResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserStatsResponse;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
+import goorm.deepdive.team1.domain.user.domain.UserDocument;
 import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
 import lombok.RequiredArgsConstructor;
 
@@ -117,6 +119,16 @@ public class UserControllerImpl implements UserController{
 		List<AgeGroups> ageGroups)
 	{
 		UserStatsResponse response = userFacade.getUserStatistics(gender, region, ageGroups);
+		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@GetMapping("/heatmap")
+	public ResponseEntity<List<UserHeatMapResponse>> searchHeatMap(List<String> region, List<AgeGroups> ageGroups) {
+		List<UserDocument> searchResponse = userFacade.getUserHeatMap(region, ageGroups);
+		List<UserHeatMapResponse> response = searchResponse.stream()
+			.map(UserHeatMapResponse::from)
+			.toList();
 		return ResponseEntity.ok(response);
 	}
 }

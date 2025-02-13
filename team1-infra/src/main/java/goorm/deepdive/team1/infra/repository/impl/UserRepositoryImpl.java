@@ -89,4 +89,9 @@ public class UserRepositoryImpl implements UserRepository {
 	public Map<String, Object> searchUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups) {
 		return elasticUserRepository.searchUserStatistics(gender, region, ageGroups);
 	}
+
+	@Override
+	public List<UserDocument> searchHeatMap(List<String> region, List<AgeGroups> ageGroups){
+		return elasticUserRepository.searchHeatMap(region, ageGroups);
+	}
 }

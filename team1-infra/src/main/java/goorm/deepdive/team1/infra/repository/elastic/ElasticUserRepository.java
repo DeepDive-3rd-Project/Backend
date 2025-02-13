@@ -89,6 +89,28 @@ public class ElasticUserRepository {
 		}
 	}
 
+	public List<UserDocument> searchHeatMap(List<String> regions, List<AgeGroups> ageGroups){
+		try {
+			SearchResponse<UserDocument> response = elasticsearchClient.search(s -> s
+					.index(INDEX_NAME)
+					.size(10_000)
+					.query(q -> q
+						.bool(b -> b
+							.must(getRegionQuery(regions))
+							.must(getAgeRangeQuery(ageGroups))
+						)
+					)
+				, UserDocument.class
+			);
+
+			return response.hits().hits().stream()
+				.map(Hit::source)
+				.toList();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new ElasticQueryExecutionException();
+		}
+	}
 	public Map<String, Object> searchUserStatistics(List<String> genders, List<String> regions, List<AgeGroups> ageGroups) {
 		try {
 			SearchResponse<Void> response = elasticsearchClient.search(s -> s

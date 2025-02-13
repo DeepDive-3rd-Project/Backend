@@ -22,6 +22,7 @@ import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserStatsResponse;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
 import goorm.deepdive.team1.domain.address.domain.Address;
+import goorm.deepdive.team1.domain.address.domain.AddressSearch;
 import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
 import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
 import goorm.deepdive.team1.domain.user.application.UserCommandService;
@@ -125,5 +126,12 @@ public class UserFacade {
 
 		Map<String, Object> stats = userQueryService.getUserStatistics(gender, region, ageGroup);
 		return UserStatsResponse.from(stats);
+	}
+
+	public List<UserDocument> getUserHeatMap(List<String> region, List<AgeGroups> ageGroups) {
+		List<AgeGroups> ageGroup = (ageGroups == null || ageGroups.isEmpty())
+			? List.of(TEENS, TWENTIES, THIRTIES, FORTIES, FIFTIES, SIXTIES_AND_ABOVE) : ageGroups;
+
+		return userQueryService.getUsersHeatMap(region, ageGroup);
 	}
 }
