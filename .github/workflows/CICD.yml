@@ -54,18 +54,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
         # DockerHub에 로그인하여 이미지를 푸시할 수 있도록 인증.
 
-      # 7. Docker 이미지 빌드 및 푸시 (멀티모듈)
-      - name: Build and push Docker images (Multimodule)
-        run: |
-          docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_USERNAME }}/team1-api:${{ env.IMAGE_TAG }} -f team1-api/Dockerfile .
-          docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_USERNAME }}/team1-domain:${{ env.IMAGE_TAG }} -f team1-domain/Dockerfile .
-          docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_USERNAME }}/team1-infra:${{ env.IMAGE_TAG }} -f team1-infra/Dockerfile .
-
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/team1-api:${{ env.IMAGE_TAG }}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/team1-domain:${{ env.IMAGE_TAG }}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/team1-infra:${{ env.IMAGE_TAG }}
-        # 멀티모듈을 각각 개별 Docker 이미지로 빌드한 후 DockerHub에 업로드.
-
   deploy:
     # 배포 작업 (build 작업 완료 후 실행)
     needs: build
