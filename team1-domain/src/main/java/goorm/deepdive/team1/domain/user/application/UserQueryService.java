@@ -24,10 +24,16 @@ public class UserQueryService {
 	private final UserRepository userRepository;
 
 	public UserCache getUserCacheById(Long id) {
-		return userRepository.getUserCache(id);
+		UserCache userCache = userRepository.getUserCache(id);
+		if (userCache == null) {
+			User user = getById(id);
+			userCache = UserCache.from(user);
+			userRepository.saveCache(userCache);
+		}
+		return userCache;
 	}
 
-	public User getById(Long id) {
+	private User getById(Long id) {
 		return userRepository.findByIdAndDeletedAtIsNull(id)
 			.orElseThrow(UserNotFoundException::new);
 	}
