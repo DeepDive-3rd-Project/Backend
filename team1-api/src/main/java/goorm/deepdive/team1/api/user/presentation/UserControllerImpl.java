@@ -17,6 +17,7 @@ import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.application.UserFacade;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
+import goorm.deepdive.team1.api.user.presentation.resonse.UserHeatMapListResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserHeatMapResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserStatsResponse;
@@ -124,11 +125,13 @@ public class UserControllerImpl implements UserController{
 
 	@Override
 	@GetMapping("/heatmap")
-	public ResponseEntity<List<UserHeatMapResponse>> searchHeatMap(List<String> region, List<AgeGroups> ageGroups) {
+	public ResponseEntity<UserHeatMapListResponse> searchHeatMap(List<String> region, List<AgeGroups> ageGroups) {
 		List<UserDocument> searchResponse = userFacade.getUserHeatMap(region, ageGroups);
-		List<UserHeatMapResponse> response = searchResponse.stream()
+		List<UserHeatMapResponse> responseList = searchResponse.stream()
 			.map(UserHeatMapResponse::from)
 			.toList();
+
+		UserHeatMapListResponse response = UserHeatMapListResponse.of(responseList);
 		return ResponseEntity.ok(response);
 	}
 }

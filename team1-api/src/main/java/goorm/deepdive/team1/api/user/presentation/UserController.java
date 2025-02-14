@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
-import goorm.deepdive.team1.api.user.presentation.resonse.UserHeatMapResponse;
+import goorm.deepdive.team1.api.user.presentation.resonse.UserHeatMapListResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserListResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserStatsResponse;
@@ -186,7 +186,7 @@ public interface UserController {
 			- Description : 이 API는 사용자 히트맵 데이터를 조회할 수 있습니다.
 		""")
 	@ApiResponse(responseCode = "200")
-	ResponseEntity<List<UserHeatMapResponse>> searchHeatMap(
+	ResponseEntity<UserHeatMapListResponse> searchHeatMap(
 		@Parameter(
 			description = "지역",
 			example = "[\"서울\", \"부산\"]"
