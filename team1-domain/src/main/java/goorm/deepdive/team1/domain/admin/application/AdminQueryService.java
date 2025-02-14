@@ -1,9 +1,15 @@
 package goorm.deepdive.team1.domain.admin.application;
 
+import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -13,5 +19,14 @@ public class AdminQueryService {
 
     public boolean existsByEmail(String email) {
         return adminRepository.existsByEmail(email);
+    }
+
+    public List<Admin> getAllAdmins() {
+        return adminRepository.findAll();
+    }
+
+    public Page<Admin> getAdminsByPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return adminRepository.findAll(pageable);
     }
 }

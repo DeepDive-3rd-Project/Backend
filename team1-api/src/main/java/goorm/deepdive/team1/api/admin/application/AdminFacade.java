@@ -18,8 +18,11 @@ import goorm.deepdive.team1.domain.admin.infrastructure.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -99,6 +102,14 @@ public class AdminFacade {
 
     public void updatePassword(Long adminId, AdminPasswordUpdateRequest request) {
         adminCommandService.updatePassword(adminId, request.oldPassword(), request.newPassword());
+    }
+
+    public List<Admin> getAllAdmins() {
+        return adminQueryService.getAllAdmins();
+    }
+
+    public Page<Admin> getAdminsByPage(int page, int size) {
+        return adminQueryService.getAdminsByPage(page, size);
     }
 
 }
