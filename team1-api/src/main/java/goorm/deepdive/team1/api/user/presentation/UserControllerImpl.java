@@ -2,6 +2,8 @@ package goorm.deepdive.team1.api.user.presentation;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+import java.util.List;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,8 +17,13 @@ import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.application.UserFacade;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
+import goorm.deepdive.team1.api.user.presentation.resonse.UserHeatMapListResponse;
+import goorm.deepdive.team1.api.user.presentation.resonse.UserHeatMapResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
+import goorm.deepdive.team1.api.user.presentation.resonse.UserStatsResponse;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
+import goorm.deepdive.team1.domain.user.domain.UserDocument;
+import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -102,6 +109,29 @@ public class UserControllerImpl implements UserController{
 			name,
 			PageRequest.of(page, size)
 		);
+		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@GetMapping("/stats")
+	public ResponseEntity<UserStatsResponse> searchStats(
+		List<String> gender,
+		List<String> region,
+		List<AgeGroups> ageGroups)
+	{
+		UserStatsResponse response = userFacade.getUserStatistics(gender, region, ageGroups);
+		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@GetMapping("/heatmap")
+	public ResponseEntity<UserHeatMapListResponse> searchHeatMap(List<String> region, List<AgeGroups> ageGroups) {
+		List<UserDocument> searchResponse = userFacade.getUserHeatMap(region, ageGroups);
+		List<UserHeatMapResponse> responseList = searchResponse.stream()
+			.map(UserHeatMapResponse::from)
+			.toList();
+
+		UserHeatMapListResponse response = UserHeatMapListResponse.of(responseList);
 		return ResponseEntity.ok(response);
 	}
 }

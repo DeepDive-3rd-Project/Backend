@@ -24,6 +24,10 @@ public class UserDocument {
 
 	private String phoneNumber;
 
+	private double x;
+
+	private double y;
+
 	private String regionAddress;
 
 	private String roadAddress;
@@ -54,6 +58,8 @@ public class UserDocument {
 			.region(user.getAddress().getRegion())
 			.gender(user.getGender().getValue())
 			.age(user.getAge())
+			.x(user.getAddress().getX())
+			.y(user.getAddress().getY())
 			.build();
 	}
 

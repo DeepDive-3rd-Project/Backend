@@ -113,6 +113,8 @@ public class BatchService {
 					.region(region)
 					.regionAddress(regionAddress)
 					.roadAddress(roadAddress)
+					.age(age)
+					.gender(gender)
 					.build();
 
 				bulkOperations.add(new BulkOperation.Builder()

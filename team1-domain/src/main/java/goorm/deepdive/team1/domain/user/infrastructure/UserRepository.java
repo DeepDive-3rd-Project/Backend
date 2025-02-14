@@ -1,5 +1,7 @@
 package goorm.deepdive.team1.domain.user.infrastructure;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
+import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
 
 public interface UserRepository {
 	User save(User user);
@@ -33,4 +36,8 @@ public interface UserRepository {
 	void saveCache(UserCache userCache);
 
 	void saveDocument(UserDocument userDocument);
+
+	Map<String, Object> searchUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups);
+
+	List<UserDocument> searchHeatMap(List<String> region, List<AgeGroups> ageGroups);
 }
