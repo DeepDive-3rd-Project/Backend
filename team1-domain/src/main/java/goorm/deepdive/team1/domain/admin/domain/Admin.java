@@ -33,4 +33,9 @@ public class Admin {
 	@Enumerated(STRING)
 	@Column(nullable = false)
 	private Role role;
+
+	public void updatePassword(String password) {
+		this.password = password;
+	}
+
 }
