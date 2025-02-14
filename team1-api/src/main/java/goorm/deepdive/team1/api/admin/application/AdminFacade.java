@@ -1,6 +1,7 @@
 package goorm.deepdive.team1.api.admin.application;
 
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
 import goorm.deepdive.team1.api.jwt.CookieUtil;
@@ -10,7 +11,6 @@ import goorm.deepdive.team1.api.jwt.exception.JwtExpiredException;
 import goorm.deepdive.team1.api.jwt.exception.JwtRedisStorageException;
 import goorm.deepdive.team1.common.exception.AdminExceptionCode;
 import goorm.deepdive.team1.common.exception.CustomException;
-import goorm.deepdive.team1.common.exception.JwtExceptionCode;
 import goorm.deepdive.team1.domain.admin.application.AdminCommandService;
 import goorm.deepdive.team1.domain.admin.application.AdminQueryService;
 import goorm.deepdive.team1.domain.admin.domain.Admin;
@@ -30,6 +30,7 @@ public class AdminFacade {
     private final TokenRepository tokenRepository;
 
     public AdminRegisterResponse register(AdminRegisterRequest request) {
+        // 해당 부분 예외처리 수정 필요
         if (adminQueryService.existsByEmail(request.email())) {
             throw new CustomException(AdminExceptionCode.ALREADY_REGISTERED);
         }
@@ -37,8 +38,6 @@ public class AdminFacade {
         Admin admin = adminCommandService.register(request.email(), request.password(), request.role());
         return new AdminRegisterResponse(admin.getId(), admin.getEmail());
     }
-
-
 
     public AdminReissueResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
         // 쿠키에서 리프레시 토큰 가져오기
@@ -93,4 +92,13 @@ public class AdminFacade {
         CookieUtil.clearAuthCookie(response, "Refresh-Token"); // 쿠키 삭제
 
     }
+
+    public void deleteAdmin(Long adminId) {
+        adminCommandService.deleteAdmin(adminId);
+    }
+
+    public void updatePassword(Long adminId, AdminPasswordUpdateRequest request) {
+        adminCommandService.updatePassword(adminId, request.oldPassword(), request.newPassword());
+    }
+
 }

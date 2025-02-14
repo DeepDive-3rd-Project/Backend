@@ -3,7 +3,7 @@ package goorm.deepdive.team1.api.admin.presentation;
 import goorm.deepdive.team1.api.admin.application.AdminFacade;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminLoginRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
-import goorm.deepdive.team1.api.admin.presentation.response.AdminLoginResponse;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,6 +51,19 @@ public class AdminControllerImpl implements AdminController{
         return ResponseEntity.ok().build();
     }
 
+    @Override
+    @DeleteMapping("/{adminId}")
+    public ResponseEntity<Void> deleteAdmin(@PathVariable Long adminId) {
+        adminFacade.deleteAdmin(adminId);
+        return ResponseEntity.noContent().build(); // 204 No Content 반환
+    }
 
-
+    @Override
+    @PatchMapping("/{adminId}/password")
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable Long adminId,
+            @RequestBody AdminPasswordUpdateRequest request) {
+        adminFacade.updatePassword(adminId, request);
+        return ResponseEntity.ok().build(); // 200 OK 반환
+    }
 }

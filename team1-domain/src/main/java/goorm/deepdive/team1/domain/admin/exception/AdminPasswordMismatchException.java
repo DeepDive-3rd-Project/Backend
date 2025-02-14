@@ -4,8 +4,8 @@ import goorm.deepdive.team1.common.exception.CustomException;
 
 import static goorm.deepdive.team1.domain.admin.exception.AdminDomainExceptionCode.PASSWORD_MISMATCH;
 
-public class PasswordMismatchException extends CustomException {
-    public PasswordMismatchException() {
+public class AdminPasswordMismatchException extends CustomException {
+    public AdminPasswordMismatchException() {
         super(PASSWORD_MISMATCH);
     }
 }
