@@ -3,6 +3,7 @@ package goorm.deepdive.team1.domain.admin.infrastructure;
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,7 @@ public interface AdminRepository {
 
     void delete(Admin admin);
 
-    List<Admin> findAll();
+    List<Admin> findAll(Sort sort);
 
     Page<Admin> findAll(Pageable pageable);
 }

@@ -6,6 +6,7 @@ import goorm.deepdive.team1.infra.repository.jpa.JpaAdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -42,8 +43,8 @@ public class AdminRepositoryImpl implements AdminRepository {
     }
 
     @Override
-    public List<Admin> findAll() {
-        return jpaAdminRepository.findAll();
+    public List<Admin> findAll(Sort sort) {
+        return jpaAdminRepository.findAll(sort);
     }
 
     @Override
