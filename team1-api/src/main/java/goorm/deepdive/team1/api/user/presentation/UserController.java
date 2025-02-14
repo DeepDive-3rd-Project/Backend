@@ -97,7 +97,10 @@ public interface UserController {
 	@Operation(summary = "도로명 주소 기반 유저 목록 검색 API", description = """
 			- Description : 이 API는 해당 키워드를 포함한 주소를 가지고 있는 유저 목록을 조회할 수 있습니다.
 		""")
-	@ApiResponse(responseCode = "200")
+	@ApiResponse(
+		responseCode = "200",
+		content = @Content(schema = @Schema(implementation = PaginatedListResponse.class))
+	)
 	ResponseEntity<PaginatedListResponse> searchUsersByRoadAddressKeyword(
 		@Parameter(
 			description = "페이지 인덱스",
@@ -120,7 +123,10 @@ public interface UserController {
 	@Operation(summary = "지번 주소 기반 유저 목록 검색 API", description = """
 			- Description : 이 API는 해당 키워드를 포함한 주소를 가지고 있는 유저 목록을 조회할 수 있습니다.
 		""")
-	@ApiResponse(responseCode = "200")
+	@ApiResponse(
+		responseCode = "200",
+		content = @Content(schema = @Schema(implementation = PaginatedListResponse.class))
+	)
 	ResponseEntity<PaginatedListResponse> searchUsersByRegionAddressKeyword(
 		@Parameter(
 			description = "페이지 인덱스",
@@ -143,7 +149,10 @@ public interface UserController {
 	@Operation(summary = "사용자 이름 기반 유저 목록 검색 API", description = """
 			- Description : 이 API는 해당 사용자 이름을 기반으로 유저 목록을 조회할 수 있습니다.
 		""")
-	@ApiResponse(responseCode = "200")
+	@ApiResponse(
+		responseCode = "200",
+		content = @Content(schema = @Schema(implementation = PaginatedListResponse.class))
+	)
 	ResponseEntity<PaginatedListResponse> searchUsersByName(
 		@Parameter(
 			description = "페이지 인덱스",
@@ -166,7 +175,10 @@ public interface UserController {
 	@Operation(summary = "사용자 통계 API", description = """
 			- Description : 이 API는 사용자 통계 데이터를 조회할 수 있습니다.
 		""")
-	@ApiResponse(responseCode = "200")
+	@ApiResponse(
+		responseCode = "200",
+		content = @Content(schema = @Schema(implementation = UserStatsResponse.class))
+	)
 	ResponseEntity<UserStatsResponse> searchStats(
 		@Parameter(
 			description = "성별",
@@ -185,7 +197,10 @@ public interface UserController {
 	@Operation(summary = "사용자 히트맵 API", description = """
 			- Description : 이 API는 사용자 히트맵 데이터를 조회할 수 있습니다.
 		""")
-	@ApiResponse(responseCode = "200")
+	@ApiResponse(
+		responseCode = "200",
+		content = @Content(schema = @Schema(implementation = UserHeatMapListResponse.class))
+	)
 	ResponseEntity<UserHeatMapListResponse> searchHeatMap(
 		@Parameter(
 			description = "지역",
