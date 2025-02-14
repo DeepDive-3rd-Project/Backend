@@ -1,6 +1,10 @@
 package goorm.deepdive.team1.domain.admin.infrastructure;
 
 import goorm.deepdive.team1.domain.admin.domain.Admin;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface AdminRepository {
@@ -13,4 +17,8 @@ public interface AdminRepository {
     Optional<Admin> findById(Long id);
 
     void delete(Admin admin);
+
+    List<Admin> findAll();
+
+    Page<Admin> findAll(Pageable pageable);
 }
