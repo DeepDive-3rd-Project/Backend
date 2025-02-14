@@ -42,4 +42,9 @@ public class AddressHistoryRepositoryImpl implements AddressHistoryRepository {
 	public List<AddressHistoryCache> findCacheByUserIdAndDeletedAtIsNull(Long userId) {
 		return redisAddressHistoryRepository.findByUserId(userId);
 	}
+
+	@Override
+	public void saveAllCaches(List<AddressHistory> addressHistories) {
+		redisAddressHistoryRepository.saveAll(addressHistories);
+	}
 }
