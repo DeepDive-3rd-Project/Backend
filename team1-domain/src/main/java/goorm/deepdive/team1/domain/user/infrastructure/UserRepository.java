@@ -19,7 +19,9 @@ public interface UserRepository {
 
 	UserCache getUserCache(Long id);
 
-	Page<UserCache> findAll(Pageable pageable);
+	Page<UserCache> findAllCache(Pageable pageable);
+
+	Page<User> findAll(Pageable pageable);
 
 	void deleteById(Long id);
 
@@ -34,6 +36,8 @@ public interface UserRepository {
 	boolean existsByEmail(String email);
 
 	void saveCache(UserCache userCache);
+
+	void saveAllCache(List<UserCache> userCaches);
 
 	void saveDocument(UserDocument userDocument);
 

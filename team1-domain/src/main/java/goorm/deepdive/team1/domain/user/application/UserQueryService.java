@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import goorm.deepdive.team1.domain.address.domain.AddressSearch;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
@@ -33,7 +33,23 @@ public class UserQueryService {
 	}
 
 	public Page<UserCache> getAll(Pageable pageable) {
-		return userRepository.findAll(pageable);
+		Page<UserCache> userCaches = userRepository.findAllCache(pageable);
+		if (userCaches.hasContent() && userCaches.getContent().size() == pageable.getPageSize()) {
+			return userCaches;
+		}
+
+		Page<User> users = userRepository.findAll(pageable);
+		if (users.isEmpty()) {
+			return Page.empty();
+		}
+
+		List<UserCache> cacheUsers = users.getContent().stream()
+			.map(UserCache::from)
+			.toList();
+
+		userRepository.saveAllCache(cacheUsers);
+
+		return new PageImpl<>(cacheUsers, pageable, users.getTotalElements());
 	}
 
 	public Page<UserDocument> getUsersByRoadAddressKeyword(String keyword, Pageable pageable) {
