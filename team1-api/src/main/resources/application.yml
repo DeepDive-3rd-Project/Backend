@@ -12,10 +12,11 @@ spring:
     defer-datasource-initialization: true
     show-sql: true
     open-in-view: false
+    hibernate:
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
-        ddl-auto: validate
         default_batch_fetch_size: 1000
         order_inserts: true
         order_updates: true
