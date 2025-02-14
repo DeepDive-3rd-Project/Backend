@@ -62,9 +62,9 @@ public interface UserController {
 	ResponseEntity<PaginatedListResponse> getAll(
 		@Parameter(
 			description = "페이지 인덱스",
-			example = "0",
+			example = "1",
 			required = true
-		) @PositiveOrZero @RequestParam(defaultValue = "0") int page,
+		) @Positive @RequestParam(defaultValue = "1") int page,
 		@Parameter(
 			description = "응답 개수",
 			example = "10",
@@ -104,9 +104,9 @@ public interface UserController {
 	ResponseEntity<PaginatedListResponse> searchUsersByRoadAddressKeyword(
 		@Parameter(
 			description = "페이지 인덱스",
-			example = "0",
+			example = "1",
 			required = true
-		) @PositiveOrZero @RequestParam(defaultValue = "0") int page,
+		) @Positive @RequestParam(defaultValue = "1") int page,
 		@Parameter(
 			description = "응답 개수",
 			example = "10",
@@ -130,9 +130,9 @@ public interface UserController {
 	ResponseEntity<PaginatedListResponse> searchUsersByRegionAddressKeyword(
 		@Parameter(
 			description = "페이지 인덱스",
-			example = "0",
+			example = "1",
 			required = true
-		) @PositiveOrZero @RequestParam(defaultValue = "0") int page,
+		) @Positive @RequestParam(defaultValue = "1") int page,
 		@Parameter(
 			description = "응답 개수",
 			example = "10",
@@ -156,9 +156,9 @@ public interface UserController {
 	ResponseEntity<PaginatedListResponse> searchUsersByName(
 		@Parameter(
 			description = "페이지 인덱스",
-			example = "0",
+			example = "1",
 			required = true
-		) @PositiveOrZero @RequestParam(defaultValue = "0") int page,
+		) @PositiveOrZero @RequestParam(defaultValue = "1") int page,
 		@Parameter(
 			description = "응답 개수",
 			example = "10",

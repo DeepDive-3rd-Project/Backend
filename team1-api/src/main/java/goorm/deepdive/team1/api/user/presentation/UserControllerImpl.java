@@ -52,7 +52,7 @@ public class UserControllerImpl implements UserController{
 		int page,
 		int size
 	) {
-		PaginatedListResponse response = userFacade.getAll(PageRequest.of(page, size));
+		PaginatedListResponse response = userFacade.getAll(PageRequest.of(page - 1, size));
 		return ResponseEntity.ok(response);
 	}
 
@@ -79,7 +79,7 @@ public class UserControllerImpl implements UserController{
 	) {
 		PaginatedListResponse response = userFacade.searchUsersByRoadAddressKeyword(
 			keyword,
-			PageRequest.of(page, size)
+			PageRequest.of(page - 1, size)
 		);
 		return ResponseEntity.ok(response);
 	}
@@ -93,7 +93,7 @@ public class UserControllerImpl implements UserController{
 	) {
 		PaginatedListResponse response = userFacade.searchUsersByRegionAddressKeyword(
 			keyword,
-			PageRequest.of(page, size)
+			PageRequest.of(page - 1, size)
 		);
 		return ResponseEntity.ok(response);
 	}
@@ -107,7 +107,7 @@ public class UserControllerImpl implements UserController{
 	) {
 		PaginatedListResponse response = userFacade.searchUsersByName(
 			name,
-			PageRequest.of(page, size)
+			PageRequest.of(page - 1, size)
 		);
 		return ResponseEntity.ok(response);
 	}
