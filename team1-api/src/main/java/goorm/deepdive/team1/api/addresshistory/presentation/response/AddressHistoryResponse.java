@@ -1,6 +1,6 @@
 package goorm.deepdive.team1.api.addresshistory.presentation.response;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
@@ -11,7 +11,7 @@ import lombok.Builder;
 public record AddressHistoryResponse (
 	String roadAddress,
 	String regionAddress,
-	LocalDateTime createdAt
+	String createdAt
 ) {
 	public static AddressHistoryResponse from(AddressHistoryCache addressHistoryCache) {
 		return AddressHistoryResponse.builder()
@@ -22,11 +22,13 @@ public record AddressHistoryResponse (
 	}
 
 	public static AddressHistoryResponse from(AddressHistory addressHistory) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+		String createdAt = addressHistory.getCreatedAt().format(formatter);
 		Address address = addressHistory.getAddress();
 		return AddressHistoryResponse.builder()
 			.roadAddress(address.getRoadAddress())
 			.regionAddress(address.getRegionAddress())
-			.createdAt(addressHistory.getCreatedAt())
+			.createdAt(createdAt)
 			.build();
 	}
 }
