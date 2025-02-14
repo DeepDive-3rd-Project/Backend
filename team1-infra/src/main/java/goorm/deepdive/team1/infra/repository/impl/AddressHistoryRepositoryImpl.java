@@ -26,8 +26,8 @@ public class AddressHistoryRepositoryImpl implements AddressHistoryRepository {
 	}
 
 	@Override
-	public List<AddressHistory> findAllByDeletedAtIsNull() {
-		return jpaAddressHistoryRepository.findAllByDeletedAtIsNull();
+	public List<AddressHistory> findAllByUserIdAndDeletedAtIsNull(Long userId) {
+		return jpaAddressHistoryRepository.findByUserIdAndDeletedAtIsNull(userId);
 	}
 
 	@Override

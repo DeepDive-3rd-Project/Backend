@@ -10,5 +10,5 @@ import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
 public interface JpaAddressHistoryRepository extends JpaRepository<AddressHistory, Long> {
 	Optional<AddressHistory> findByIdAndDeletedAtIsNull(Long id);
 
-	List<AddressHistory> findAllByDeletedAtIsNull();
+	List<AddressHistory> findByUserIdAndDeletedAtIsNull(Long userId);
 }

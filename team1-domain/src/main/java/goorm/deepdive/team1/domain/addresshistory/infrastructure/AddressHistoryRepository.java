@@ -10,7 +10,7 @@ public interface AddressHistoryRepository {
 
 	Optional<AddressHistory> findByIdAndDeletedAtIsNull(Long id);
 
-	List<AddressHistory> findAllByDeletedAtIsNull();
+	List<AddressHistory> findAllByUserIdAndDeletedAtIsNull(Long userId);
 
 	void delete(AddressHistory addressHistory);
 }
