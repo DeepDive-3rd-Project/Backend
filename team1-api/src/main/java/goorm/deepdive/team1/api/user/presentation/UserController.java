@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import goorm.deepdive.team1.api.addresshistory.presentation.response.AddressHistoryListResponse;
 import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
 import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
@@ -210,5 +211,17 @@ public interface UserController {
 			description = "연령대",
 			example = "[TEEN, TWENTIES]"
 		) @RequestParam(required = false) List<AgeGroups> ageGroups
+	);
+
+	@Operation(summary = "유저 주소 이력 조회 API", description = """
+			- Description : 이 API는 유저 주소 이력을 조회할 수 있습니다.
+		""")
+	@ApiResponse(
+		responseCode = "200",
+		content = @Content(schema = @Schema(implementation = AddressHistoryListResponse.class))
+	)
+	ResponseEntity<AddressHistoryListResponse> getAddressHistoriesByUserId(
+		@Parameter(description = "조회할 사용자의 ID", example = "1")
+		@PathVariable Long id
 	);
 }
