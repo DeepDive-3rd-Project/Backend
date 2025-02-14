@@ -166,7 +166,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            PREV_CONTAINER_ID=$(sudo docker ps -q --filter "name=${{ env.CURRENT_UPSTREAM }}")
+            PREV_CONTAINER_ID=$(sudo docker ps -q --filter "name=${{ env.CURRENT_UPSTREAM }}" --filter "name!=nginx-server")
             if [ -n "$PREV_CONTAINER_ID" ]; then
               echo "Stopping old container: ${{ env.CURRENT_UPSTREAM }}"
               sudo docker stop $PREV_CONTAINER_ID
