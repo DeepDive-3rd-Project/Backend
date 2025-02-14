@@ -97,7 +97,7 @@ public class UserFacade {
 		AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
 
 		userProducer.sendMessageToUpdate(user);
-		addressHistoryProducer.sendMessageToUpdate(addressHistory);
+		addressHistoryProducer.sendMessageToDelete(addressHistory);
 	}
 
 	public void delete(Long id) {
