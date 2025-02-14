@@ -22,7 +22,6 @@ import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserStatsResponse;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
 import goorm.deepdive.team1.domain.address.domain.Address;
-import goorm.deepdive.team1.domain.address.domain.AddressSearch;
 import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
 import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
 import goorm.deepdive.team1.domain.user.application.UserCommandService;
