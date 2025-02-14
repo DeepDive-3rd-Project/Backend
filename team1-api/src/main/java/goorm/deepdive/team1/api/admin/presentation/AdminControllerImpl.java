@@ -4,17 +4,25 @@ import goorm.deepdive.team1.api.admin.application.AdminFacade;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminLoginRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
+import goorm.deepdive.team1.api.admin.presentation.response.AdminListResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
+import goorm.deepdive.team1.domain.admin.domain.Admin;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -65,5 +73,23 @@ public class AdminControllerImpl implements AdminController{
             @RequestBody AdminPasswordUpdateRequest request) {
         adminFacade.updatePassword(adminId, request);
         return ResponseEntity.ok().build(); // 200 OK 반환
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<AdminListResponse>> getAllAdmins() {
+        List<AdminListResponse> adminList = adminFacade.getAllAdmins()
+                .stream()
+                .map(AdminListResponse::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(adminList);
+    }
+
+    @GetMapping("/list/page")
+    public ResponseEntity<Page<AdminListResponse>> getAdminsByPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<AdminListResponse> adminPage = adminFacade.getAdminsByPage(page, size)
+                .map(AdminListResponse::fromEntity);
+        return ResponseEntity.ok(adminPage);
     }
 }
