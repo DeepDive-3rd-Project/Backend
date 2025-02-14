@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminLoginRequest;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
@@ -57,13 +58,29 @@ public interface AdminController {
     @PostMapping("/reissue")
     ResponseEntity<AdminReissueResponse> reissueToken(HttpServletRequest request, HttpServletResponse response);
 
-
-
-
     @Operation(summary = "관리자 로그아웃 API", description = """
             - Description : 로그아웃을 수행하며, 리프레시 토큰을 삭제하고 세션을 종료합니다.
         """)
     @ApiResponse(responseCode = "200", description = "로그아웃 성공")
     @PostMapping("/logout")
     ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response);
+
+    @Operation(summary = "관리자 삭제 API", description = """
+            - Description : 특정 관리자를 삭제하는 API입니다.
+        """)
+    @ApiResponse(responseCode = "204", description = "관리자 삭제 성공")
+    @ApiResponse(responseCode = "404", description = "관리자를 찾을 수 없음")
+    @DeleteMapping("/{adminId}")
+    ResponseEntity<Void> deleteAdmin(@PathVariable Long adminId);
+
+    @Operation(summary = "관리자 비밀번호 변경 API", description = """
+            - Description : 기존 비밀번호를 검증한 후 새 비밀번호로 변경하는 API입니다.
+        """)
+    @ApiResponse(responseCode = "200", description = "비밀번호 변경 성공")
+    @ApiResponse(responseCode = "401", description = "기존 비밀번호 불일치")
+    @ApiResponse(responseCode = "404", description = "관리자를 찾을 수 없음")
+    @PatchMapping("/{adminId}/password")
+    ResponseEntity<Void> updatePassword(
+            @PathVariable Long adminId,
+            @RequestBody AdminPasswordUpdateRequest request);
 }

@@ -27,4 +27,14 @@ public class AdminRepositoryImpl implements AdminRepository {
     public boolean existsByEmail(String email) {
         return jpaAdminRepository.existsByEmail(email);
     }
+
+    @Override
+    public Optional<Admin> findById(Long id) {
+        return jpaAdminRepository.findById(id);
+    }
+
+    @Override
+    public void delete(Admin admin) {
+        jpaAdminRepository.delete(admin);
+    }
 }
