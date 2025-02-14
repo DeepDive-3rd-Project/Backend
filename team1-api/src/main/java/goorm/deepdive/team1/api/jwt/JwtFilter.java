@@ -80,7 +80,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 || uri.contains("v3/api-docs") || uri.contains("webjars")
                 || uri.contains("/reissue")
                 || uri.contains("/register") // 회원가입 엔드포인트 추가
-                || uri.contains("/logout");
+                || uri.contains("/logout")
+                || uri.contains("/actuator/health");
     }
 
 
