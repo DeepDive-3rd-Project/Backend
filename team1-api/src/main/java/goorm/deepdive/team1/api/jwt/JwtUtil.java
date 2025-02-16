@@ -46,10 +46,11 @@ public class JwtUtil {
         this.refrsh_secretKey = Keys.hmacShaKeyFor(jwtProperties.getRefreshSecret().getBytes(StandardCharsets.UTF_8));
     }
 
-    public String createAccessToken(String adminId, String role) {
+    public String createAccessToken(String adminId,String email ,String role) {
         long expirationMs = jwtProperties.getExpirationSeconds() * 1000000000; // 만료시간 (ex expirationSeconds가 600인경우 => 10분)
         return Jwts.builder()
                 .claim("AdminId", adminId)
+                .claim("email", email)
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
@@ -57,10 +58,11 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createRefreshToken(String adminId, String role) {
+    public String createRefreshToken(String adminId,String email, String role) {
         long expirationMs = jwtProperties.getRefreshExpirationSeconds() * 1000; // 7일
         String refreshToken = Jwts.builder()
                 .claim("AdminId", adminId)
+                .claim("email", email)
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
@@ -100,6 +102,15 @@ public class JwtUtil {
     public String getEmail(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(Access_secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("email", String.class);
+    }
+
+    public String getRefreshTokenEmail(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(refrsh_secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()

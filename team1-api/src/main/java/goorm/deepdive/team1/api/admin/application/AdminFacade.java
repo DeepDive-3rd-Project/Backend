@@ -63,8 +63,16 @@ public class AdminFacade {
         }
 
         // 레디스에 저장된 토큰 검증이 통과한 경우 정상 요청으로 판단, 새 토큰 생성
-        String newAccessToken = "Bearer " +jwtUtil.createAccessToken(adminId, jwtUtil.getRefreshTokenRole(refreshToken));
-        String newRefreshToken = jwtUtil.createRefreshToken(adminId, jwtUtil.getRefreshTokenRole(refreshToken));
+        String newAccessToken = "Bearer " +jwtUtil.createAccessToken(
+                adminId,
+                jwtUtil.getRefreshTokenEmail(refreshToken),
+                jwtUtil.getRefreshTokenRole(refreshToken)
+        );
+        String newRefreshToken = jwtUtil.createRefreshToken(
+                adminId,
+                jwtUtil.getRefreshTokenEmail(refreshToken),
+                jwtUtil.getRefreshTokenRole(refreshToken)
+        );
 
         // 기존 리프레시 토큰 삭제 & 새로운 리프레시 토큰 저장
         tokenRepository.deleteRefreshToken(adminId);
