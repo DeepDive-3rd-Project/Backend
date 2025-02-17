@@ -90,7 +90,7 @@ jobs:
             CURRENT_UPSTREAM=green
           fi
 
-					TARGET_UPSTREAM=$([ "$CURRENT_UPSTREAM" == "blue" ] && echo "green" || echo "blue")
+          TARGET_UPSTREAM=$([ "$CURRENT_UPSTREAM" == "blue" ] && echo "green" || echo "blue")
           echo "TARGET_UPSTREAM=$TARGET_UPSTREAM" >> $GITHUB_ENV
           echo "CURRENT_UPSTREAM=$CURRENT_UPSTREAM" >> $GITHUB_ENV
         # 현재 활성화된 Nginx 업스트림(blue/green)을 확인하고, 새로운 배포 대상 설정.
