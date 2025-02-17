@@ -7,6 +7,7 @@ import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRe
 import goorm.deepdive.team1.api.admin.presentation.response.AdminListResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
+import goorm.deepdive.team1.api.admin.presentation.response.AdminSearchResponse;
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
@@ -91,5 +92,11 @@ public class AdminControllerImpl implements AdminController{
         Page<AdminListResponse> adminPage = adminFacade.getAdminsByPage(page, size)
                 .map(AdminListResponse::fromEntity);
         return ResponseEntity.ok(adminPage);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<AdminSearchResponse> getAdminByEmail(@RequestParam String email) {
+        Admin admin = adminFacade.getAdminByEmail(email);
+        return ResponseEntity.ok(AdminSearchResponse.fromEntity(admin));
     }
 }

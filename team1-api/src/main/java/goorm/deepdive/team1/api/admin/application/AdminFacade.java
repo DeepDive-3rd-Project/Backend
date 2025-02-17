@@ -120,4 +120,8 @@ public class AdminFacade {
         return adminQueryService.getAdminsByPage(page, size);
     }
 
+    public Admin getAdminByEmail(String email) {
+        return adminQueryService.getAdminByEmail(email);
+    }
+
 }

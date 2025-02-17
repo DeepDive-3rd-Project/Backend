@@ -2,6 +2,7 @@ package goorm.deepdive.team1.domain.admin.application;
 
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
+import goorm.deepdive.team1.domain.admin.exception.AdminNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,5 +30,10 @@ public class AdminQueryService {
     public Page<Admin> getAdminsByPage(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
         return adminRepository.findAll(pageable);
+    }
+
+    public Admin getAdminByEmail(String email) {
+        return adminRepository.findByEmail(email)
+                .orElseThrow(AdminNotFoundException::new);
     }
 }
