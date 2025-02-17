@@ -155,5 +155,4 @@ public class UserCommandServiceTest {
 		assertEquals(userCache, fakeUserRepository.getUserCache(user.getId()));
 		assertEquals(userCache1, fakeUserRepository.getUserCache(user1.getId()));
 	}
-
 }
