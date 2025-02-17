@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import goorm.deepdive.team1.api.addresshistory.Application.AddressHistoryFacade;
+import goorm.deepdive.team1.api.addresshistory.presentation.response.AddressHistoryListResponse;
 import goorm.deepdive.team1.api.paging.PaginatedListResponse;
 import goorm.deepdive.team1.api.user.application.UserFacade;
 import goorm.deepdive.team1.api.user.presentation.request.UserCreateRequest;
@@ -31,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController{
 	private final UserFacade userFacade;
+	private final AddressHistoryFacade addressHistoryFacade;
 
 	@Override
 	@PostMapping
@@ -132,6 +135,15 @@ public class UserControllerImpl implements UserController{
 			.toList();
 
 		UserHeatMapListResponse response = UserHeatMapListResponse.of(responseList);
+		return ResponseEntity.ok(response);
+	}
+
+	@Override
+	@GetMapping("/{id}/address-histories")
+	public ResponseEntity<AddressHistoryListResponse> getAddressHistoriesByUserId(Long id) {
+		AddressHistoryListResponse response = addressHistoryFacade
+			.getAddressHistories(id);
+
 		return ResponseEntity.ok(response);
 	}
 }

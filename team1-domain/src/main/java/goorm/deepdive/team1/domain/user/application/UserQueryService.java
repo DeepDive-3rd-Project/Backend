@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import goorm.deepdive.team1.domain.address.domain.AddressSearch;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
@@ -24,16 +24,38 @@ public class UserQueryService {
 	private final UserRepository userRepository;
 
 	public UserCache getUserCacheById(Long id) {
-		return userRepository.getUserCache(id);
+		UserCache userCache = userRepository.getUserCache(id);
+		if (userCache == null) {
+			User user = getById(id);
+			userCache = UserCache.from(user);
+			userRepository.saveCache(userCache);
+		}
+		return userCache;
 	}
 
-	public User getById(Long id) {
+	private User getById(Long id) {
 		return userRepository.findByIdAndDeletedAtIsNull(id)
 			.orElseThrow(UserNotFoundException::new);
 	}
 
 	public Page<UserCache> getAll(Pageable pageable) {
-		return userRepository.findAll(pageable);
+		Page<UserCache> userCaches = userRepository.findAllCache(pageable);
+		if (userCaches.hasContent() && userCaches.getContent().size() == pageable.getPageSize()) {
+			return userCaches;
+		}
+
+		Page<User> users = userRepository.findAll(pageable);
+		if (users.isEmpty()) {
+			return Page.empty();
+		}
+
+		List<UserCache> cacheUsers = users.getContent().stream()
+			.map(UserCache::from)
+			.toList();
+
+		userRepository.saveAllCache(cacheUsers);
+
+		return new PageImpl<>(cacheUsers, pageable, users.getTotalElements());
 	}
 
 	public Page<UserDocument> getUsersByRoadAddressKeyword(String keyword, Pageable pageable) {

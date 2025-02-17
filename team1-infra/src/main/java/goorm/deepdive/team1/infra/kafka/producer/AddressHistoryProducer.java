@@ -16,7 +16,7 @@ public class AddressHistoryProducer {
 	private final ObjectMapper objectMapper;
 
 	private static final String CREATE_ADDRESS_HISTORY = "create-address-history";
-	private static final String UPDATE_ADDRESS_HISTORY = "update-address-history";
+	private static final String DELETE_ADDRESS_HISTORY = "delete-address-history";
 
 	public void sendMessageToCreate(AddressHistory addressHistory) {
 		try {
@@ -27,10 +27,10 @@ public class AddressHistoryProducer {
 		}
 	}
 
-	public void sendMessageToUpdate(AddressHistory addressHistory) {
+	public void sendMessageToDelete(AddressHistory addressHistory) {
 		try {
 			String addressHistoryJson = objectMapper.writeValueAsString(addressHistory);
-			kafkaTemplate.send(UPDATE_ADDRESS_HISTORY, addressHistoryJson);
+			kafkaTemplate.send(DELETE_ADDRESS_HISTORY, addressHistoryJson);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}

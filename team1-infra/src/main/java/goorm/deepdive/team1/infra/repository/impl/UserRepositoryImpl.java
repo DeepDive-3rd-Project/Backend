@@ -41,8 +41,13 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public Page<UserCache> findAll(Pageable pageable) {
+	public Page<UserCache> findAllCache(Pageable pageable) {
 		return redisUserRepository.findAllSorted(pageable);
+	}
+
+	@Override
+	public Page<User> findAll(Pageable pageable){
+		return jpaUserRepository.findAllByDeletedAtIsNull(pageable);
 	}
 
 	@Override
@@ -78,6 +83,11 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public void saveCache(UserCache userCache) {
 		redisUserRepository.save(userCache);
+	}
+
+	@Override
+	public void saveAllCache(List<UserCache> userCaches) {
+		redisUserRepository.saveAll(userCaches);
 	}
 
 	@Override

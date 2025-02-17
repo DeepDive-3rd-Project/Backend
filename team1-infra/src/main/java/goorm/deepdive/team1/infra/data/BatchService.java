@@ -4,6 +4,7 @@ import static java.util.Locale.KOREA;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -101,8 +102,10 @@ public class BatchService {
 					.create(userId, name, email, phoneNumber, regionAddress, roadAddress, gender, age);
 				redisUserRepository.save(userCache);
 
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+				String createdAt = LocalDateTime.now().format(formatter);
 				AddressHistoryCache addressHistoryCache = AddressHistoryCache
-					.create(addressHistoryId, userId, regionAddress, roadAddress, LocalDateTime.now());
+					.create(addressHistoryId, userId, regionAddress, roadAddress, createdAt);
 				redisAddressHistoryRepository.save(addressHistoryCache);
 
 				UserDocument userDoc = UserDocument.builder()

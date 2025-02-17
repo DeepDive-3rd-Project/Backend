@@ -11,4 +11,6 @@ public interface JpaAddressHistoryRepository extends JpaRepository<AddressHistor
 	Optional<AddressHistory> findByIdAndDeletedAtIsNull(Long id);
 
 	List<AddressHistory> findAllByDeletedAtIsNull();
+
+	List<AddressHistory> findByUserIdAndDeletedAtIsNull(Long userId);
 }

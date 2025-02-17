@@ -27,7 +27,7 @@ public class UserConsumer {
 		groupId = "consumer-group",
 		containerFactory = "consumerGroup"
 	)
-	public void consumeToCreate(ConsumerRecord<String, Object> record) throws JsonProcessingException {
+	public void consumeToCreate(ConsumerRecord<String, Object> record) {
 		try {
 			String json = record.value().toString();
 			User user = objectMapper.readValue(json, User.class);
@@ -47,7 +47,7 @@ public class UserConsumer {
 		groupId = "consumer-group",
 		containerFactory = "consumerGroup"
 	)
-	public void consumeToUpdate(ConsumerRecord<String, Object> record) throws JsonProcessingException {
+	public void consumeToUpdate(ConsumerRecord<String, Object> record) {
 		try {
 			String json = record.value().toString();
 			User user = objectMapper.readValue(json, User.class);
