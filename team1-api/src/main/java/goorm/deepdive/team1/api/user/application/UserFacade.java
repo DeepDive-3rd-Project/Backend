@@ -99,16 +99,18 @@ public class UserFacade {
 		Address address = addressCommandService.findOrCreateAddress(
 			request.regionAddress(), request.roadAddress()
 		);
-
-		User user = userCommandService.update(id, request.name(), request.email(), request.phoneNumber(), request.gender(), request.age(), address);
+		User user = userQueryService.getById(id);
+		userCommandService.update(user, request.name(), request.email(), request.phoneNumber(), request.gender(), request.age(), address);
 		AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
 
 		userProducer.sendMessageToUpdate(user);
 		addressHistoryProducer.sendMessageToDelete(addressHistory);
 	}
 
+	@Transactional
 	public void delete(Long id) {
-		userCommandService.delete(id);
+		User user = userQueryService.getById(id);
+		userCommandService.delete(user);
 	}
 
 	public PaginatedListResponse searchUsersByRoadAddressKeyword(String keyword, Pageable pageable) {
