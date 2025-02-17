@@ -104,4 +104,16 @@ public class UserRepositoryImpl implements UserRepository {
 	public List<UserDocument> searchHeatMap(List<String> region, List<AgeGroups> ageGroups){
 		return elasticUserRepository.searchHeatMap(region, ageGroups);
 	}
+
+	@Override
+	public List<Long> findIdsByDeletedAtIsNotNull() {
+		return jpaUserRepository.findIdsByDeletedAtIsNotNull();
+	}
+
+	@Override
+	public void deleteScheduling(List<Long> ids) {
+		jpaUserRepository.deleteUsersInBatch(ids);
+		elasticUserRepository.deleteScheduling(ids);
+		redisUserRepository.deleteByIds(ids);
+	}
 }

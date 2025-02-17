@@ -87,6 +87,18 @@ public class RedisUserRepository {
 		redisTemplate.opsForZSet().add(USER_ZSET_KEY, userIdSet);
 	}
 
+	public void deleteByIds(List<Long> ids) {
+		List<String> keysToDelete = ids.stream()
+			.map(id -> USER_KEY_PREFIX + id)
+			.collect(Collectors.toList());
+
+		redisTemplate.delete(keysToDelete);
+
+		redisTemplate.opsForZSet().remove(USER_ZSET_KEY, ids.stream()
+			.map(String::valueOf)
+			.toArray());
+	}
+
 	private String serializeUserCache(UserCache userCache) {
 		try {
 			return objectMapper.writeValueAsString(userCache);

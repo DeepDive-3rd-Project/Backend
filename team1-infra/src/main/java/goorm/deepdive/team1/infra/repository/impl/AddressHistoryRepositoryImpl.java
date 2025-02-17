@@ -47,4 +47,10 @@ public class AddressHistoryRepositoryImpl implements AddressHistoryRepository {
 	public void saveAllCaches(List<AddressHistory> addressHistories) {
 		redisAddressHistoryRepository.saveAll(addressHistories);
 	}
+
+	@Override
+	public void deleteScheduling(List<Long> userIds) {
+		jpaAddressHistoryRepository.deleteScheduling(userIds);
+		redisAddressHistoryRepository.deleteByUserIds(userIds);
+	}
 }

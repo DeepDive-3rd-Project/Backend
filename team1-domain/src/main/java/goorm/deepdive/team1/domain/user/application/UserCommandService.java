@@ -1,5 +1,7 @@
 package goorm.deepdive.team1.domain.user.application;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +14,9 @@ import goorm.deepdive.team1.domain.user.exception.UserEmailAlreadyExistsExceptio
 import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
 import goorm.deepdive.team1.domain.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserCommandService {
@@ -62,5 +66,10 @@ public class UserCommandService {
 
 	public void saveDocument(UserDocument userDocument) {
 		userRepository.saveDocument(userDocument);
+	}
+
+	public void cleanUpDeletedUsers(List<Long> ids) {
+		userRepository.deleteScheduling(ids);
+		log.info("✅ {}명의 유저 데이터가 삭제 되었습니다", ids.size());
 	}
 }

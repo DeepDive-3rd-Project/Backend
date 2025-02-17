@@ -57,6 +57,8 @@ public class BatchService {
 				String gender = faker.options().option("MALE", "FEMALE");
 				int age = faker.number().numberBetween(10, 80);
 
+				double x = faker.number().randomDouble(6, 124, 132);
+				double y = faker.number().randomDouble(6, 33, 43);
 				String region = faker.address().state();
 
 				String regionAddress = region + " " +
@@ -71,8 +73,8 @@ public class BatchService {
 					faker.address().streetAddressNumber();
 
 				Long addressId = jdbcTemplate.queryForObject(insertAddressSql, new Object[]{
-					faker.number().randomDouble(6, 124, 132),
-					faker.number().randomDouble(6, 33, 43),
+					x,
+					y,
 					regionAddress,
 					roadAddress,
 					region,
@@ -118,6 +120,8 @@ public class BatchService {
 					.roadAddress(roadAddress)
 					.age(age)
 					.gender(gender)
+					.x(x)
+					.y(y)
 					.build();
 
 				bulkOperations.add(new BulkOperation.Builder()

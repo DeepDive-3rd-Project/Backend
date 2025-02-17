@@ -17,8 +17,10 @@ import co.elastic.clients.elasticsearch._types.aggregations.MultiBucketBase;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import co.elastic.clients.elasticsearch._types.query_dsl.NumberRangeQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
 import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
@@ -33,6 +35,20 @@ public class ElasticUserRepository {
 	private final ElasticsearchClient elasticsearchClient;
 	private static final String INDEX_NAME = "user_address";
 
+	public void deleteScheduling(List<Long> ids) {
+		try {
+			List<BulkOperation> deleteOperations = ids.stream()
+				.map(id -> BulkOperation.of(op -> op
+					.delete(d -> d.index(INDEX_NAME).id(String.valueOf(id)))
+				))
+				.collect(Collectors.toList());
+
+			BulkRequest bulkRequest = BulkRequest.of(b -> b.operations(deleteOperations));
+			elasticsearchClient.bulk(bulkRequest);
+		} catch (Exception e) {
+			throw new ElasticQueryExecutionException();
+		}
+	}
 	public Page<UserDocument> searchByRoadAddress(String roadAddress, Pageable pageable){
 		return search("roadAddress", roadAddress, pageable);
 	}

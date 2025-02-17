@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +34,9 @@ import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
 import goorm.deepdive.team1.infra.kafka.producer.AddressHistoryProducer;
 import goorm.deepdive.team1.infra.kafka.producer.UserProducer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class UserFacade {
@@ -122,5 +124,19 @@ public class UserFacade {
 			? List.of(TEENS, TWENTIES, THIRTIES, FORTIES, FIFTIES, SIXTIES_AND_ABOVE) : ageGroups;
 
 		return userQueryService.getUsersHeatMap(region, ageGroup);
+	}
+
+	@Transactional
+	@Scheduled(cron = "0 0 0 * * *")
+	public void cleanUpDeletedUsers() {
+		log.info("🗑️ 유저 삭제 스케줄링 작동...");
+		List<Long> userIdsToDelete = userQueryService.findIdsByDeletedAtIsNotNull();
+
+		if (userIdsToDelete.isEmpty()) {
+			log.info("✅ 삭제할 유저 데이터가 없습니다.");
+			return;
+		}
+		addressHistoryCommandService.cleanUpDeletedAddressHistories(userIdsToDelete);
+		userCommandService.cleanUpDeletedUsers(userIdsToDelete);
 	}
 }

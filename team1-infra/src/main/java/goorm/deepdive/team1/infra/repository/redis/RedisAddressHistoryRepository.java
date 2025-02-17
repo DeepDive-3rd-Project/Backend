@@ -53,4 +53,14 @@ public class RedisAddressHistoryRepository {
 		String pattern = KEY_PREFIX + userId + ":*";
 		redisTemplate.delete(redisTemplate.keys(pattern));
 	}
+
+	public void deleteByUserIds(List<Long> userIds) {
+		List<String> keysToDelete = userIds.stream()
+			.flatMap(userId -> Objects.requireNonNull(redisTemplate.keys(KEY_PREFIX + userId + ":*")).stream())
+			.toList();
+
+		if (!keysToDelete.isEmpty()) {
+			redisTemplate.delete(keysToDelete);
+		}
+	}
 }
