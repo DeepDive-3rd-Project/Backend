@@ -2,6 +2,7 @@ package goorm.deepdive.team1.domain.admin.application;
 
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.domain.Role;
+import goorm.deepdive.team1.domain.admin.exception.CannotChangeOwnRoleException;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
 import goorm.deepdive.team1.domain.admin.security.PasswordEncryptor;
 import goorm.deepdive.team1.domain.admin.exception.AdminPasswordMismatchException;
@@ -47,6 +48,20 @@ public class AdminCommandService {
 
         // 새 비밀번호 암호화 후 저장
         admin.updatePassword(passwordEncryptor.encode(newPassword));
+        adminRepository.save(admin);
+    }
+
+    @Transactional
+    public void updateAdminRole(Long adminId, Role newRole, Long loggedInAdminId) {
+
+        // 자기 자신의 Role 변경 방지
+        if (loggedInAdminId.equals(adminId)) {
+            throw new CannotChangeOwnRoleException();
+        }
+        Admin admin = adminRepository.findById(adminId)
+                .orElseThrow(AdminNotFoundException::new);
+
+        admin.updateRole(newRole);
         adminRepository.save(admin);
     }
 

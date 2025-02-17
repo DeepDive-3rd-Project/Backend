@@ -1,6 +1,8 @@
 package goorm.deepdive.team1.api.admin.presentation;
 
+import goorm.deepdive.team1.api.admin.presentation.request.AdminRoleUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.response.*;
+import goorm.deepdive.team1.api.security.CustomAdminDetails;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 
@@ -16,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -112,4 +115,18 @@ public interface AdminController {
     @ApiResponse(responseCode = "404", description = "관리자를 찾을 수 없음")
     @GetMapping("/search")
     ResponseEntity<AdminSearchResponse> getAdminByEmail(@RequestParam String email);
+
+    @Operation(summary = "관리자 권한 변경 API", description = """
+        - Description : 특정 관리자의 권한을 변경하는 API입니다.
+        - 요청 파라미터로 `adminId`와 `새로운 Role` 값을 전달하면 해당 관리자의 권한이 업데이트됩니다.
+    """)
+    @ApiResponse(responseCode = "200", description = "권한 변경 성공")
+    @ApiResponse(responseCode = "403", description = "사용자 자신의 권한을 변경하려는 경우 403에러")
+    @ApiResponse(responseCode = "403", description = "role이 SUPER가 아닌 계정이 권한 변경하는 경우 403에러")
+    @ApiResponse(responseCode = "404", description = "관리자를 찾을 수 없음")
+    @PatchMapping("/{adminId}/role")
+    ResponseEntity<Void> updateAdminRole(
+            @PathVariable Long adminId,
+            @RequestBody AdminRoleUpdateRequest request,
+            @AuthenticationPrincipal CustomAdminDetails adminDetails);
 }

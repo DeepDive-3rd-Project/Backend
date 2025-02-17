@@ -2,6 +2,7 @@ package goorm.deepdive.team1.api.admin.application;
 
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminRoleUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
 import goorm.deepdive.team1.api.jwt.CookieUtil;
@@ -122,6 +123,10 @@ public class AdminFacade {
 
     public Admin getAdminByEmail(String email) {
         return adminQueryService.getAdminByEmail(email);
+    }
+
+    public void updateAdminRole(Long adminId, AdminRoleUpdateRequest request, Long loggedInAdminId) {
+        adminCommandService.updateAdminRole(adminId, request.role(), loggedInAdminId);
     }
 
 }
