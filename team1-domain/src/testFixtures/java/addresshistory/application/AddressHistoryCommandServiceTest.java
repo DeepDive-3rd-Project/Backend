@@ -79,7 +79,7 @@ public class AddressHistoryCommandServiceTest {
 	}
 
 	@Test
-	@DisplayName("cleanUpDeletedAddressHistoriess는 해당 매개변수의 있는 유저와 관련된 정보를 삭제한다.")
+	@DisplayName("cleanUpDeletedAddressHistories는 해당 매개변수의 있는 유저와 관련된 정보를 삭제한다.")
 	public void cleanUpDeletedAddressHistories_Success() {
 		// given
 		List<Long> request = List.of(user.getId());
