@@ -2,6 +2,7 @@ package goorm.deepdive.team1.api.user.presentation.request;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
+import goorm.deepdive.team1.common.valid.ValidPhoneNumber;
 import goorm.deepdive.team1.domain.user.domain.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -17,6 +18,7 @@ public record UserCreateRequest(
 	String email,
 
 	@Schema(description = "휴대폰 번호", example = "01012345678", requiredMode = REQUIRED)
+	@ValidPhoneNumber
 	@NotBlank
 	String phoneNumber,
 
