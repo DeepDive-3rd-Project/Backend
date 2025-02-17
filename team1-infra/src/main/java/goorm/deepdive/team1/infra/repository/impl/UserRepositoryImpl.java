@@ -114,4 +114,14 @@ public class UserRepositoryImpl implements UserRepository {
 	public void deleteScheduling() {
 		jpaUserRepository.deleteAllByDeletedAtIsNotNull();
 	}
+
+	@Override
+	public void deletedSchedulingToElastic(List<Long> ids) {
+		elasticUserRepository.deleteScheduling(ids);
+	}
+
+	@Override
+	public void deletedSchedulingToRedis(List<Long> ids) {
+		redisUserRepository.deleteByIds(ids);
+	}
 }

@@ -1,5 +1,8 @@
 package goorm.deepdive.team1.domain.user.application;
 
+import java.util.List;
+
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +15,9 @@ import goorm.deepdive.team1.domain.user.exception.UserEmailAlreadyExistsExceptio
 import goorm.deepdive.team1.domain.user.exception.UserNotFoundException;
 import goorm.deepdive.team1.domain.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserCommandService {
@@ -62,5 +67,27 @@ public class UserCommandService {
 
 	public void saveDocument(UserDocument userDocument) {
 		userRepository.saveDocument(userDocument);
+	}
+
+	@Transactional
+	@Scheduled(cron = "0 43 10 * * ?")
+	public void cleanUpDeletedUsers() {
+		log.info("🗑️ Retrieving users to delete...");
+
+		List<Long> userIdsToDelete = userRepository.findIdsByDeletedAtIsNotNull();
+
+		if (userIdsToDelete.isEmpty()) {
+			log.info("✅ No users to delete.");
+			return;
+		}
+
+		log.info("🗑️ Deleting {} users from Elasticsearch", userIdsToDelete.size());
+		userRepository.deletedSchedulingToElastic(userIdsToDelete);
+
+		log.info("🗑️ Deleting {} users from Redis", userIdsToDelete.size());
+		userRepository.deletedSchedulingToRedis(userIdsToDelete);
+
+		userRepository.deleteScheduling();
+		log.info("✅ Deleted {} users successfully!", userIdsToDelete.size());
 	}
 }
