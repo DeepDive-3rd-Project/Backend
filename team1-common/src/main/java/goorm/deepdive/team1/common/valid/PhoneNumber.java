@@ -11,7 +11,7 @@ import jakarta.validation.Payload;
 @Constraint(validatedBy = PhoneNumberValidator.class)
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidPhoneNumber {
+public @interface PhoneNumber {
 	String message() default "휴대폰 번호는 '010'으로 시작하는 숫자 11자리여야 합니다.";
 	Class<?>[] groups() default {};
 	Class<? extends Payload>[] payload() default {};

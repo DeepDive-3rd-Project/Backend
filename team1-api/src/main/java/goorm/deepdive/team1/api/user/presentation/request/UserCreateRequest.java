@@ -2,9 +2,10 @@ package goorm.deepdive.team1.api.user.presentation.request;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
-import goorm.deepdive.team1.common.valid.ValidPhoneNumber;
+import goorm.deepdive.team1.common.valid.PhoneNumber;
 import goorm.deepdive.team1.domain.user.domain.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -14,11 +15,12 @@ public record UserCreateRequest(
 	String name,
 
 	@Schema(description = "이메일", example = "alswns11346@kgu.ac.kr", requiredMode = REQUIRED)
+	@Email
 	@NotBlank
 	String email,
 
 	@Schema(description = "휴대폰 번호", example = "01012345678", requiredMode = REQUIRED)
-	@ValidPhoneNumber
+	@PhoneNumber
 	@NotBlank
 	String phoneNumber,
 
