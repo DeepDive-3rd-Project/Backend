@@ -24,4 +24,9 @@ public class AddressQueryService {
 	public List<Address> getAllByDeletedAtIsNull() {
 		return addressRepository.findAllByDeletedAtIsNull();
 	}
+
+	public Address findByRoadAddress(String roadAddress) {
+		return addressRepository.findByRoadAddressContainingAndDeletedAtIsNull(roadAddress)
+			.orElse(null);
+	}
 }

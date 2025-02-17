@@ -45,4 +45,6 @@ public class AddressCommandService {
 		Address newAddress = kakaoApiAddressService.getGeoDataFromAddress(roadAddress);
 		return addressRepository.save(newAddress);
 	}
+
+
 }
