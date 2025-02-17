@@ -26,6 +26,11 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-    //Health Check
+    // Health Check
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    testFixturesImplementation project(':team1-infra')
+    testFixturesImplementation project(':team1-domain')
+    testFixturesImplementation project(':team1-common')
+    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }

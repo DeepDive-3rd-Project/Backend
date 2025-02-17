@@ -71,12 +71,27 @@ public class UserFacade {
 	}
 
 	public UserCache getUserCacheById(Long id) {
-		return userQueryService.getUserCacheById(id);
+		UserCache userCache = userQueryService.getUserCacheById(id);
+
+		if (userCache == null) {
+			User user = userQueryService.getById(id);
+			userCache = UserCache.from(user);
+			userCommandService.saveCache(userCache);
+		}
+
+		return userCache;
 	}
 
 	public PaginatedListResponse getAll(Pageable pageable) {
-		Page<UserCache> userList = userQueryService.getAll(pageable);
-		return PaginatedListResponse.from(userList);
+		Page<UserCache> userCaches = userQueryService.getCaches(pageable);
+
+		if (userCaches.hasContent() && userCaches.getContent().size() == pageable.getPageSize()) {
+			return PaginatedListResponse.from(userCaches);
+		}
+
+		userCaches = userQueryService.getCachesFromUsers(pageable);
+		userCommandService.saveAllCaches(userCaches.getContent());
+		return PaginatedListResponse.from(userCaches);
 	}
 
 	@Transactional
@@ -84,16 +99,18 @@ public class UserFacade {
 		Address address = addressCommandService.findOrCreateAddress(
 			request.regionAddress(), request.roadAddress()
 		);
-
-		User user = userCommandService.update(id, request.name(), request.email(), request.phoneNumber(), request.gender(), request.age(), address);
+		User user = userQueryService.getById(id);
+		userCommandService.update(user, request.name(), request.email(), request.phoneNumber(), request.gender(), request.age(), address);
 		AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
 
 		userProducer.sendMessageToUpdate(user);
 		addressHistoryProducer.sendMessageToDelete(addressHistory);
 	}
 
+	@Transactional
 	public void delete(Long id) {
-		userCommandService.delete(id);
+		User user = userQueryService.getById(id);
+		userCommandService.delete(user);
 	}
 
 	public PaginatedListResponse searchUsersByRoadAddressKeyword(String keyword, Pageable pageable) {
