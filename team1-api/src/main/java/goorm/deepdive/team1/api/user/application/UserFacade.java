@@ -9,6 +9,7 @@ import static goorm.deepdive.team1.domain.user.domain.enums.AgeGroups.TWENTIES;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -100,11 +101,18 @@ public class UserFacade {
 			request.regionAddress(), request.roadAddress()
 		);
 		User user = userQueryService.getById(id);
-		userCommandService.update(user, request.name(), request.email(), request.phoneNumber(), request.gender(), request.age(), address);
-		AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
+
+		boolean isAddressChanged = !Objects.equals(address.getId(), user.getAddress().getId());
+
+		userCommandService.update(user, request.name(), request.email(), request.phoneNumber(),
+			request.gender(), request.age(), address);
+
+		if (isAddressChanged) {
+			AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
+			addressHistoryProducer.sendMessageToDelete(addressHistory);
+		}
 
 		userProducer.sendMessageToUpdate(user);
-		addressHistoryProducer.sendMessageToDelete(addressHistory);
 	}
 
 	@Transactional
