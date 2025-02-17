@@ -23,6 +23,8 @@ import goorm.deepdive.team1.api.user.presentation.request.UserUpdateRequest;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserPersistResponse;
 import goorm.deepdive.team1.api.user.presentation.resonse.UserStatsResponse;
 import goorm.deepdive.team1.domain.address.application.AddressCommandService;
+import goorm.deepdive.team1.domain.address.application.AddressQueryService;
+import goorm.deepdive.team1.domain.address.application.KakaoApiAddressService;
 import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
 import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
@@ -47,12 +49,12 @@ public class UserFacade {
 	private final AddressCommandService addressCommandService;
 	private final UserProducer userProducer;
 	private final AddressHistoryProducer addressHistoryProducer;
+	private final KakaoApiAddressService kakaoApiAddressService;
+	private final AddressQueryService addressQueryService;
 
 	@Transactional
 	public UserPersistResponse create(UserCreateRequest request) {
-		Address address = addressCommandService.findOrCreateAddress(
-				request.regionAddress(), request.roadAddress()
-		);
+		Address address = findOrCreateAddress(request.roadAddress());
 
 		User user = userCommandService.create(
 			request.name(),
@@ -97,9 +99,8 @@ public class UserFacade {
 
 	@Transactional
 	public void update(Long id, UserUpdateRequest request) {
-		Address address = addressCommandService.findOrCreateAddress(
-			request.regionAddress(), request.roadAddress()
-		);
+		Address address = findOrCreateAddress(request.roadAddress());
+
 		User user = userQueryService.getById(id);
 
 		boolean isAddressChanged = !Objects.equals(address.getId(), user.getAddress().getId());
@@ -163,5 +164,16 @@ public class UserFacade {
 		}
 		addressHistoryCommandService.cleanUpDeletedAddressHistories(userIdsToDelete);
 		userCommandService.cleanUpDeletedUsers(userIdsToDelete);
+	}
+
+	private Address findOrCreateAddress(String roadAddress) {
+		Address address = addressQueryService.findByRoadAddress(roadAddress);
+
+		if (address == null) {
+			address = kakaoApiAddressService.getGeoDataFromAddress(roadAddress);
+			addressCommandService.save(address);
+		}
+
+		return address;
 	}
 }

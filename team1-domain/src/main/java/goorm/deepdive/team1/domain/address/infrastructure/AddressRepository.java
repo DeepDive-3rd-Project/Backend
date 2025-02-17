@@ -1,6 +1,5 @@
 package goorm.deepdive.team1.domain.address.infrastructure;
 
-import java.util.List;
 import java.util.Optional;
 
 import goorm.deepdive.team1.domain.address.domain.Address;
@@ -8,11 +7,5 @@ import goorm.deepdive.team1.domain.address.domain.Address;
 public interface AddressRepository {
 	Address save(Address address);
 
-	Optional<Address> findByIdAndDeletedAtIsNull(Long id);
-
-	List<Address> findAllByDeletedAtIsNull();
-
-	void delete(Address address);
-
-	Optional<Address> findByRegionAddressOrRoadAddressAndDeletedAtIsNull(String regionAddress, String roadAddress);
+	Optional<Address> findByRoadAddressContainingAndDeletedAtIsNull(String roadAddress);
 }
