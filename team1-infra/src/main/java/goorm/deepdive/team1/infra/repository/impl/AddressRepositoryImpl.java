@@ -18,7 +18,7 @@ public class AddressRepositoryImpl implements AddressRepository {
 	public Address save(Address address) {
 		return jpaAddressRepository.save(address);
 	}
-	
+
 	@Override
 	public Optional<Address> findByRoadAddressContainingAndDeletedAtIsNull(String roadAddress) {
 		return jpaAddressRepository.findByRoadAddressContainingAndDeletedAtIsNull(roadAddress);
