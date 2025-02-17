@@ -56,7 +56,9 @@ public class FakeAddressRepository implements AddressRepository {
 
 	@Override
 	public Optional<Address> findByRoadAddressContainingAndDeletedAtIsNull(String roadAddress) {
-		return addresses.values().stream().findFirst()
-			.filter(address -> address.getRoadAddress().contains(roadAddress));
+		return addresses.values().stream()
+			.filter(address -> address.getDeletedAt() == null)
+			.filter(address -> address.getRoadAddress().contains(roadAddress))
+			.findFirst();
 	}
 }
