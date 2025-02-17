@@ -127,13 +127,13 @@ public class UserFacade {
 	}
 
 	@Transactional
-	@Scheduled(cron = "0 45 11 * * *")
+	@Scheduled(cron = "0 0 0 * * *")
 	public void cleanUpDeletedUsers() {
-		log.info("🗑️ Retrieving users to delete...");
+		log.info("🗑️ 유저 삭제 스케줄링 작동...");
 		List<Long> userIdsToDelete = userQueryService.findIdsByDeletedAtIsNotNull();
 
 		if (userIdsToDelete.isEmpty()) {
-			log.info("✅ No users to delete.");
+			log.info("✅ 삭제할 유저 데이터가 없습니다.");
 			return;
 		}
 		addressHistoryCommandService.cleanUpDeletedAddressHistories(userIdsToDelete);

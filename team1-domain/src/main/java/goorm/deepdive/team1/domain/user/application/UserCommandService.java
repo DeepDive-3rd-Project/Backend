@@ -70,6 +70,6 @@ public class UserCommandService {
 
 	public void cleanUpDeletedUsers(List<Long> ids) {
 		userRepository.deleteScheduling(ids);
-		log.info("✅ Deleted {} users successfully!", ids.size());
+		log.info("✅ {}명의 유저 데이터가 삭제 되었습니다", ids.size());
 	}
 }
