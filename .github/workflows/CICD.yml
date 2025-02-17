@@ -28,51 +28,51 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
         # 빌드에 필요한 Java Development Kit(JDK)를 설치.
-
-      # 3. Gradle 설정
+        
+      # 3. Gradle 설정 (의존성 캐싱 포함)
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
-        # Gradle 실행 환경 구성.
-
-      # Gradle 의존성 캐싱 설정 
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
-      #매번 의존성 다운로드 발생을 막아서 빌드 시간을 줄여줌.
+          cache-disabled: false
+          gradle-home-cache-includes: |
+            caches
+            wrapper
+		  #매번 의존성 다운로드 발생을 막아서 빌드 시간을 줄여줌.
 
-      # 4. Gradle 빌드 실행 (멀티모듈)
+			# 4. Gradle 빌드 실행 (멀티모듈) - 빌드 속도 최적화 옵션 적용
       - name: Build with Gradle (Multimodule)
         run: |
           chmod +x ./gradlew
-          ./gradlew clean build --parallel --build-cache -x test
+          ./gradlew clean build -x test --parallel --build-cache --daemon --configure-on-demand
         # 프로젝트를 Gradle로 빌드. 테스트는 제외하고 실행. (--parallel, --build-cache 사용으로 시간 줄이기)
+
+      # Docker 태그용 환경변수 설정
+      - name: Set TARGET_UPSTREAM Environment Variable
+        run: |
+          echo "TARGET_UPSTREAM=green" >> $GITHUB_ENV
+          
+			# 5. Docker Buildx 설정 (이미지 빌드 속도 및 캐싱 최적화)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
       # 6. DockerHub 로그인
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
         # DockerHub에 로그인하여 이미지를 푸시할 수 있도록 인증.
-
-      # 5. Docker 이미지 태그 설정
-      - name: Set Docker Image Tag
-        run: |
-          TARGET_UPSTREAM=green 
-          echo "TARGET_UPSTREAM=$TARGET_UPSTREAM" >> $GITHUB_ENV
-          docker build -t lemonlab0408/backend:$TARGET_UPSTREAM .
-        # blue 또는 green 중 고정 Docker 이미지에 고유 태그를 부여.
-
-      # 이미지 가져오기
-      - name: Push Docker Image to DockerHub
-        run: |
-          docker push lemonlab0408/backend:$TARGET_UPSTREAM
+        
+      # 7. Docker 이미지 빌드 및 푸시 (BuildKit 및 캐싱 활성화)
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: lemonlab0408/backend:${{ env.TARGET_UPSTREAM }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
 
   deploy:
@@ -90,8 +90,9 @@ jobs:
             CURRENT_UPSTREAM=green
           fi
 
-          TARGET_UPSTREAM=$([ "$CURRENT_UPSTREAM" == "blue" ] && echo "green" || echo "blue")
+					TARGET_UPSTREAM=$([ "$CURRENT_UPSTREAM" == "blue" ] && echo "green" || echo "blue")
           echo "TARGET_UPSTREAM=$TARGET_UPSTREAM" >> $GITHUB_ENV
+          echo "CURRENT_UPSTREAM=$CURRENT_UPSTREAM" >> $GITHUB_ENV
         # 현재 활성화된 Nginx 업스트림(blue/green)을 확인하고, 새로운 배포 대상 설정.
           
       # 2. EC2에 환경 변수 파일 생성
@@ -114,7 +115,7 @@ jobs:
             EOF
         # EC2 서버에 환경 변수 파일을 생성.
 
-      # 3. 새로운 컨테이너 배포 (멀티모듈)
+      # 3. 새로운 컨테이너 배포 (docker-compose 사용)
       - name: Deploy new containers (Multimodule)
         uses: appleboy/ssh-action@master
         with:
