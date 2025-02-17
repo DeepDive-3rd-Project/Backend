@@ -36,7 +36,7 @@ public class AddressRepositoryImpl implements AddressRepository {
 	}
 
 	@Override
-	public Optional<Address> findByRegionAddressOrRoadAddressAndDeletedAtIsNull(String regionAddress, String roadAddress) {
-		return jpaAddressRepository.findByRegionAddressOrRoadAddressAndDeletedAtIsNull(regionAddress, roadAddress);
+	public Optional<Address> findByRoadAddressContainingAndDeletedAtIsNull(String roadAddress) {
+		return jpaAddressRepository.findByRoadAddressContainingAndDeletedAtIsNull(roadAddress);
 	}
 }

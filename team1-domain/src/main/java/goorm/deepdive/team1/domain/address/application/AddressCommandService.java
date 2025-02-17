@@ -36,8 +36,8 @@ public class AddressCommandService {
 	}
 
 	@Transactional
-	public Address findOrCreateAddress(String regionAddress, String roadAddress) {
-		return addressRepository.findByRegionAddressOrRoadAddressAndDeletedAtIsNull(regionAddress, roadAddress)
+	public Address findOrCreateAddress(String roadAddress) {
+		return addressRepository.findByRoadAddressContainingAndDeletedAtIsNull(roadAddress)
 			.orElseGet(() -> createAddressFromKakaoApi(roadAddress));
 	}
 
