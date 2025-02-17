@@ -1,7 +1,6 @@
 package goorm.deepdive.team1.infra.repository.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -24,18 +23,8 @@ public class AddressHistoryRepositoryImpl implements AddressHistoryRepository {
 	}
 
 	@Override
-	public Optional<AddressHistory> findByIdAndDeletedAtIsNull(Long id) {
-		return jpaAddressHistoryRepository.findByIdAndDeletedAtIsNull(id);
-	}
-
-	@Override
 	public List<AddressHistory> findByUserIdAndDeletedAtIsNull(Long userId) {
 		return jpaAddressHistoryRepository.findByUserIdAndDeletedAtIsNull(userId);
-	}
-
-	@Override
-	public void delete(AddressHistory addressHistory) {
-		jpaAddressHistoryRepository.delete(addressHistory);
 	}
 
 	@Override
