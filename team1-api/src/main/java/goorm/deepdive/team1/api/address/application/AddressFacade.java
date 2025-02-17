@@ -3,6 +3,7 @@ package goorm.deepdive.team1.api.address.application;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.api.address.presentation.request.AddressCreateRequest;
 import goorm.deepdive.team1.api.address.presentation.request.AddressUpdateRequest;
@@ -35,11 +36,15 @@ public class AddressFacade {
 		return AddressListResponse.from(addressList);
 	}
 
+	@Transactional
 	public void update(Long id, AddressUpdateRequest request) {
-		addressCommandService.update(id, request.x(), request.y(), request.regionAddress(), request.roadAddress(), request.region());
+		Address address = addressQueryService.getById(id);
+		addressCommandService.update(address, request.x(), request.y(), request.regionAddress(), request.roadAddress(), request.region());
 	}
 
+	@Transactional
 	public void delete(Long id) {
-		addressCommandService.delete(id);
+		Address address = addressQueryService.getById(id);
+		addressCommandService.delete(address);
 	}
 }

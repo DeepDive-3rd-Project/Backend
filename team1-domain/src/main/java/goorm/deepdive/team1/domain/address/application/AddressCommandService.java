@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.domain.address.domain.Address;
-import goorm.deepdive.team1.domain.address.exception.AddressNotFoundException;
 import goorm.deepdive.team1.domain.address.infrastructure.AddressRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -24,9 +23,7 @@ public class AddressCommandService {
 		return addressRepository.save(address);
 	}
 
-	public void update(Long id, double x, double y, String regionAddress, String roadAddress, String region) {
-		Address address = getAddress(id);
-
+	public void update(Address address, double x, double y, String regionAddress, String roadAddress, String region) {
 		address.updateX(x);
 		address.updateY(y);
 		address.updateRegionAddress(regionAddress);
@@ -34,8 +31,7 @@ public class AddressCommandService {
 		address.updateRegion(region);
 	}
 
-	public void delete(Long id) {
-		Address address = getAddress(id);
+	public void delete(Address address) {
 		address.markAsDeleted();
 	}
 
@@ -43,11 +39,6 @@ public class AddressCommandService {
 	public Address findOrCreateAddress(String regionAddress, String roadAddress) {
 		return addressRepository.findByRegionAddressOrRoadAddressAndDeletedAtIsNull(regionAddress, roadAddress)
 			.orElseGet(() -> createAddressFromKakaoApi(roadAddress));
-	}
-
-	private Address getAddress(Long id) {
-		return addressRepository.findByIdAndDeletedAtIsNull(id)
-			.orElseThrow(AddressNotFoundException::new);
 	}
 
 	private Address createAddressFromKakaoApi(String roadAddress) {
