@@ -36,4 +36,8 @@ public class AddressHistoryCommandService {
 	public void saveAll(List<AddressHistory> addressHistories) {
 		addressHistoryRepository.saveAllCaches(addressHistories);
 	}
+
+	public void cleanUpDeletedAddressHistories(List<Long> userIds) {
+		addressHistoryRepository.deleteScheduling(userIds);
+	}
 }

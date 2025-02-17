@@ -81,4 +81,8 @@ public class UserQueryService {
 	public List<UserDocument> getUsersHeatMap(List<String> region, List<AgeGroups> ageGroups) {
 		return userRepository.searchHeatMap(region, ageGroups);
 	}
+
+	public List<Long> findIdsByDeletedAtIsNotNull() {
+		return userRepository.findIdsByDeletedAtIsNotNull();
+	}
 }

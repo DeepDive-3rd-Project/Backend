@@ -2,11 +2,11 @@ package goorm.deepdive.team1.domain.user.application;
 
 import java.util.List;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.domain.address.domain.Address;
+import goorm.deepdive.team1.domain.addresshistory.infrastructure.AddressHistoryRepository;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserCommandService {
 	private final UserRepository userRepository;
+	private final AddressHistoryRepository addressHistoryRepository;
 
 	public User create(String name, String email, String phoneNumber, Address address, Gender gender, Integer age) {
 		User user = User.create(name, email, phoneNumber, address, gender, age);
@@ -69,25 +70,14 @@ public class UserCommandService {
 		userRepository.saveDocument(userDocument);
 	}
 
-	@Transactional
-	@Scheduled(cron = "0 43 10 * * ?")
-	public void cleanUpDeletedUsers() {
-		log.info("🗑️ Retrieving users to delete...");
+	public void cleanUpDeletedUsers(List<Long> ids) {
+		log.info("🗑️ Deleting {} users from Elasticsearch", ids.size());
+		userRepository.deletedSchedulingToElastic(ids);
 
-		List<Long> userIdsToDelete = userRepository.findIdsByDeletedAtIsNotNull();
-
-		if (userIdsToDelete.isEmpty()) {
-			log.info("✅ No users to delete.");
-			return;
-		}
-
-		log.info("🗑️ Deleting {} users from Elasticsearch", userIdsToDelete.size());
-		userRepository.deletedSchedulingToElastic(userIdsToDelete);
-
-		log.info("🗑️ Deleting {} users from Redis", userIdsToDelete.size());
-		userRepository.deletedSchedulingToRedis(userIdsToDelete);
+		log.info("🗑️ Deleting {} users from Redis", ids.size());
+		userRepository.deletedSchedulingToRedis(ids);
 
 		userRepository.deleteScheduling();
-		log.info("✅ Deleted {} users successfully!", userIdsToDelete.size());
+		log.info("✅ Deleted {} users successfully!", ids.size());
 	}
 }

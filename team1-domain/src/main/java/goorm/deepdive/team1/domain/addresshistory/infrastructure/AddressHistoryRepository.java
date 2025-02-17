@@ -18,4 +18,6 @@ public interface AddressHistoryRepository {
 	List<AddressHistoryCache> findCacheByUserIdAndDeletedAtIsNull(Long userId);
 
 	void saveAllCaches(List<AddressHistory> addressHistories);
+
+	void deleteScheduling(List<Long> userIds);
 }
