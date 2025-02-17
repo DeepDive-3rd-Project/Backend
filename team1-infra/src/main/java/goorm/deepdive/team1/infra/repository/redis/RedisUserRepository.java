@@ -88,11 +88,6 @@ public class RedisUserRepository {
 	}
 
 	public void deleteByIds(List<Long> ids) {
-		if (ids == null || ids.isEmpty()) {
-			log.info("✅ 삭제할 사용자 ID가 없습니다.");
-			return;
-		}
-
 		List<String> keysToDelete = ids.stream()
 			.map(id -> USER_KEY_PREFIX + id)
 			.collect(Collectors.toList());
@@ -102,8 +97,6 @@ public class RedisUserRepository {
 		redisTemplate.opsForZSet().remove(USER_ZSET_KEY, ids.stream()
 			.map(String::valueOf)
 			.toArray());
-
-		log.info("✅ {}명의 사용자 정보를 Redis에서 삭제했습니다.", ids.size());
 	}
 
 	private String serializeUserCache(UserCache userCache) {

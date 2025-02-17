@@ -127,7 +127,7 @@ public class UserFacade {
 	}
 
 	@Transactional
-	@Scheduled(cron = "0 31 11 * * *")
+	@Scheduled(cron = "0 45 11 * * *")
 	public void cleanUpDeletedUsers() {
 		log.info("🗑️ Retrieving users to delete...");
 		List<Long> userIdsToDelete = userQueryService.findIdsByDeletedAtIsNotNull();

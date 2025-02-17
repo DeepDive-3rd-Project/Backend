@@ -36,14 +36,7 @@ public class ElasticUserRepository {
 	private static final String INDEX_NAME = "user_address";
 
 	public void deleteScheduling(List<Long> ids) {
-		if (ids == null || ids.isEmpty()) {
-			log.info("✅ No posts to delete from Elasticsearch.");
-			return;
-		}
-
 		try {
-			log.info("🗑️ Deleting {} posts from Elasticsearch...", ids.size());
-
 			List<BulkOperation> deleteOperations = ids.stream()
 				.map(id -> BulkOperation.of(op -> op
 					.delete(d -> d.index(INDEX_NAME).id(String.valueOf(id)))
@@ -52,11 +45,8 @@ public class ElasticUserRepository {
 
 			BulkRequest bulkRequest = BulkRequest.of(b -> b.operations(deleteOperations));
 			elasticsearchClient.bulk(bulkRequest);
-
-			log.info("✅ Successfully deleted {} posts from Elasticsearch.", ids.size());
 		} catch (Exception e) {
-			log.error("❌ Error while deleting posts from Elasticsearch: ", e);
-			throw new RuntimeException("Failed to delete posts from Elasticsearch", e);
+			throw new ElasticQueryExecutionException();
 		}
 	}
 	public Page<UserDocument> searchByRoadAddress(String roadAddress, Pageable pageable){

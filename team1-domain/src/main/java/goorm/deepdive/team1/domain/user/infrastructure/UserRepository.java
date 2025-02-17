@@ -47,9 +47,6 @@ public interface UserRepository {
 
 	List<Long> findIdsByDeletedAtIsNotNull();
 
-	void deleteScheduling();
+	void deleteScheduling(List<Long> ids);
 
-	void deletedSchedulingToElastic(List<Long> ids);
-
-	void deletedSchedulingToRedis(List<Long> ids);
-}
+	}

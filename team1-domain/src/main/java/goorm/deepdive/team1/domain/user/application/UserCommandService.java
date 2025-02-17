@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.domain.address.domain.Address;
-import goorm.deepdive.team1.domain.addresshistory.infrastructure.AddressHistoryRepository;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
@@ -22,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserCommandService {
 	private final UserRepository userRepository;
-	private final AddressHistoryRepository addressHistoryRepository;
 
 	public User create(String name, String email, String phoneNumber, Address address, Gender gender, Integer age) {
 		User user = User.create(name, email, phoneNumber, address, gender, age);
@@ -71,13 +69,7 @@ public class UserCommandService {
 	}
 
 	public void cleanUpDeletedUsers(List<Long> ids) {
-		log.info("🗑️ Deleting {} users from Elasticsearch", ids.size());
-		userRepository.deletedSchedulingToElastic(ids);
-
-		log.info("🗑️ Deleting {} users from Redis", ids.size());
-		userRepository.deletedSchedulingToRedis(ids);
-
-		userRepository.deleteScheduling();
+		userRepository.deleteScheduling(ids);
 		log.info("✅ Deleted {} users successfully!", ids.size());
 	}
 }

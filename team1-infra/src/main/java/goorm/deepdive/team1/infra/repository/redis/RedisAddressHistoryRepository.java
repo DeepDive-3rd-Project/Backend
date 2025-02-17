@@ -55,10 +55,6 @@ public class RedisAddressHistoryRepository {
 	}
 
 	public void deleteByUserIds(List<Long> userIds) {
-		if (userIds == null || userIds.isEmpty()) {
-			return;
-		}
-
 		List<String> keysToDelete = userIds.stream()
 			.flatMap(userId -> Objects.requireNonNull(redisTemplate.keys(KEY_PREFIX + userId + ":*")).stream())
 			.toList();
