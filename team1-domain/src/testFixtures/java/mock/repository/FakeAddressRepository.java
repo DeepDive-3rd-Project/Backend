@@ -1,7 +1,6 @@
 package mock.repository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,23 +34,6 @@ public class FakeAddressRepository implements AddressRepository {
 		TestEntityUtils.setCreatedAt(address, LocalDateTime.now());
 		addresses.put(address.getId(), address);
 		return address;
-	}
-
-	@Override
-	public Optional<Address> findByIdAndDeletedAtIsNull(Long id) {
-		return Optional.ofNullable(addresses.get(id));
-	}
-
-	@Override
-	public List<Address> findAllByDeletedAtIsNull() {
-		return addresses.values().stream()
-			.filter(address -> !address.isDeleted())
-			.toList();
-	}
-
-	@Override
-	public void delete(Address address) {
-		addresses.remove(address.getId());
 	}
 
 	@Override

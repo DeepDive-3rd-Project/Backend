@@ -1,6 +1,5 @@
 package goorm.deepdive.team1.infra.repository.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -19,22 +18,7 @@ public class AddressRepositoryImpl implements AddressRepository {
 	public Address save(Address address) {
 		return jpaAddressRepository.save(address);
 	}
-
-	@Override
-	public Optional<Address> findByIdAndDeletedAtIsNull(Long id) {
-		return jpaAddressRepository.findByIdAndDeletedAtIsNull(id);
-	}
-
-	@Override
-	public List<Address> findAllByDeletedAtIsNull() {
-		return jpaAddressRepository.findAllByDeletedAtIsNull();
-	}
-
-	@Override
-	public void delete(Address address) {
-		jpaAddressRepository.delete(address);
-	}
-
+	
 	@Override
 	public Optional<Address> findByRoadAddressContainingAndDeletedAtIsNull(String roadAddress) {
 		return jpaAddressRepository.findByRoadAddressContainingAndDeletedAtIsNull(roadAddress);
