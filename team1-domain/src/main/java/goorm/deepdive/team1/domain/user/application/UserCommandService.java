@@ -72,4 +72,8 @@ public class UserCommandService {
 		userRepository.deleteScheduling(ids);
 		log.info("✅ {}명의 유저 데이터가 삭제 되었습니다", ids.size());
 	}
+
+	public void saveAllCaches(List<UserCache> userCaches) {
+		userRepository.saveAllCache(userCaches);
+	}
 }

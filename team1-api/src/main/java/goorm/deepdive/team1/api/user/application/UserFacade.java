@@ -71,12 +71,27 @@ public class UserFacade {
 	}
 
 	public UserCache getUserCacheById(Long id) {
-		return userQueryService.getUserCacheById(id);
+		UserCache userCache = userQueryService.getUserCacheById(id);
+
+		if (userCache == null) {
+			User user = userQueryService.getById(id);
+			userCache = UserCache.from(user);
+			userCommandService.saveCache(userCache);
+		}
+
+		return userCache;
 	}
 
 	public PaginatedListResponse getAll(Pageable pageable) {
-		Page<UserCache> userList = userQueryService.getAll(pageable);
-		return PaginatedListResponse.from(userList);
+		Page<UserCache> userCaches = userQueryService.getCaches(pageable);
+
+		if (userCaches.hasContent() && userCaches.getContent().size() == pageable.getPageSize()) {
+			return PaginatedListResponse.from(userCaches);
+		}
+
+		userCaches = userQueryService.getCachesFromUsers(pageable);
+		userCommandService.saveAllCaches(userCaches.getContent());
+		return PaginatedListResponse.from(userCaches);
 	}
 
 	@Transactional
