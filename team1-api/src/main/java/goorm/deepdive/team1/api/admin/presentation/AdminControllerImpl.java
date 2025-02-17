@@ -4,18 +4,19 @@ import goorm.deepdive.team1.api.admin.application.AdminFacade;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminLoginRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminRoleUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminListResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminSearchResponse;
+import goorm.deepdive.team1.api.security.CustomAdminDetails;
 import goorm.deepdive.team1.domain.admin.domain.Admin;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -98,5 +99,17 @@ public class AdminControllerImpl implements AdminController{
     public ResponseEntity<AdminSearchResponse> getAdminByEmail(@RequestParam String email) {
         Admin admin = adminFacade.getAdminByEmail(email);
         return ResponseEntity.ok(AdminSearchResponse.fromEntity(admin));
+    }
+
+    @PatchMapping("/{adminId}/role")
+    @PreAuthorize("hasAuthority('SUPER')")
+    public ResponseEntity<Void> updateAdminRole(
+            @PathVariable Long adminId,
+            @RequestBody AdminRoleUpdateRequest request,
+            @AuthenticationPrincipal CustomAdminDetails adminDetails // 현재 로그인한 관리자 정보
+    ) {
+
+        adminFacade.updateAdminRole(adminId, request,  adminDetails.getAdminId());
+        return ResponseEntity.ok().build();
     }
 }
