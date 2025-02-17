@@ -1,15 +1,12 @@
 package goorm.deepdive.team1.api.admin.presentation;
 
-import goorm.deepdive.team1.api.admin.presentation.response.AdminListResponse;
+import goorm.deepdive.team1.api.admin.presentation.response.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminLoginRequest;
-import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
-import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
-import goorm.deepdive.team1.api.admin.presentation.response.AdminLoginResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -106,4 +103,13 @@ public interface AdminController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     );
+
+    @Operation(summary = "관리자 이메일 검색 API", description = """
+        - Description : 특정 이메일을 가진 관리자를 조회하는 API입니다.
+        - 요청 파라미터로 `email` 값을 전달하면 해당 이메일을 가진 관리자를 반환합니다.
+    """)
+    @ApiResponse(responseCode = "200", description = "관리자 조회 성공", content = @Content(schema = @Schema(implementation = AdminSearchResponse.class)))
+    @ApiResponse(responseCode = "404", description = "관리자를 찾을 수 없음")
+    @GetMapping("/search")
+    ResponseEntity<AdminSearchResponse> getAdminByEmail(@RequestParam String email);
 }
