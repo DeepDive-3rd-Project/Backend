@@ -44,4 +44,8 @@ public interface UserRepository {
 	Map<String, Object> searchUserStatistics(List<String> gender, List<String> region, List<AgeGroups> ageGroups);
 
 	List<UserDocument> searchHeatMap(List<String> region, List<AgeGroups> ageGroups);
+
+	List<Long> findIdsByDeletedAtIsNotNull();
+
+	void deleteScheduling();
 }
