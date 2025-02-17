@@ -18,8 +18,11 @@ import goorm.deepdive.team1.domain.admin.infrastructure.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -60,8 +63,16 @@ public class AdminFacade {
         }
 
         // 레디스에 저장된 토큰 검증이 통과한 경우 정상 요청으로 판단, 새 토큰 생성
-        String newAccessToken = "Bearer " +jwtUtil.createAccessToken(adminId, jwtUtil.getRefreshTokenRole(refreshToken));
-        String newRefreshToken = jwtUtil.createRefreshToken(adminId, jwtUtil.getRefreshTokenRole(refreshToken));
+        String newAccessToken = "Bearer " +jwtUtil.createAccessToken(
+                adminId,
+                jwtUtil.getRefreshTokenEmail(refreshToken),
+                jwtUtil.getRefreshTokenRole(refreshToken)
+        );
+        String newRefreshToken = jwtUtil.createRefreshToken(
+                adminId,
+                jwtUtil.getRefreshTokenEmail(refreshToken),
+                jwtUtil.getRefreshTokenRole(refreshToken)
+        );
 
         // 기존 리프레시 토큰 삭제 & 새로운 리프레시 토큰 저장
         tokenRepository.deleteRefreshToken(adminId);
@@ -99,6 +110,14 @@ public class AdminFacade {
 
     public void updatePassword(Long adminId, AdminPasswordUpdateRequest request) {
         adminCommandService.updatePassword(adminId, request.oldPassword(), request.newPassword());
+    }
+
+    public List<Admin> getAllAdmins() {
+        return adminQueryService.getAllAdmins();
+    }
+
+    public Page<Admin> getAdminsByPage(int page, int size) {
+        return adminQueryService.getAdminsByPage(page, size);
     }
 
 }

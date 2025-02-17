@@ -59,8 +59,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                 .orElse("ROLE_USER");
 
         // JWT 생성
-        String token = jwtUtil.createAccessToken(String.valueOf(adminId), role); // 1시간 유효기간
-        String refreshToken = jwtUtil.createRefreshToken(String.valueOf(adminId), role);
+        String token = jwtUtil.createAccessToken(String.valueOf(adminId), email, role); // 1시간 유효기간
+        String refreshToken = jwtUtil.createRefreshToken(String.valueOf(adminId),email, role);
         response.addHeader("Authorization", "Bearer " + token);
         response.addCookie(CookieUtil.createCookie("Refresh-Token", refreshToken, 604800));
 //        response.addHeader("Refresh-Token", refreshToken);

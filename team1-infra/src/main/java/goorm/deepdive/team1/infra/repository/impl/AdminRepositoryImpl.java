@@ -4,8 +4,12 @@ import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
 import goorm.deepdive.team1.infra.repository.jpa.JpaAdminRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -36,5 +40,15 @@ public class AdminRepositoryImpl implements AdminRepository {
     @Override
     public void delete(Admin admin) {
         jpaAdminRepository.delete(admin);
+    }
+
+    @Override
+    public List<Admin> findAll(Sort sort) {
+        return jpaAdminRepository.findAll(sort);
+    }
+
+    @Override
+    public Page<Admin> findAll(Pageable pageable) {
+        return jpaAdminRepository.findAll(pageable);
     }
 }
