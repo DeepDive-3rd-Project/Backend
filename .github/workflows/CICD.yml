@@ -95,8 +95,8 @@ jobs:
           echo "CURRENT_UPSTREAM=$CURRENT_UPSTREAM" >> $GITHUB_ENV
         # 현재 활성화된 Nginx 업스트림(blue/green)을 확인하고, 새로운 배포 대상 설정.
 
-      # 2. EC2에 환경 변수 파일 생성
-      - name: Create .env file on EC2
+      # 2. EC2에 환경 변수 파일 생성 부분 아래 script 수정 (CICD deploy job)
+      - name: Create .env and env.properties file on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.LIVE_SERVER_IP }}
@@ -112,8 +112,28 @@ jobs:
             DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             REDIS_HOST=${{ secrets.REDIS_HOST }}
             REDIS_PORT=${{ secrets.REDIS_PORT }}
+            POSTGRES_HOST=${POSTGRES_HOST}
+            POSTGRES_PORT=5432
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             EOF
-        # EC2 서버에 환경 변수 파일을 생성.
+      
+            # 여기에 env.properties 파일 생성 추가!!
+            cat <<EOF > /home/ubuntu/deploy/env.properties
+            DB_HOST=${{ secrets.POSTGRES_HOST }}
+            DB_PORT=5432
+            DB_NAME=${{ secrets.POSTGRES_DB }}
+            DB_USERNAME=${{ secrets.POSTGRES_USER }}
+            DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=${{ secrets.REDIS_PORT }}
+            POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
+            POSTGRES_PORT=5432
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            EOF
 
       # 3. 새로운 컨테이너 배포 (docker-compose 사용)
       - name: Deploy new containers (Multimodule)
