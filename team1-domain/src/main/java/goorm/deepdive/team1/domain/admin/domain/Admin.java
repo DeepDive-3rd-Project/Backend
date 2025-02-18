@@ -34,9 +34,16 @@ public class Admin {
 	@Column(nullable = false)
 	private Role role;
 
+	public static Admin create(String email, String password, Role role) {
+		return Admin.builder()
+			.email(email)
+			.password(password)
+			.role(role)
+			.build();
+	}
 	public void updatePassword(String password) {
 		this.password = password;
 	}
-	public void updateRole(Role role) { this.role = role;}
 
+	public void updateRole(Role role) { this.role = role;}
 }

@@ -7,7 +7,7 @@ public record AdminSearchResponse(
         String email,
         String role
 ) {
-    public static AdminSearchResponse fromEntity(Admin admin) {
+    public static AdminSearchResponse from(Admin admin) {
         return new AdminSearchResponse(admin.getId(), admin.getEmail(), admin.getRole().name());
     }
 }

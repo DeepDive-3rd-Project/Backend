@@ -1,13 +1,20 @@
 package goorm.deepdive.team1.api.admin.presentation.response;
 
 import goorm.deepdive.team1.domain.admin.domain.Admin;
+import goorm.deepdive.team1.domain.admin.domain.Role;
+import lombok.Builder;
 
+@Builder
 public record AdminListResponse(
         Long id,
         String email,
-        String role
+        Role role
 ) {
-    public static AdminListResponse fromEntity(Admin admin) {
-        return new AdminListResponse(admin.getId(), admin.getEmail(), admin.getRole().name());
+    public static AdminListResponse from(Admin admin) {
+        return AdminListResponse.builder()
+            .id(admin.getId())
+            .email(admin.getEmail())
+            .role(admin.getRole())
+            .build();
     }
 }

@@ -1,15 +1,15 @@
 package goorm.deepdive.team1.domain.admin.application;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.domain.Role;
+import goorm.deepdive.team1.domain.admin.exception.AdminPasswordMismatchException;
 import goorm.deepdive.team1.domain.admin.exception.CannotChangeOwnRoleException;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
 import goorm.deepdive.team1.domain.admin.security.PasswordEncryptor;
-import goorm.deepdive.team1.domain.admin.exception.AdminPasswordMismatchException;
-import goorm.deepdive.team1.domain.admin.exception.AdminNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -19,50 +19,29 @@ public class AdminCommandService {
     private final AdminRepository adminRepository;
     private final PasswordEncryptor passwordEncryptor;
 
-    public Admin register(String email, String password, String role) {
-        Admin admin = Admin.builder()
-                .email(email)
-                .password(passwordEncryptor.encode(password))
-                .role(Role.valueOf(role))
-                .build();
+    public Admin register(String email, String password, Role role) {
+        Admin admin = Admin.create(email, passwordEncryptor.encode(password), role);
         return adminRepository.save(admin);
     }
 
-    @Transactional
-    public void deleteAdmin(Long adminId) {
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(AdminNotFoundException::new);
-
+    public void deleteAdmin(Admin admin) {
         adminRepository.delete(admin);
     }
 
-    @Transactional
-    public void updatePassword(Long adminId, String oldPassword, String newPassword) {
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(AdminNotFoundException::new);
-
-        // 기존 비밀번호 검증
+    public void updatePassword(Admin admin, String oldPassword, String newPassword) {
         if (!passwordEncryptor.matches(oldPassword, admin.getPassword())) {
             throw new AdminPasswordMismatchException();
         }
 
-        // 새 비밀번호 암호화 후 저장
         admin.updatePassword(passwordEncryptor.encode(newPassword));
         adminRepository.save(admin);
     }
 
-    @Transactional
-    public void updateAdminRole(Long adminId, Role newRole, Long loggedInAdminId) {
-
-        // 자기 자신의 Role 변경 방지
-        if (loggedInAdminId.equals(adminId)) {
+    public void updateAdminRole(Admin admin, Role newRole, Long loggedInAdminId) {
+        if (loggedInAdminId.equals(admin.getId())) {
             throw new CannotChangeOwnRoleException();
         }
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(AdminNotFoundException::new);
-
         admin.updateRole(newRole);
-        adminRepository.save(admin);
     }
 
 }

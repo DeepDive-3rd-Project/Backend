@@ -1,7 +1,14 @@
 package goorm.deepdive.team1.api.admin.application;
 
-import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRoleUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
@@ -10,8 +17,6 @@ import goorm.deepdive.team1.api.jwt.JwtUtil;
 import goorm.deepdive.team1.api.jwt.exception.JwtEmptyException;
 import goorm.deepdive.team1.api.jwt.exception.JwtExpiredException;
 import goorm.deepdive.team1.api.jwt.exception.JwtRedisStorageException;
-import goorm.deepdive.team1.common.exception.AdminExceptionCode;
-import goorm.deepdive.team1.common.exception.CustomException;
 import goorm.deepdive.team1.domain.admin.application.AdminCommandService;
 import goorm.deepdive.team1.domain.admin.application.AdminQueryService;
 import goorm.deepdive.team1.domain.admin.domain.Admin;
@@ -19,11 +24,6 @@ import goorm.deepdive.team1.domain.admin.infrastructure.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -34,13 +34,10 @@ public class AdminFacade {
     private final TokenRepository tokenRepository;
 
     public AdminRegisterResponse register(AdminRegisterRequest request) {
-        // 해당 부분 예외처리 수정 필요
-        if (adminQueryService.existsByEmail(request.email())) {
-            throw new CustomException(AdminExceptionCode.ALREADY_REGISTERED);
-        }
+        adminQueryService.validateEmailUniqueness(request.email());
 
         Admin admin = adminCommandService.register(request.email(), request.password(), request.role());
-        return new AdminRegisterResponse(admin.getId(), admin.getEmail());
+        return AdminRegisterResponse.from(admin);
     }
 
     public AdminReissueResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
@@ -83,7 +80,6 @@ public class AdminFacade {
         response.setHeader("Authorization", newAccessToken);
         response.addCookie(CookieUtil.createCookie("Refresh-Token", newRefreshToken, 604800));
 
-//        AdminReissueResponse responseBody = new AdminReissueResponse(Long.parseLong(adminId), newAccessToken);
         return new AdminReissueResponse(Long.parseLong(adminId), newAccessToken);
     }
 
@@ -105,28 +101,31 @@ public class AdminFacade {
 
     }
 
-    public void deleteAdmin(Long adminId) {
-        adminCommandService.deleteAdmin(adminId);
+    @Transactional
+    public void deleteAdmin(Long id) {
+        Admin admin = adminQueryService.getById(id);
+        adminCommandService.deleteAdmin(admin);
     }
 
-    public void updatePassword(Long adminId, AdminPasswordUpdateRequest request) {
-        adminCommandService.updatePassword(adminId, request.oldPassword(), request.newPassword());
-    }
-
-    public List<Admin> getAllAdmins() {
-        return adminQueryService.getAllAdmins();
+    @Transactional
+    public void updatePassword(Long id, AdminPasswordUpdateRequest request) {
+        Admin admin = adminQueryService.getById(id);
+        adminCommandService.updatePassword(admin, request.oldPassword(), request.newPassword());
     }
 
     public Page<Admin> getAdminsByPage(int page, int size) {
-        return adminQueryService.getAdminsByPage(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+        return adminQueryService.getAdminsByPage(pageable);
     }
 
     public Admin getAdminByEmail(String email) {
         return adminQueryService.getAdminByEmail(email);
     }
 
+    @Transactional
     public void updateAdminRole(Long adminId, AdminRoleUpdateRequest request, Long loggedInAdminId) {
-        adminCommandService.updateAdminRole(adminId, request.role(), loggedInAdminId);
+        Admin admin = adminQueryService.getById(adminId);
+        adminCommandService.updateAdminRole(admin, request.role(), loggedInAdminId);
     }
 
 }
