@@ -1,10 +1,7 @@
 package goorm.deepdive.team1.domain.admin.application;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +18,6 @@ public class AdminQueryService {
 
     public boolean existsByEmail(String email) {
         return adminRepository.existsByEmail(email);
-    }
-
-    public List<Admin> getAllAdmins() {
-        return adminRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     public Page<Admin> getAdminsByPage(Pageable pageable) {

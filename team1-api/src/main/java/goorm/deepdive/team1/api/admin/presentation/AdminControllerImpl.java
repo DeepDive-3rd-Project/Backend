@@ -47,7 +47,7 @@ public class AdminControllerImpl implements AdminController{
     public ResponseEntity<Void> login(@RequestBody AdminLoginRequest request) {
         return ResponseEntity.ok().build();
     }
-    
+
     @Override
     @PostMapping("/reissue")
     public ResponseEntity<AdminReissueResponse> reissueToken(HttpServletRequest request, HttpServletResponse response) {
@@ -66,7 +66,7 @@ public class AdminControllerImpl implements AdminController{
     @DeleteMapping("/{adminId}")
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long adminId) {
         adminFacade.deleteAdmin(adminId);
-        return ResponseEntity.noContent().build(); // 204 No Content 반환
+        return ResponseEntity.noContent().build();
     }
 
     @Override
@@ -75,22 +75,23 @@ public class AdminControllerImpl implements AdminController{
             @PathVariable Long adminId,
             @RequestBody AdminPasswordUpdateRequest request) {
         adminFacade.updatePassword(adminId, request);
-        return ResponseEntity.ok().build(); // 200 OK 반환
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/list")
     public ResponseEntity<Page<AdminListResponse>> getAdminsByPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Page<AdminListResponse> adminPage = adminFacade.getAdminsByPage(page, size)
-                .map(AdminListResponse::fromEntity);
-        return ResponseEntity.ok(adminPage);
+        Page<AdminListResponse> response = adminFacade.getAdminsByPage(page, size)
+                .map(AdminListResponse::from);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/search")
     public ResponseEntity<AdminSearchResponse> getAdminByEmail(@RequestParam String email) {
         Admin admin = adminFacade.getAdminByEmail(email);
-        return ResponseEntity.ok(AdminSearchResponse.fromEntity(admin));
+        AdminSearchResponse response = AdminSearchResponse.from(admin);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{adminId}/role")
@@ -98,10 +99,9 @@ public class AdminControllerImpl implements AdminController{
     public ResponseEntity<Void> updateAdminRole(
             @PathVariable Long adminId,
             @RequestBody AdminRoleUpdateRequest request,
-            @AuthenticationPrincipal CustomAdminDetails adminDetails // 현재 로그인한 관리자 정보
+            @AuthenticationPrincipal CustomAdminDetails adminDetails
     ) {
-
-        adminFacade.updateAdminRole(adminId, request,  adminDetails.getAdminId());
+        adminFacade.updateAdminRole(adminId, request, adminDetails.getAdminId());
         return ResponseEntity.ok().build();
     }
 }
