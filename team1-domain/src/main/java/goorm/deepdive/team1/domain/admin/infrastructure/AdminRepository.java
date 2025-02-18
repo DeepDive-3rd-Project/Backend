@@ -19,7 +19,5 @@ public interface AdminRepository {
 
     void delete(Admin admin);
 
-    List<Admin> findAll(Sort sort);
-
     Page<Admin> findAll(Pageable pageable);
 }
