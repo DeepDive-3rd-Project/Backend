@@ -1,27 +1,34 @@
 package goorm.deepdive.team1.api.admin.presentation;
 
-import goorm.deepdive.team1.api.admin.presentation.request.AdminRoleUpdateRequest;
-import goorm.deepdive.team1.api.admin.presentation.response.*;
-import goorm.deepdive.team1.api.security.CustomAdminDetails;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
-
-import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
-import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminLoginRequest;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminRoleUpdateRequest;
+import goorm.deepdive.team1.api.admin.presentation.response.AdminListResponse;
+import goorm.deepdive.team1.api.admin.presentation.response.AdminLoginResponse;
+import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
+import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
+import goorm.deepdive.team1.api.admin.presentation.response.AdminSearchResponse;
+import goorm.deepdive.team1.api.security.CustomAdminDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "ADMIN", description = "관리자 API")  // Swagger 태그 추가
 public interface AdminController {
@@ -88,20 +95,13 @@ public interface AdminController {
             @PathVariable Long adminId,
             @RequestBody AdminPasswordUpdateRequest request);
 
-    @Operation(summary = "전체 관리자 목록 조회 API", description = """
-        - Description : 등록된 모든 관리자 목록을 조회하는 API입니다.
-    """)
-    @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/list")
-    ResponseEntity<List<AdminListResponse>> getAllAdmins();
-
     @Operation(summary = "페이징된 관리자 목록 조회 API", description = """
         - Description : 등록된 관리자를 페이지 단위로 조회하는 API입니다.
         - `page`: 0부터 시작하는 페이지 번호
         - `size`: 한 페이지당 조회할 개수
     """)
     @ApiResponse(responseCode = "200", description = "조회 성공")
-    @GetMapping("/list/page")
+    @GetMapping("/list")
     ResponseEntity<Page<AdminListResponse>> getAdminsByPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
