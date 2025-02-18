@@ -89,7 +89,6 @@ jobs:
           else
             CURRENT_UPSTREAM=green
           fi
-
           TARGET_UPSTREAM=$([ "$CURRENT_UPSTREAM" == "blue" ] && echo "green" || echo "blue")
           echo "TARGET_UPSTREAM=$TARGET_UPSTREAM" >> $GITHUB_ENV
           echo "CURRENT_UPSTREAM=$CURRENT_UPSTREAM" >> $GITHUB_ENV
@@ -118,6 +117,22 @@ jobs:
             POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             EOF
+      
+            # 여기에 env.properties 파일 생성 추가!!
+            cat <<EOF > /home/ubuntu/deploy/env.properties
+            DB_HOST=${{ secrets.POSTGRES_HOST }}
+            DB_PORT=5432
+            DB_NAME=${{ secrets.POSTGRES_DB }}
+            DB_USERNAME=${{ secrets.POSTGRES_USER }}
+            DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=${{ secrets.REDIS_PORT }}
+            POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}
+            POSTGRES_PORT=5432
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            EOF
 
       # 3. 새로운 컨테이너 배포 (docker-compose 사용)
       - name: Deploy new containers (Multimodule)
@@ -129,12 +144,10 @@ jobs:
           script: |
             echo "Deploying to ${{ env.TARGET_UPSTREAM }}"
             cd /home/ubuntu/deploy
-
             if [ ! -f docker-compose-${{ env.TARGET_UPSTREAM }}.yml ]; then
               echo "🚨 Error: docker-compose-${{ env.TARGET_UPSTREAM }}.yml not found!"
               exit 1
             fi
-
             sudo docker compose -f docker-compose-${{ env.TARGET_UPSTREAM }}.yml --env-file .env up -d --no-deps
         # team1-api, team1-domain, team1-infra 컨테이너를 함께 실행.
 
@@ -190,7 +203,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "Updating /team1/live-color to ${{ env.TARGET_UPSTREAM }}"
-
             aws ssm put-parameter \
               --name "/team1/live-color" \
               --value "${{ env.TARGET_UPSTREAM }}" \
