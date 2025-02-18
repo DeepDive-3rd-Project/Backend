@@ -20,8 +20,8 @@ public class AdminCommandService {
     private final AdminRepository adminRepository;
     private final PasswordEncryptor passwordEncryptor;
 
-    public Admin register(String email, String password, String role) {
-        Admin admin = Admin.create(email, passwordEncryptor.encode(password), Role.valueOf(role));
+    public Admin register(String email, String password, Role role) {
+        Admin admin = Admin.create(email, passwordEncryptor.encode(password), role);
         return adminRepository.save(admin);
     }
 
@@ -30,16 +30,11 @@ public class AdminCommandService {
     }
 
     @Transactional
-    public void updatePassword(Long adminId, String oldPassword, String newPassword) {
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(AdminNotFoundException::new);
-
-        // 기존 비밀번호 검증
+    public void updatePassword(Admin admin, String oldPassword, String newPassword) {
         if (!passwordEncryptor.matches(oldPassword, admin.getPassword())) {
             throw new AdminPasswordMismatchException();
         }
 
-        // 새 비밀번호 암호화 후 저장
         admin.updatePassword(passwordEncryptor.encode(newPassword));
         adminRepository.save(admin);
     }

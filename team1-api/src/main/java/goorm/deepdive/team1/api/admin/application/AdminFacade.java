@@ -110,8 +110,9 @@ public class AdminFacade {
         adminCommandService.deleteAdmin(admin);
     }
 
-    public void updatePassword(Long adminId, AdminPasswordUpdateRequest request) {
-        adminCommandService.updatePassword(adminId, request.oldPassword(), request.newPassword());
+    public void updatePassword(Long id, AdminPasswordUpdateRequest request) {
+        Admin admin = adminQueryService.getById(id);
+        adminCommandService.updatePassword(admin, request.oldPassword(), request.newPassword());
     }
 
     public List<Admin> getAllAdmins() {
