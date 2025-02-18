@@ -45,3 +45,10 @@ spring:
 kakao:
   api:
     key: ${KAKAO_API_KEY}
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
