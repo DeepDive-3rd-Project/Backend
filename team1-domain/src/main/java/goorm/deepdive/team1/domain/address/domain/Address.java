@@ -21,8 +21,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor(access = PROTECTED)
 @Table(name = "address", indexes = {
-	@Index(name = "idx_region_address", columnList = "regionAddress"),
-	@Index(name = "idx_road_address", columnList = "roadAddress"),
 	@Index(name = "idx_region", columnList = "region")
 })
 public class Address extends BaseTimeEntity {
