@@ -19,6 +19,8 @@ jobs:
       # 1. 소스 코드 체크아웃
       - name: Checkout source code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 전체 히스토리를 가져오도록 설정
         # GitHub 레포지토리에서 소스 코드를 가져옴.
 
       # 2. JDK 21 설치
@@ -72,6 +74,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: lemonlab0408/backend:${{ env.TARGET_UPSTREAM }}
+          no-cache: true
 
   deploy:
     # 배포 작업 (build 작업 완료 후 실행)
@@ -115,6 +118,7 @@ jobs:
             POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             EOF
+            
 
       # 3. 새로운 컨테이너 배포 (docker-compose 사용)
       - name: Deploy new containers (Multimodule)
