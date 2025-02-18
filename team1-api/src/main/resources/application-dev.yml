@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:postgresql://postgresql-development:5432/team1-db
-    username: team1-master
+    url: jdbc:postgresql://postgres-development:5432/team1-db
+    username: team1_master
     password: postgresql1234!
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
