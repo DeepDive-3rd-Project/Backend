@@ -1,7 +1,12 @@
 package goorm.deepdive.team1.api.admin.application;
 
-import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Component;
+
 import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
+import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRoleUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminRegisterResponse;
 import goorm.deepdive.team1.api.admin.presentation.response.AdminReissueResponse;
@@ -19,11 +24,6 @@ import goorm.deepdive.team1.domain.admin.infrastructure.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -105,8 +105,9 @@ public class AdminFacade {
 
     }
 
-    public void deleteAdmin(Long adminId) {
-        adminCommandService.deleteAdmin(adminId);
+    public void deleteAdmin(Long id) {
+        Admin admin = adminQueryService.getById(id);
+        adminCommandService.deleteAdmin(admin);
     }
 
     public void updatePassword(Long adminId, AdminPasswordUpdateRequest request) {

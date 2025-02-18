@@ -25,11 +25,7 @@ public class AdminCommandService {
         return adminRepository.save(admin);
     }
 
-    @Transactional
-    public void deleteAdmin(Long adminId) {
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(AdminNotFoundException::new);
-
+    public void deleteAdmin(Admin admin) {
         adminRepository.delete(admin);
     }
 
