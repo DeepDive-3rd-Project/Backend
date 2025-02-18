@@ -1,15 +1,16 @@
 package goorm.deepdive.team1.domain.admin.application;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.domain.Role;
+import goorm.deepdive.team1.domain.admin.exception.AdminNotFoundException;
+import goorm.deepdive.team1.domain.admin.exception.AdminPasswordMismatchException;
 import goorm.deepdive.team1.domain.admin.exception.CannotChangeOwnRoleException;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
 import goorm.deepdive.team1.domain.admin.security.PasswordEncryptor;
-import goorm.deepdive.team1.domain.admin.exception.AdminPasswordMismatchException;
-import goorm.deepdive.team1.domain.admin.exception.AdminNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -20,11 +21,7 @@ public class AdminCommandService {
     private final PasswordEncryptor passwordEncryptor;
 
     public Admin register(String email, String password, String role) {
-        Admin admin = Admin.builder()
-                .email(email)
-                .password(passwordEncryptor.encode(password))
-                .role(Role.valueOf(role))
-                .build();
+        Admin admin = Admin.create(email, passwordEncryptor.encode(password), Role.valueOf(role));
         return adminRepository.save(admin);
     }
 
