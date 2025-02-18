@@ -43,11 +43,6 @@ public class AdminRepositoryImpl implements AdminRepository {
     }
 
     @Override
-    public List<Admin> findAll(Sort sort) {
-        return jpaAdminRepository.findAll(sort);
-    }
-
-    @Override
     public Page<Admin> findAll(Pageable pageable) {
         return jpaAdminRepository.findAll(pageable);
     }
