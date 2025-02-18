@@ -33,7 +33,7 @@ jobs:
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          cache-disabled: false
+          cache-disabled: true
           gradle-home-cache-includes: |
             caches
             wrapper
@@ -72,8 +72,6 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: lemonlab0408/backend:${{ env.TARGET_UPSTREAM }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   deploy:
     # 배포 작업 (build 작업 완료 후 실행)
