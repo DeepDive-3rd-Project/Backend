@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.api.admin.presentation.request.AdminPasswordUpdateRequest;
 import goorm.deepdive.team1.api.admin.presentation.request.AdminRegisterRequest;
@@ -106,11 +107,13 @@ public class AdminFacade {
 
     }
 
+    @Transactional
     public void deleteAdmin(Long id) {
         Admin admin = adminQueryService.getById(id);
         adminCommandService.deleteAdmin(admin);
     }
 
+    @Transactional
     public void updatePassword(Long id, AdminPasswordUpdateRequest request) {
         Admin admin = adminQueryService.getById(id);
         adminCommandService.updatePassword(admin, request.oldPassword(), request.newPassword());
@@ -125,8 +128,10 @@ public class AdminFacade {
         return adminQueryService.getAdminByEmail(email);
     }
 
+    @Transactional
     public void updateAdminRole(Long adminId, AdminRoleUpdateRequest request, Long loggedInAdminId) {
-        adminCommandService.updateAdminRole(adminId, request.role(), loggedInAdminId);
+        Admin admin = adminQueryService.getById(adminId);
+        adminCommandService.updateAdminRole(admin, request.role(), loggedInAdminId);
     }
 
 }

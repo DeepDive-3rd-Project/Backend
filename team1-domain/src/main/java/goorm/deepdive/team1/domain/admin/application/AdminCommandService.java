@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.domain.admin.domain.Admin;
 import goorm.deepdive.team1.domain.admin.domain.Role;
-import goorm.deepdive.team1.domain.admin.exception.AdminNotFoundException;
 import goorm.deepdive.team1.domain.admin.exception.AdminPasswordMismatchException;
 import goorm.deepdive.team1.domain.admin.exception.CannotChangeOwnRoleException;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
@@ -29,7 +28,6 @@ public class AdminCommandService {
         adminRepository.delete(admin);
     }
 
-    @Transactional
     public void updatePassword(Admin admin, String oldPassword, String newPassword) {
         if (!passwordEncryptor.matches(oldPassword, admin.getPassword())) {
             throw new AdminPasswordMismatchException();
@@ -39,18 +37,11 @@ public class AdminCommandService {
         adminRepository.save(admin);
     }
 
-    @Transactional
-    public void updateAdminRole(Long adminId, Role newRole, Long loggedInAdminId) {
-
-        // 자기 자신의 Role 변경 방지
-        if (loggedInAdminId.equals(adminId)) {
+    public void updateAdminRole(Admin admin, Role newRole, Long loggedInAdminId) {
+        if (loggedInAdminId.equals(admin.getId())) {
             throw new CannotChangeOwnRoleException();
         }
-        Admin admin = adminRepository.findById(adminId)
-                .orElseThrow(AdminNotFoundException::new);
-
         admin.updateRole(newRole);
-        adminRepository.save(admin);
     }
 
 }
