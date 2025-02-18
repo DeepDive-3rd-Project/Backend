@@ -17,8 +17,6 @@ import goorm.deepdive.team1.api.jwt.JwtUtil;
 import goorm.deepdive.team1.api.jwt.exception.JwtEmptyException;
 import goorm.deepdive.team1.api.jwt.exception.JwtExpiredException;
 import goorm.deepdive.team1.api.jwt.exception.JwtRedisStorageException;
-import goorm.deepdive.team1.common.exception.AdminExceptionCode;
-import goorm.deepdive.team1.common.exception.CustomException;
 import goorm.deepdive.team1.domain.admin.application.AdminCommandService;
 import goorm.deepdive.team1.domain.admin.application.AdminQueryService;
 import goorm.deepdive.team1.domain.admin.domain.Admin;
@@ -36,13 +34,10 @@ public class AdminFacade {
     private final TokenRepository tokenRepository;
 
     public AdminRegisterResponse register(AdminRegisterRequest request) {
-        // 해당 부분 예외처리 수정 필요
-        if (adminQueryService.existsByEmail(request.email())) {
-            throw new CustomException(AdminExceptionCode.ALREADY_REGISTERED);
-        }
+        adminQueryService.validateEmailUniqueness(request.email());
 
         Admin admin = adminCommandService.register(request.email(), request.password(), request.role());
-        return new AdminRegisterResponse(admin.getId(), admin.getEmail());
+        return AdminRegisterResponse.from(admin);
     }
 
     public AdminReissueResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
@@ -85,7 +80,6 @@ public class AdminFacade {
         response.setHeader("Authorization", newAccessToken);
         response.addCookie(CookieUtil.createCookie("Refresh-Token", newRefreshToken, 604800));
 
-//        AdminReissueResponse responseBody = new AdminReissueResponse(Long.parseLong(adminId), newAccessToken);
         return new AdminReissueResponse(Long.parseLong(adminId), newAccessToken);
     }
 

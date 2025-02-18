@@ -15,6 +15,6 @@ public record AdminListResponse(
             .id(admin.getId())
             .email(admin.getEmail())
             .role(admin.getRole())
-            .build();(admin.getId(), admin.getEmail(), admin.getRole().name());
+            .build();
     }
 }

@@ -1,11 +1,14 @@
 package goorm.deepdive.team1.domain.admin.application;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import goorm.deepdive.team1.domain.admin.domain.Admin;
+import goorm.deepdive.team1.domain.admin.exception.AdminEmailAlreadyExistsException;
 import goorm.deepdive.team1.domain.admin.exception.AdminNotFoundException;
 import goorm.deepdive.team1.domain.admin.infrastructure.AdminRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +19,10 @@ import lombok.RequiredArgsConstructor;
 public class AdminQueryService {
     private final AdminRepository adminRepository;
 
-    public boolean existsByEmail(String email) {
-        return adminRepository.existsByEmail(email);
+    public void validateEmailUniqueness(String email) {
+        Optional.ofNullable(email)
+            .filter(adminRepository::existsByEmail)
+            .ifPresent(e -> { throw new AdminEmailAlreadyExistsException(); });
     }
 
     public Page<Admin> getAdminsByPage(Pageable pageable) {
