@@ -3,7 +3,6 @@ package goorm.deepdive.team1.domain.admin.application;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -28,8 +27,7 @@ public class AdminQueryService {
         return adminRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
-    public Page<Admin> getAdminsByPage(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+    public Page<Admin> getAdminsByPage(Pageable pageable) {
         return adminRepository.findAll(pageable);
     }
 
