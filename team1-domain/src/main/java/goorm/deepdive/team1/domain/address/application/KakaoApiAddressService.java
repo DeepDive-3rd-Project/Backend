@@ -99,6 +99,10 @@ public class KakaoApiAddressService {
             String roadNameAddress = roadAddressNode.path("address_name").asText(null);
             String region = addressNode.path("region_1depth_name").asText(null);
 
+            if (region != null && region.length() > 2) {
+                region = region.substring(0, 2);
+            }
+
             if (regionAddress == null || roadNameAddress == null) {
                 throw new AddressNotFoundException();
             }
