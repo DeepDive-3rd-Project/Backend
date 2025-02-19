@@ -37,7 +37,7 @@ services:
       - "8080:8080"
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
-      POSTGRES_HOST: postgres  # 컨테이너명으로 지정
+      POSTGRES_HOST: ${POSTGRES_HOST}  # 컨테이너명으로 지정
       POSTGRES_PORT: "5432"
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -46,7 +46,6 @@ services:
       REDIS_PORT: "6379"
     depends_on:
       - redis
-      - postgres
     restart: always
     networks:
       - backend-network
@@ -60,18 +59,6 @@ services:
     networks:
       - backend-network
 
-  postgres:
-    image: postgres:15
-    container_name: postgres-${ENV}
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    restart: always
-    networks:
-      - backend-network
 
   kafka-0:
     image: docker.io/bitnami/kafka:3.9
