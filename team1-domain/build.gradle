@@ -1,9 +1,9 @@
 bootJar {
-    archiveFileName = "team1-domain.jar"
+    enabled = false
 }
 
 jar {
-    enabled = false
+    enabled = true
 }
 
 dependencies {
