@@ -96,7 +96,7 @@ jobs:
         # 현재 활성화된 Nginx 업스트림(blue/green)을 확인하고, 새로운 배포 대상 설정.
 
       # 2. EC2에 환경 변수 파일 생성 부분 아래 script 수정 (CICD deploy job)
-      - name: Create .env and env.properties file on EC2
+      - name: Create .env file on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.LIVE_SERVER_IP }}
@@ -119,6 +119,8 @@ jobs:
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             EOF
             
+            sudo chown ubuntu:ubuntu /home/ubuntu/deploy/.env
+            sudo chmod 644 /home/ubuntu/deploy/.env
 
       # 3. 새로운 컨테이너 배포 (docker-compose 사용)
       - name: Deploy new containers (Multimodule)
@@ -134,7 +136,7 @@ jobs:
               echo "🚨 Error: docker-compose-${{ env.TARGET_UPSTREAM }}.yml not found!"
               exit 1
             fi
-            sudo docker compose -f docker-compose-${{ env.TARGET_UPSTREAM }}.yml --env-file .env up -d --no-deps
+            sudo docker compose -f docker-compose-${{ env.TARGET_UPSTREAM }}.yml --env-file /home/ubuntu/deploy/.env up -d --no-deps
         # team1-api, team1-domain, team1-infra 컨테이너를 함께 실행.
 
       # 4. 새로운 배포의 Health Check
