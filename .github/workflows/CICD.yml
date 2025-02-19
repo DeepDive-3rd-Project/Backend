@@ -119,26 +119,6 @@ jobs:
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             EOF
 
-            cat <<EOF > /home/ubuntu/deploy/env.properties
-            DB_HOST=${{ secrets.POSTGRES_HOST }}
-            DB_PORT=5432
-            DB_NAME=${{ secrets.POSTGRES_DB }}
-            DB_USERNAME=${{ secrets.POSTGRES_USER }}
-            DB_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            REDIS_HOST=${{ secrets.REDIS_HOST }}
-            REDIS_PORT=${{ secrets.REDIS_PORT }}
-            POSTGRES_HOST=${POSTGRES_HOST}
-            POSTGRES_PORT=5432
-            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            JWT_SECRET=${{ secrets.JWT_SECRET }}
-            JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}
-            JWT_EXPIRATION_SECONDS=600
-            JWT_REFRESH_EXPIRATION_SECONDS=604800
-            KAKAO_API_KEY=${{ secrets.KAKAO_API_KEY }}
-            EOF
-
       # 3. 새로운 컨테이너 배포 (docker-compose 사용)
       - name: Deploy new containers (Multimodule)
         uses: appleboy/ssh-action@master
