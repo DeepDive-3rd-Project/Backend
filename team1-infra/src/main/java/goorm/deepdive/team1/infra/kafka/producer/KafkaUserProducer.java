@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import goorm.deepdive.team1.domain.user.application.UserProducer;
+import goorm.deepdive.team1.domain.user.infrastructure.UserProducer;
 import goorm.deepdive.team1.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
