@@ -94,15 +94,11 @@ public class UserFacade {
 	@Transactional
 	public void update(Long id, UserUpdateRequest request) {
 		Address address = findOrCreateAddress(request.roadAddress());
-
 		User user = userQueryService.getById(id);
-
-		boolean isAddressChanged = !Objects.equals(address.getId(), user.getAddress().getId());
-
 		userCommandService.update(user, request.name(), request.email(), request.phoneNumber(),
 			request.gender(), request.age(), address);
 
-		if (isAddressChanged) {
+		if (Objects.equals(address.getId(), user.getAddress().getId())) {
 			addressHistoryCommandService.create(user, address);
 		}
 	}
