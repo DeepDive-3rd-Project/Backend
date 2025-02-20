@@ -45,7 +45,7 @@ jobs:
       - name: Build with Gradle (Multimodule)
         run: |
           chmod +x ./gradlew
-          ./gradlew clean build -x test --no-daemon -Dorg.gradle.jvmargs="-Xmx512m"
+          ./gradlew clean build -x test --parallel, --build-cache --no-daemon -Dorg.gradle.jvmargs="-Xmx512m"
         # 프로젝트를 Gradle로 빌드. 테스트는 제외하고 실행. (--parallel, --build-cache 사용으로 시간 줄이기)
 
       # Docker 태그용 환경변수 설정
@@ -151,9 +151,10 @@ jobs:
             # ✅ 최신 이미지 pull
             sudo docker-compose -f docker-compose-${{ env.TARGET_UPSTREAM }}.yml pull app
       
-            # ✅ 최신 이미지 강제 사용하여 컨테이너 재생성
-            sudo docker-compose -f docker-compose-${{ env.TARGET_UPSTREAM }}.yml --env-file /home/ubuntu/deploy/.env up -d --no-deps --force-recreate --pull always
-
+            # ✅ 최신 이미지 강제 사용하여 컨테이너 재생성 (메모리 설정 추가)
+            sudo docker-compose -f docker-compose-${{ env.TARGET_UPSTREAM }}.yml --env-file /home/ubuntu/deploy/.env up -d --no-deps --force-recreate --pull always \
+              -e JAVA_OPTS="-Xms256m -Xmx512m"
+              
       # 4. 새로운 배포의 Health Check
       - name: Health check on new deployment
         uses: jtalk/url-health-check-action@v3
