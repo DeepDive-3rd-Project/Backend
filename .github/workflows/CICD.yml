@@ -1,4 +1,4 @@
-name: CICD
+name: CICD 
 
 on:
   # main 브랜치로 push 또는 pull request 발생 시 실행
