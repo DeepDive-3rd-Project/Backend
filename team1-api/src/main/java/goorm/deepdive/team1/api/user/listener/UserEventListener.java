@@ -4,8 +4,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
-import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.event.UserCreatedEvent;
+import goorm.deepdive.team1.domain.user.event.UserDeletedEvent;
+import goorm.deepdive.team1.domain.user.event.UserUpdatedEvent;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -15,7 +16,16 @@ public class UserEventListener {
 
 	@EventListener
 	public void handleUserCreatedEvent(UserCreatedEvent event) {
-		User user = event.user();
-		addressHistoryCommandService.create(user);
+		addressHistoryCommandService.create(event.user());
+	}
+
+	@EventListener
+	public void handleUserUpdatedEvent(UserUpdatedEvent event) {
+		addressHistoryCommandService.update(event.user());
+	}
+
+	@EventListener
+	public void handleUserDeletedEvent(UserDeletedEvent event) {
+		addressHistoryCommandService.cleanUpDeletedAddressHistories(event.userIds());
 	}
 }
