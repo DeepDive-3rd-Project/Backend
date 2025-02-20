@@ -73,6 +73,7 @@ public class UserFacade {
 		return UserPersistResponse.from(user);
 	}
 
+	@Transactional(readOnly = true)
 	public UserCache getUserCacheById(Long id) {
 		UserCache userCache = userQueryService.getUserCacheById(id);
 
@@ -85,6 +86,7 @@ public class UserFacade {
 		return userCache;
 	}
 
+	@Transactional(readOnly = true)
 	public PaginatedListResponse getAll(Pageable pageable) {
 		Page<UserCache> userCaches = userQueryService.getCaches(pageable);
 
