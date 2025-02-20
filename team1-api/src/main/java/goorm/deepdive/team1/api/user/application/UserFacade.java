@@ -27,8 +27,6 @@ import goorm.deepdive.team1.domain.address.application.AddressQueryService;
 import goorm.deepdive.team1.domain.address.application.KakaoApiAddressService;
 import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
-import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
-import goorm.deepdive.team1.domain.addresshistory.infrastructure.AddressHistoryProducer;
 import goorm.deepdive.team1.domain.user.application.UserCommandService;
 import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
@@ -46,7 +44,6 @@ public class UserFacade {
 	private final UserCommandService userCommandService;
 	private final AddressHistoryCommandService addressHistoryCommandService;
 	private final AddressCommandService addressCommandService;
-	private final AddressHistoryProducer addressHistoryProducer;
 	private final KakaoApiAddressService kakaoApiAddressService;
 	private final AddressQueryService addressQueryService;
 
@@ -63,9 +60,7 @@ public class UserFacade {
 			request.age()
 		);
 
-		AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
-
-		addressHistoryProducer.sendMessageToCreate(addressHistory);
+		addressHistoryCommandService.create(user, address);
 
 		return UserPersistResponse.from(user);
 	}
@@ -108,8 +103,7 @@ public class UserFacade {
 			request.gender(), request.age(), address);
 
 		if (isAddressChanged) {
-			AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
-			addressHistoryProducer.sendMessageToDelete(addressHistory);
+			addressHistoryCommandService.create(user, address);
 		}
 	}
 
