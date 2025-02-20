@@ -76,16 +76,6 @@ public class FakeUserRepository implements UserRepository {
 	}
 
 	@Override
-	public boolean existsById(Long id) {
-		return users.containsKey(id);
-	}
-
-	@Override
-	public boolean existsByEmail(String email) {
-		return users.values().stream().anyMatch(user -> user.getEmail().equals(email));
-	}
-
-	@Override
 	public void saveCache(UserCache userCache) {
 		userCaches.put(userCache.getId(), userCache);
 	}

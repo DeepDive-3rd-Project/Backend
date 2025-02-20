@@ -56,11 +56,6 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public boolean existsById(Long id) {
-		return jpaUserRepository.existsById(id);
-	}
-
-	@Override
 	public Page<UserDocument> searchByRoadAddress(String keyword, Pageable pageable) {
 		return elasticUserRepository.searchByRoadAddress(keyword, pageable);
 	}
@@ -73,11 +68,6 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public Page<UserDocument> searchByName(String name, Pageable pageable) {
 		return elasticUserRepository.searchByName(name, pageable);
-	}
-
-	@Override
-	public boolean existsByEmail(String email) {
-		return jpaUserRepository.existsByEmail(email);
 	}
 
 	@Override
