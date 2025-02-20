@@ -6,18 +6,20 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import goorm.deepdive.team1.domain.user.application.UserProducer;
 import goorm.deepdive.team1.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class UserProducer {
+public class KafkaUserProducer implements UserProducer {
 	private final KafkaTemplate<String, Object> kafkaTemplate;
 	private final ObjectMapper objectMapper;
 
 	private static final String CREATE_USER = "create-user";
 	private static final String UPDATE_USER = "update-user";
 
+	@Override
 	public void sendMessageToCreate(User user) {
 		try {
 			String userJson = objectMapper.writeValueAsString(user);
@@ -27,6 +29,7 @@ public class UserProducer {
 		}
 	}
 
+	@Override
 	public void sendMessageToUpdate(User user) {
 		try {
 			String userJson = objectMapper.writeValueAsString(user);

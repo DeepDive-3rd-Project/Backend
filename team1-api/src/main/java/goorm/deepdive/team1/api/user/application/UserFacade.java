@@ -29,13 +29,13 @@ import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
 import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
 import goorm.deepdive.team1.domain.user.application.UserCommandService;
+import goorm.deepdive.team1.domain.user.application.UserProducer;
 import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
 import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
 import goorm.deepdive.team1.infra.kafka.producer.AddressHistoryProducer;
-import goorm.deepdive.team1.infra.kafka.producer.UserProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
