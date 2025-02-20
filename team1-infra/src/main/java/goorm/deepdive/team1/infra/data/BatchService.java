@@ -57,8 +57,8 @@ public class BatchService {
 				String gender = faker.options().option("MALE", "FEMALE");
 				int age = faker.number().numberBetween(10, 80);
 
-				double x = faker.number().randomDouble(6, 124, 132);
-				double y = faker.number().randomDouble(6, 33, 43);
+				double x = faker.number().randomDouble(6, 127, 129);
+				double y = faker.number().randomDouble(6, 35, 38);
 				String region = faker.address().state();
 
 				String regionAddress = region + " " +
