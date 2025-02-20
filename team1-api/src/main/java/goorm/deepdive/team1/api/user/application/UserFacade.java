@@ -9,7 +9,6 @@ import static goorm.deepdive.team1.domain.user.domain.enums.AgeGroups.TWENTIES;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +25,6 @@ import goorm.deepdive.team1.domain.address.application.AddressCommandService;
 import goorm.deepdive.team1.domain.address.application.AddressQueryService;
 import goorm.deepdive.team1.domain.address.application.KakaoApiAddressService;
 import goorm.deepdive.team1.domain.address.domain.Address;
-import goorm.deepdive.team1.domain.addresshistory.application.AddressHistoryCommandService;
 import goorm.deepdive.team1.domain.user.application.UserCommandService;
 import goorm.deepdive.team1.domain.user.application.UserQueryService;
 import goorm.deepdive.team1.domain.user.domain.User;
@@ -42,7 +40,6 @@ import lombok.extern.slf4j.Slf4j;
 public class UserFacade {
 	private final UserQueryService userQueryService;
 	private final UserCommandService userCommandService;
-	private final AddressHistoryCommandService addressHistoryCommandService;
 	private final AddressCommandService addressCommandService;
 	private final KakaoApiAddressService kakaoApiAddressService;
 	private final AddressQueryService addressQueryService;
@@ -59,8 +56,6 @@ public class UserFacade {
 			request.gender(),
 			request.age()
 		);
-
-		addressHistoryCommandService.create(user);
 
 		return UserPersistResponse.from(user);
 	}
@@ -97,10 +92,6 @@ public class UserFacade {
 		User user = userQueryService.getById(id);
 		userCommandService.update(user, request.name(), request.email(), request.phoneNumber(),
 			request.gender(), request.age(), address);
-
-		if (Objects.equals(address.getId(), user.getAddress().getId())) {
-			addressHistoryCommandService.update(user);
-		}
 	}
 
 	@Transactional
@@ -140,16 +131,15 @@ public class UserFacade {
 	}
 
 	@Transactional
-	@Scheduled(cron = "0 0 0 * * *")
+	@Scheduled(cron = "20 18 15 * * *")
 	public void cleanUpDeletedUsers() {
-		log.info("🗑️ 유저 삭제 스케줄링 작동...");
 		List<Long> userIdsToDelete = userQueryService.findIdsByDeletedAtIsNotNull();
 
 		if (userIdsToDelete.isEmpty()) {
 			log.info("✅ 삭제할 유저 데이터가 없습니다.");
 			return;
 		}
-		addressHistoryCommandService.cleanUpDeletedAddressHistories(userIdsToDelete);
+
 		userCommandService.cleanUpDeletedUsers(userIdsToDelete);
 	}
 
