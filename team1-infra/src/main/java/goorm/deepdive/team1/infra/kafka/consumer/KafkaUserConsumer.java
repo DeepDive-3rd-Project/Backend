@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class UserConsumer {
+public class KafkaUserConsumer {
 	private final RedisUserRepository redisUserRepository;
 	private final ElasticUserRepository elasticUserRepository;
 	private final ObjectMapper objectMapper;

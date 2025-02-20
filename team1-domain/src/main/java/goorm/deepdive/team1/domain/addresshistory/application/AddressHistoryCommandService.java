@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import goorm.deepdive.team1.domain.address.domain.Address;
 import goorm.deepdive.team1.domain.addresshistory.domain.AddressHistory;
+import goorm.deepdive.team1.domain.addresshistory.infrastructure.AddressHistoryProducer;
 import goorm.deepdive.team1.domain.addresshistory.infrastructure.AddressHistoryRepository;
 import goorm.deepdive.team1.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +16,16 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class AddressHistoryCommandService {
 	private final AddressHistoryRepository addressHistoryRepository;
+	private final AddressHistoryProducer addressHistoryProducer;
 
-	public AddressHistory create(User user, Address address) {
-		AddressHistory addressHistory = AddressHistory.create(user, address);
-		return addressHistoryRepository.save(addressHistory);
+	public void create(User user) {
+		AddressHistory addressHistory = AddressHistory.create(user);
+		addressHistoryProducer.sendMessageToCreate(addressHistoryRepository.save(addressHistory));
+	}
+
+	public void update(User user) {
+		AddressHistory addressHistory = AddressHistory.create(user);
+		addressHistoryProducer.sendMessageToDelete(addressHistoryRepository.save(addressHistory));
 	}
 
 	public void saveAll(List<AddressHistory> addressHistories) {
