@@ -25,15 +25,11 @@ public interface UserRepository {
 
 	void deleteById(Long id);
 
-	boolean existsById(Long id);
-
 	Page<UserDocument> searchByRoadAddress(String keyword, Pageable pageable);
   
 	Page<UserDocument> searchByRegionAddress(String keyword, Pageable pageable);
 
 	Page<UserDocument> searchByName(String name, Pageable pageable);
-
-	boolean existsByEmail(String email);
 
 	void saveCache(UserCache userCache);
 
