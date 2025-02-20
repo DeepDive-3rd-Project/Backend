@@ -45,7 +45,7 @@ jobs:
       - name: Build with Gradle (Multimodule)
         run: |
           chmod +x ./gradlew
-          ./gradlew clean build -x test --parallel, --build-cache --no-daemon -Dorg.gradle.jvmargs="-Xmx512m"
+          ./gradlew clean build -x test --parallel --build-cache --no-daemon -Dorg.gradle.jvmargs="-Xmx512m"
         # 프로젝트를 Gradle로 빌드. 테스트는 제외하고 실행. (--parallel, --build-cache 사용으로 시간 줄이기)
 
       # Docker 태그용 환경변수 설정
