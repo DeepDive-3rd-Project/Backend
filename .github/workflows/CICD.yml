@@ -95,6 +95,17 @@ jobs:
           echo "CURRENT_UPSTREAM=$CURRENT_UPSTREAM" >> $GITHUB_ENV
         # 현재 활성화된 Nginx 업스트림(blue/green)을 확인하고, 새로운 배포 대상 설정.
 
+      # ✅ 네트워크가 없으면 생성하는 부분 추가 
+      - name: Create Network if not exists
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.LIVE_SERVER_IP }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo docker network inspect backend-network >/dev/null 2>&1 || \
+            sudo docker network create backend-network
+
       # 2. EC2에 환경 변수 파일 생성 부분 아래 script 수정 (CICD deploy job)
       - name: Create .env file on EC2
         uses: appleboy/ssh-action@master
