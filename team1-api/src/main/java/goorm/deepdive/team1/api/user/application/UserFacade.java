@@ -60,7 +60,7 @@ public class UserFacade {
 			request.age()
 		);
 
-		addressHistoryCommandService.create(user, address);
+		addressHistoryCommandService.create(user);
 
 		return UserPersistResponse.from(user);
 	}
@@ -99,7 +99,7 @@ public class UserFacade {
 			request.gender(), request.age(), address);
 
 		if (Objects.equals(address.getId(), user.getAddress().getId())) {
-			addressHistoryCommandService.create(user, address);
+			addressHistoryCommandService.update(user);
 		}
 	}
 

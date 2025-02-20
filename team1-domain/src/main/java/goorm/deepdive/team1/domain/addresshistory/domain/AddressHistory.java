@@ -40,10 +40,10 @@ public class AddressHistory extends BaseTimeEntity {
 	@JoinColumn(name = "address_id", nullable = false)
 	private Address address;
 
-	public static AddressHistory create(User user, Address address) {
+	public static AddressHistory create(User user) {
 		return AddressHistory.builder()
 			.user(user)
-			.address(address)
+			.address(user.getAddress())
 			.build();
 	}
 }
