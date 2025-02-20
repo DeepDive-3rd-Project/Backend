@@ -136,11 +136,12 @@ jobs:
               echo "🚨 Error: docker-compose-${{ env.TARGET_UPSTREAM }}.yml not found!"
               exit 1
             fi
-            
-            # ✅ 최신 이미지 강제 pull (기존 이미지 덮어쓰기)
+      
+            # ✅ 최신 이미지 pull
             sudo docker compose -f docker-compose-${{ env.TARGET_UPSTREAM }}.yml pull app
-            # ✅ 컨테이너 실행 (이제 최신 이미지로 실행됨)
-            sudo docker compose -f docker-compose-${{ env.TARGET_UPSTREAM }}.yml --env-file /home/ubuntu/deploy/.env up -d --no-deps --force-recreate
+      
+            # ✅ 최신 이미지 강제 사용하여 컨테이너 재생성
+            sudo docker compose -f docker-compose-${{ env.TARGET_UPSTREAM }}.yml --env-file /home/ubuntu/deploy/.env up -d --no-deps --force-recreate --pull always
 
       # 4. 새로운 배포의 Health Check
       - name: Health check on new deployment
