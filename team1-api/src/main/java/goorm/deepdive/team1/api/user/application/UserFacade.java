@@ -35,7 +35,6 @@ import goorm.deepdive.team1.domain.user.domain.User;
 import goorm.deepdive.team1.domain.user.domain.UserCache;
 import goorm.deepdive.team1.domain.user.domain.UserDocument;
 import goorm.deepdive.team1.domain.user.domain.enums.AgeGroups;
-import goorm.deepdive.team1.domain.user.infrastructure.UserProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +46,6 @@ public class UserFacade {
 	private final UserCommandService userCommandService;
 	private final AddressHistoryCommandService addressHistoryCommandService;
 	private final AddressCommandService addressCommandService;
-	private final UserProducer userProducer;
 	private final AddressHistoryProducer addressHistoryProducer;
 	private final KakaoApiAddressService kakaoApiAddressService;
 	private final AddressQueryService addressQueryService;
@@ -67,7 +65,6 @@ public class UserFacade {
 
 		AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
 
-		userProducer.sendMessageToCreate(user);
 		addressHistoryProducer.sendMessageToCreate(addressHistory);
 
 		return UserPersistResponse.from(user);
@@ -114,8 +111,6 @@ public class UserFacade {
 			AddressHistory addressHistory = addressHistoryCommandService.create(user, address);
 			addressHistoryProducer.sendMessageToDelete(addressHistory);
 		}
-
-		userProducer.sendMessageToUpdate(user);
 	}
 
 	@Transactional
